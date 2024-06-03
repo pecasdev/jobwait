@@ -1,0 +1,14 @@
+Node.js install (20.14.0 LTS) - https://nodejs.org/en/download/package-manager
+	- Installed with command: `choco install nodejs-lts --version="20.14.0"` in administrator shell
+
+***This step may not be needed if React has some sort of install file (this creates a whole new app)***:
+	Went into `jobwait` directory in shell and ran `npx create-react-app frontend --template typescript`
+
+Ran `npm install --save bootstrap@5.1 react-cookie@4.1.1 react-router-dom@5.3.0 reactstrap@8.10.0`
+Ran `npm install --save typescript @types/node @types/react @types/react-dom @types/jest`
+
+Had to add   "overrides": {
+    "typescript": "^5.4.5"
+  }, to package.json
+
+`npm start` in frontend dir
