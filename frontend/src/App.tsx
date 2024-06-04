@@ -40,17 +40,33 @@ function handleSubmit(e: React.FormEvent, setResponse: (_: string) => void) {
 }
 
 export default function App() {
-  const [response, setResponse] = useState("");
-  return (
-    <div>
-      <h1>Professional Environment.</h1>
-      <form onSubmit={(e) => handleSubmit(e, setResponse)}>
-        <input name="queryInput" id="queryInput" required={true}/>
-        <button type="submit">Search</button>
-      </form>
-      <h2>
-        {response}
-      </h2>
-    </div>
-  );
+    const [response, setResponse] = useState("");
+
+    const promptDefinition: PromptDefinition[] = [
+        {
+            displayText: "did you get accepted by the milk company?",
+            idKey: "milk_acceptance",
+            inputType: "text"
+        },
+        {
+            displayText: "how many job applications have you sent out?",
+            idKey: "job_application_count",
+            inputType: "slider"
+        }
+    ];
+
+    return (
+        <div>
+            <h1>Professional Environment.</h1>
+            <form onSubmit={(e) => handleSubmit(e, setResponse)}>
+                <input name="queryInput" id="queryInput" required={true} />
+                <button type="submit">Search</button>
+            </form>
+            <h2>{response}</h2>
+
+            <PromptCollector
+                promptDefinitions={promptDefinition}
+            ></PromptCollector>
+        </div>
+    );
 }
