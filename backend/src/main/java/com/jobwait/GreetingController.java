@@ -47,8 +47,8 @@ public class GreetingController {
 	public String postMethodName(@RequestBody String entity) {
 		// TODO: process POST request
 
-		return getDbEnvironmentVars();
-		// return attemptDbConnection();
+		//return getDbEnvironmentVars();
+		return attemptDbConnection();
 	}
 
 	public static String attemptDbConnection() {
