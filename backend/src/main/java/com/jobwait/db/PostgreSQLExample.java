@@ -24,6 +24,13 @@ public class PostgreSQLExample {
         // statement.close();
         // connection.close();
 
-        return resultSet.next();
+        //resultSet.next(); // uncomment this to verify that database failure results in error message
+        Boolean rowIsValid = resultSet.next();
+        if (rowIsValid) {
+            System.out.println("database works fine :)");
+        } else {
+            System.err.println("DATABASE PROBLEM, FIX IT >:(");
+        }    
+        return rowIsValid;
     }
 }
