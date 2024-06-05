@@ -54,8 +54,8 @@ public class GreetingController {
 	
 	public static String attemptDbConnection() {
 		try {
-			return String.valueOf(PostgreSQLExample.dbTest("jdbc:postgresql://localhost:5432/test", 
-			"tester", 
+			return String.valueOf(PostgreSQLExample.dbTest("jdbc:postgresql://localhost:5432/mydatabase", 
+			"postgres", 
 			"password"));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
