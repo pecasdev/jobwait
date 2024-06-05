@@ -3,6 +3,7 @@
   "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle",
   "editor.formatOnSave": true,
   "java.format.settings.url": "eclipse-formatter.xml",
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "java.compile.nullAnalysis.mode": "automatic"
   
 }
