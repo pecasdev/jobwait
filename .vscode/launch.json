@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-RestServiceApplication<jobwait>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.jobwait.RestServiceApplication",
+            "projectName": "jobwait",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
