@@ -11,14 +11,19 @@ export type PromptDefinition = {
 export default function PromptCollector(props: {
     promptDefinitions: PromptDefinition[];
 }) {
-    const prompts: ReactElement[] = [];
-    for (let promptDefinition of props.promptDefinitions) {
-        prompts.push(Prompt(promptDefinition));
-    }
     return (
         <div className="border border-black">
             <p className="text-2xl">super cool form you should fill out</p>
-            <tbody className="space-y-6">{prompts}</tbody>
+            <tbody className="space-y-6">
+                {props.promptDefinitions.map((promptDef, index) => (
+                    <Prompt
+                        key={index}
+                        displayText={promptDef.displayText}
+                        idKey={promptDef.idKey}
+                        inputType={promptDef.inputType}
+                    />
+                ))}
+            </tbody>
         </div>
     );
 }
