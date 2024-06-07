@@ -11,7 +11,7 @@ type User {
 type Prompt {
     id: ID!
     question: String!
-    response: IntResponse | StrResponse
+    response: Response
 }
 
 type IntResponse {
@@ -19,5 +19,7 @@ type IntResponse {
 }
 
 type StrResponse {
-    strResponse: Str
+    strResponse: String
 }
+
+union Response = IntResponse | StrResponse
