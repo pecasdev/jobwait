@@ -1,10 +1,10 @@
-package com.jobwait.jobwait;
+package com.jobwait;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class JobwaitApplicationTests {
+class RestServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
