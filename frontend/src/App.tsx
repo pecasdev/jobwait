@@ -1,6 +1,8 @@
+import { Chart, registerables } from "chart.js";
 import * as React from "react";
 import { useState } from "react";
 import "./App.css";
+import GraphExample from "./GraphExample";
 import PromptCollector, { PromptDefinition } from "./reusable/PromptCollector";
 
 async function queryAddress(address: string): Promise<string> {
@@ -39,6 +41,8 @@ function handleSubmit(e: React.FormEvent, setResponse: (_: string) => void) {
     // fetch('/some-api', { method: form.method, body: formData });
 }
 
+Chart.register(...registerables);
+
 export default function App() {
     const [response, setResponse] = useState("");
 
@@ -46,13 +50,13 @@ export default function App() {
         {
             displayText: "did you get accepted by the milk company?",
             idKey: "milk_acceptance",
-            inputType: "text"
+            inputType: "text",
         },
         {
             displayText: "how many job applications have you sent out?",
             idKey: "job_application_count",
-            inputType: "slider"
-        }
+            inputType: "slider",
+        },
     ];
 
     return (
@@ -67,6 +71,7 @@ export default function App() {
             <PromptCollector
                 promptDefinitions={promptDefinition}
             ></PromptCollector>
+            <GraphExample />
         </div>
     );
 }
