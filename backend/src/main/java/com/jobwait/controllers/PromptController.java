@@ -9,7 +9,7 @@ import com.jobwait.domain.Prompt;
 @Controller
 public class PromptController {
     @QueryMapping
-    public Prompt promptById(@Argument String id) {
-        return Prompt.getById(id);
+    public Prompt promptById(@Argument String promptID) {
+        return Prompt.getById(promptID);
     }
 }

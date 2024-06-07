@@ -3,7 +3,7 @@ package com.jobwait.domain;
 import java.util.Arrays;
 import java.util.List;
 
-public record User(String id, List<Prompt> prompts) {
+public record User(String userID, List<Prompt> prompts) {
 
     private static Prompt<Integer> intPrompt =  
         new Prompt<Integer>("1", "What?", new IntResponse(2));
@@ -17,10 +17,11 @@ public record User(String id, List<Prompt> prompts) {
     );
 
     public static User getById(String id) {
-        return users.stream()
-				.filter(user -> user.id().equals(id))
-				.findFirst()
-				.orElse(null);
+        User foundUser = users.stream()
+                            .filter(user -> user.userID.equals(id))
+                            .findFirst()
+                      .orElse(null);
+        return foundUser;
     }
 
 }

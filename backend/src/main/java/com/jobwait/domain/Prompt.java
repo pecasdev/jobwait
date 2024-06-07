@@ -3,7 +3,7 @@ package com.jobwait.domain;
 import java.util.Arrays;
 import java.util.List;
 
-public record Prompt<T extends Object>(String id, String question, Response<T> response) {
+public record Prompt<T extends Object>(String promptID, String question, Response<T> response) {
 
     private static List<Prompt> prompts = Arrays.asList(
             new Prompt<Integer>("1", "What?", new IntResponse(2)),
@@ -13,7 +13,7 @@ public record Prompt<T extends Object>(String id, String question, Response<T> r
 
     public static Prompt getById(String id) {
         return prompts.stream()
-				.filter(prompt -> prompt.id().equals(id))
+				.filter(prompt -> prompt.promptID.equals(id))
 				.findFirst()
 				.orElse(null);
     }

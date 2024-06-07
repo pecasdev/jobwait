@@ -1,15 +1,15 @@
 type Query {
-    userById(id: ID): User
-    promptById(id: ID): Prompt
+    userById(userID: ID!): User
+    promptById(promptID: ID!): Prompt
 }
 
 type User {
-    id: ID!
-    prompt: [Prompt!]!
+    userID: ID!
+    prompts: [Prompt!]!
 }
 
 type Prompt {
-    id: ID!
+    promptID: ID!
     question: String!
     response: Response
 }

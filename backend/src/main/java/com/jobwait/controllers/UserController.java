@@ -9,7 +9,8 @@ import com.jobwait.domain.User;
 @Controller
 public class UserController {
     @QueryMapping
-    public User userById(@Argument String id) {
-        return User.getById(id);
+    public User userById(@Argument String userID) {
+        User foundUser = User.getById(userID);
+        return foundUser;
     }
 }
