@@ -1,0 +1,25 @@
+type Query {
+    userById(userID: ID!): User
+    promptById(promptID: ID!): Prompt
+}
+
+type User {
+    userID: ID!
+    prompts: [Prompt!]!
+}
+
+type Prompt {
+    promptID: ID!
+    question: String!
+    response: Response
+}
+
+type IntResponse {
+    intResponse: Int!
+}
+
+type StrResponse {
+    strResponse: String!
+}
+
+union Response = IntResponse | StrResponse

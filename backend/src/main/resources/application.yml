@@ -5,4 +5,14 @@ spring:
         driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://localhost:5432/mydatabase
         username: postgres
-        password: password
+        password: ${PGPASSWORD}
+    graphql:
+        cors:
+            allowed-origins: http://localhost:3000
+        schema:
+            introspection:
+                enabled: true
+
+server:
+    port: 9000
+    address: 0.0.0.0
