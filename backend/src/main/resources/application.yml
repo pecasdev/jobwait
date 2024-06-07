@@ -3,7 +3,7 @@ spring:
         name: jobwait
     datasource:
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/test
+        url: jdbc:postgresql://localhost:5432/mydatabase
         username: postgres
         password: ${PGPASSWORD}
     graphql:

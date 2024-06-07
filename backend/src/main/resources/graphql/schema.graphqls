@@ -15,11 +15,11 @@ type Prompt {
 }
 
 type IntResponse {
-    intResponse: Int
+    intResponse: Int!
 }
 
 type StrResponse {
-    strResponse: String
+    strResponse: String!
 }
 
 union Response = IntResponse | StrResponse
