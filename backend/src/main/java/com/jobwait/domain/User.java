@@ -2,6 +2,7 @@ package com.jobwait.domain;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public record User(String userID, List<Prompt> prompts) {
 
@@ -16,12 +17,22 @@ public record User(String userID, List<Prompt> prompts) {
             new User("125", Arrays.asList(strPrompt))
     );
 
+    public static List<User> getAllUsers() {
+        return users;
+    }
+
     public static User getById(String id) {
         User foundUser = users.stream()
                             .filter(user -> user.userID.equals(id))
                             .findFirst()
                       .orElse(null);
         return foundUser;
+    }
+
+    public static User addUser(String name) {
+        User newUser = new User(UUID.randomUUID().toString(), Arrays.asList(strPrompt));
+        //PERSIST USER TO DB HERE
+        return newUser;
     }
 
 }
