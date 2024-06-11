@@ -3,7 +3,8 @@ import * as React from "react";
 import { useState } from "react";
 import "./App.css";
 import GraphExample from "./GraphExample";
-import PromptCollector, { PromptDefinition } from "./reusable/PromptCollector";
+import PromptCollector from "./reusable/PromptCollector";
+import { PromptDefinition } from "./reusable/PromptTypes";
 
 async function queryAddress(address: string): Promise<string> {
     if (address) {
@@ -56,6 +57,21 @@ export default function App() {
             displayText: "how many job applications have you sent out?",
             idKey: "job_application_count",
             inputType: "slider",
+        },
+        {
+            displayText: "how many years of experience do you have?",
+            idKey: "years_of_experience",
+            inputType: "slider",
+        },
+        {
+            displayText: "what is the job title you received?",
+            idKey: "job_title",
+            inputType: "slider",
+        },
+        {
+            displayText: "is your job fully remote / hybrid / on-site?",
+            idKey: "job_location",
+            inputType: "radio",
         },
     ];
 
