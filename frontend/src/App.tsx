@@ -1,10 +1,12 @@
-import { Chart, registerables } from "chart.js";
 import * as React from "react";
 import { useState } from "react";
 import "./App.css";
 import GraphExample from "./GraphExample";
 import PromptCollector from "./reusable/PromptCollector";
 import { PromptDefinition } from "./reusable/PromptTypes";
+import { Chart, registerables } from "chart.js";
+import SelectMenu from "./reusable/SelectMenu";
+import SubmitExample from "./reusable/SubmitExample";
 
 async function queryAddress(address: string): Promise<string> {
     if (address) {
@@ -80,14 +82,15 @@ export default function App() {
             <h1>Professional Environment.</h1>
             <form onSubmit={(e) => handleSubmit(e, setResponse)}>
                 <input name="queryInput" id="queryInput" required={true} />
-                <button type="submit">Search</button>
             </form>
             <h2>{response}</h2>
 
             <PromptCollector
                 promptDefinitions={promptDefinition}
             ></PromptCollector>
-            <GraphExample />
+            <GraphExample></GraphExample>
+            <SelectMenu></SelectMenu>
+            <SubmitExample></SubmitExample>
         </div>
     );
 }
