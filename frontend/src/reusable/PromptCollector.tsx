@@ -70,15 +70,15 @@ export default class PromptCollector extends React.Component<
                                 />
                             ),
                         )}
+                        <button
+                            className="text-lg m-4 w-32 h-16 bg-blue-200 hover:bg-blue-400"
+                            onClick={this.submitResponses.bind(this)}
+                        >
+                            SUBMIT
+                        </button>
                     </tbody>
                     <img id="gatitoImage" src="gatito.jpg" />
                 </div>
-                <button
-                    className="text-lg m-4 w-32 h-16 bg-blue-200 hover:bg-blue-400"
-                    onClick={this.submitResponses.bind(this)}
-                >
-                    SUBMIT
-                </button>
             </div>
         );
     }
