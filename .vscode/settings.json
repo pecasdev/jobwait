@@ -8,6 +8,21 @@
   "java.debug.settings.hotCodeReplace": "auto",
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "mtxr.sqltools"
+  },
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "jobwait",
+      "password": "password",
+      "username": "postgres",
+      "database": "mydatabase"
+    }
+  ]
   
 }
