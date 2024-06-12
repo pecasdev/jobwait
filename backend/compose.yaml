@@ -23,6 +23,8 @@ services:
       database:
         condition: service_healthy
     build: .
+    environment:
+      - "PGPASSWORD=password"
     ports:
       - "9000:9000"
     networks:
