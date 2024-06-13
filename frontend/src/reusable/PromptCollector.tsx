@@ -1,26 +1,20 @@
 import * as React from "react";
 import Prompt from "./Prompt";
 import { PromptDefinition, PromptResponse } from "./PromptTypes";
+import { Button, Listbox } from "@headlessui/react";
+import ListBoxPrompt from "./inputs/ListBoxPrompt";
 
 type PromptCollectorProps = { promptDefinitions: PromptDefinition[] };
-type PromptCollectorState = { promptResponses: Map<string, PromptResponse> };
 
-export default class PromptCollector extends React.Component<
-    PromptCollectorProps,
-    PromptCollectorState
-> {
+export default class PromptCollector extends React.Component {
+    promptResponses: Map<string, PromptResponse> = new Map();
     constructor(public props: PromptCollectorProps) {
         super(props);
-
-        this.state = {
-            promptResponses: new Map(),
-        };
     }
 
     private updateImageBlur() {
         const blurQuantity =
-            this.props.promptDefinitions.length -
-            this.state.promptResponses.size;
+            this.props.promptDefinitions.length - this.promptResponses.size;
 
         const blurScaling = 5;
 
@@ -34,16 +28,13 @@ export default class PromptCollector extends React.Component<
 
     private initSendUpdate(idKey: string) {
         return (response: PromptResponse) => {
-            this.state.promptResponses.set(idKey, response);
+            this.promptResponses.set(idKey, response);
             this.updateImageBlur();
         };
     }
 
     private submitResponses() {
-        console.log(
-            "sending this stuff to the backend:",
-            this.state.promptResponses,
-        );
+        console.log("sending this stuff to the backend:", this.promptResponses);
         // todo - actually do it
     }
 
@@ -70,12 +61,28 @@ export default class PromptCollector extends React.Component<
                                 />
                             ),
                         )}
-                        <button
-                            className="text-lg m-4 w-32 h-16 bg-blue-200 hover:bg-blue-400"
+                        <Button
                             onClick={this.submitResponses.bind(this)}
+                            className="gap-2 rounded-md bg-gray-700 py-1.5 
+                            px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 
+                            focus:outline-none 
+                            data-[hover]:bg-gray-600 
+                            data-[open]:bg-gray-700 
+                            data-[focus]:outline-1 
+                            data-[focus]:outline-white"
                         >
-                            SUBMIT
-                        </button>
+                            Submit
+                        </Button>
+                        {/* <ListBoxPrompt
+                            idKey="123"
+                            choices={
+                                this.props.promptDefinitions[0].choices ?? [
+                                    "t",
+                                    "d",
+                                    "a",
+                                ]
+                            }
+                        ></ListBoxPrompt> */}
                     </tbody>
                     <img id="gatitoImage" src="gatito.jpg" />
                 </div>

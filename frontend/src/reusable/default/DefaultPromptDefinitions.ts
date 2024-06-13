@@ -19,12 +19,14 @@ export const defaultPromptDefinitions: PromptDefinition[] = [
     {
         displayText: "What choice best describes your work model?",
         idKey: "work_model",
-        inputType: "slider",
+        inputType: "listbox",
+        choices: ["on-site", "hybrid", "remote"],
     },
     {
         displayText: "What choice best describes your work contract?",
         idKey: "work_contract",
-        inputType: "radio",
+        inputType: "listbox",
+        choices: ["full-time", "part-time", "contract", "internship", "other"],
     },
     {
         displayText:
