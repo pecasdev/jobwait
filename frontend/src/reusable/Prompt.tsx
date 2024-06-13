@@ -6,9 +6,11 @@ import {
     SendUpdateToCollector,
     SimplePromptDefinition,
 } from "./PromptTypes";
-import { PromptMapping } from "./inputs/PromptInputMapping";
-import TextPrompt from "./inputs/TextPrompt";
+// import { PromptMapping } from "./inputs/PromptInputMapping";
+// import TextPrompt from "./inputs/TextPrompt";
 import { LoadingIcon } from "./LoadingIcon";
+import ListBoxPrompt from "./inputs/ListBoxPrompt";
+import { PromptInputChooser } from "./inputs/PromptInputChooser";
 
 type PromptState = {
     showIcon: boolean;
@@ -37,9 +39,7 @@ export default class Prompt extends React.Component<
             this.setState({ showLoading: false });
         }, 2000);
 
-        this.promptType = PromptMapping.get(this.props.inputType) ?? TextPrompt;
-        this.doStuff = this.doStuff.bind(this);
-        this.setSelected = this.setSelected.bind(this);
+        //this.promptType = PromptMapping.get(this.props.inputType) ?? TextPrompt;
     }
 
     changeResponse(text: string) {
@@ -61,19 +61,14 @@ export default class Prompt extends React.Component<
     }
 
     render() {
+        const garbo = PromptInputChooser(this.props.inputType);
         return (
             <div className="w-full max-w-md px-4">
                 <Field>
                     <Label className="text-sm/6 font-medium text-black">
                         {this.props.displayText}
                     </Label>
-                    {this.promptType({
-                        doSomething: this.doStuff,
-                        idKey: this.props.idKey,
-                        choices: this.props.choices,
-                        state: this.state,
-                        stateManager: this.setSelected,
-                    })}
+                    {garbo(this.props)}
                     <LoadingIcon
                         key={this.state.showIcon}
                         showIcon={this.state.showIcon}
