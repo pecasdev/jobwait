@@ -20,7 +20,7 @@ export default function ListBoxPrompt(props: SimplePromptDefinition) {
             value={currentSelected}
         >
             <ListboxButton
-                className={`relative block w-full rounded-lg bg-black/5 py-1.5 pr-8 pl-3 text-left text-sm/6 text-black
+                className={`min-h-10 relative block w-full rounded-lg bg-black/5 py-1.5 pr-8 pl-3 text-left text-sm/6 text-black
                     focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-black/25`}
             >
                 {currentSelected}
