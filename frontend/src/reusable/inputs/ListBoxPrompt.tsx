@@ -8,19 +8,22 @@ import {
     Transition,
 } from "@headlessui/react";
 import { ChevronDownIcon, CheckIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
 
 export default function ListBoxPrompt(props: SimplePromptDefinition) {
-    const initialValue = props.choices ? props.choices[0] : "";
-    const [selected, setSelected] = useState(initialValue);
-
+    let currentSelected = props.state.selected;
     return (
-        <Listbox value={selected} onChange={setSelected}>
+        <Listbox
+            onChange={(e) => {
+                props.stateManager(e);
+                if (props.doSomething) props.doSomething(e);
+            }}
+            value={currentSelected}
+        >
             <ListboxButton
                 className={`relative block w-full rounded-lg bg-black/5 py-1.5 pr-8 pl-3 text-left text-sm/6 text-black
                     focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-black/25`}
             >
-                {selected}
+                {currentSelected}
                 <ChevronDownIcon
                     className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-black/60"
                     aria-hidden="true"
@@ -33,7 +36,7 @@ export default function ListBoxPrompt(props: SimplePromptDefinition) {
             >
                 <ListboxOptions
                     anchor="bottom"
-                    className="w-[var(--button-width)] rounded-xl border border-black/5 bg-black/5 p-1 [--anchor-gap:var(--spacing-1)] focus:outline-none"
+                    className="w-[var(--button-width)] rounded-xl border border-black/5 bg-gray-100 p-1 [--anchor-gap:var(--spacing-1)] focus:outline-none"
                 >
                     {props.choices?.map((choice) => (
                         <ListboxOption
