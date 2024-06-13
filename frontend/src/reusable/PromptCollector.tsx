@@ -1,26 +1,33 @@
 import * as React from "react";
 import Prompt from "./Prompt";
 import { PromptDefinition, PromptResponse } from "./PromptTypes";
-import { Button, Listbox } from "@headlessui/react";
-import ListBoxPrompt from "./inputs/ListBoxPrompt";
+import { Button } from "@headlessui/react";
 
 type PromptCollectorProps = { promptDefinitions: PromptDefinition[] };
+type PromptCollectorState = { promptResponses: Map<string, PromptResponse> };
 
-export default class PromptCollector extends React.Component {
-    promptResponses: Map<string, PromptResponse> = new Map();
+export default class PromptCollector extends React.Component<
+    PromptCollectorProps,
+    PromptCollectorState
+> {
     constructor(public props: PromptCollectorProps) {
         super(props);
+
+        this.state = {
+            promptResponses: new Map(),
+        };
     }
 
     private updateImageBlur() {
         const blurQuantity =
-            this.props.promptDefinitions.length - this.promptResponses.size;
+            this.props.promptDefinitions.length -
+            this.state.promptResponses.size;
 
         const blurScaling = 5;
 
         const image = document.getElementById("gatitoImage");
         if (!image) {
-            console.error("CANNOT FIND GATITO!!! :(((");
+            console.error("CANNOT FIND GATITO!!! :((");
         } else {
             image.style.filter = `blur(${blurQuantity * blurScaling}px)`;
         }
@@ -28,13 +35,21 @@ export default class PromptCollector extends React.Component {
 
     private initSendUpdate(idKey: string) {
         return (response: PromptResponse) => {
-            this.promptResponses.set(idKey, response);
+            this.setState({
+                promptResponses: this.state.promptResponses.set(
+                    idKey,
+                    response,
+                ),
+            });
             this.updateImageBlur();
         };
     }
 
     private submitResponses() {
-        console.log("sending this stuff to the backend:", this.promptResponses);
+        console.log(
+            "sending this stuff to the backend:",
+            this.state.promptResponses,
+        );
         // todo - actually do it
     }
 
@@ -55,6 +70,7 @@ export default class PromptCollector extends React.Component {
                                     displayText={promptDef.displayText}
                                     idKey={promptDef.idKey}
                                     inputType={promptDef.inputType}
+                                    choices={promptDef.choices}
                                     sendUpdateToCollector={this.initSendUpdate(
                                         promptDef.idKey,
                                     )}
@@ -73,16 +89,6 @@ export default class PromptCollector extends React.Component {
                         >
                             Submit
                         </Button>
-                        {/* <ListBoxPrompt
-                            idKey="123"
-                            choices={
-                                this.props.promptDefinitions[0].choices ?? [
-                                    "t",
-                                    "d",
-                                    "a",
-                                ]
-                            }
-                        ></ListBoxPrompt> */}
                     </tbody>
                     <img id="gatitoImage" src="gatito.jpg" />
                 </div>
