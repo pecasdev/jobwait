@@ -10,21 +10,36 @@ import { PromptMapping } from "./inputs/PromptInputMapping";
 import TextPrompt from "./inputs/TextPrompt";
 import { LoadingIcon } from "./LoadingIcon";
 
-export default class Prompt extends React.Component {
+type PromptState = {
+    showIcon: boolean;
+    showLoading: boolean;
+    selected: string;
+};
+
+export default class Prompt extends React.Component<
+    PromptDefinition & SendUpdateToCollector,
+    PromptState
+> {
     debounced: (...args: any[]) => void;
     promptType: (props: SimplePromptDefinition) => React.ReactNode;
-    showIcon: boolean = false;
-    showLoading: boolean = false;
 
     constructor(public props: PromptDefinition & SendUpdateToCollector) {
         super(props);
 
+        this.state = {
+            showIcon: false,
+            showLoading: false,
+            selected: this.props.choices ? this.props.choices[0] : "",
+        };
+
         this.debounced = debounceFunction((response: string) => {
             this.changeResponse(response);
-            this.showLoading = false;
+            this.setState({ showLoading: false });
         }, 2000);
 
         this.promptType = PromptMapping.get(this.props.inputType) ?? TextPrompt;
+        this.doStuff = this.doStuff.bind(this);
+        this.setSelected = this.setSelected.bind(this);
     }
 
     changeResponse(text: string) {
@@ -33,10 +48,16 @@ export default class Prompt extends React.Component {
         console.log(`response for "${this.props.idKey}" changed to "${text}"`);
     }
 
-    doStuff(event: React.ChangeEvent<HTMLInputElement>) {
-        this.showIcon = true;
-        this.showLoading = true;
-        this.debounced(event.target.value);
+    doStuff(response: string) {
+        this.setState({
+            showIcon: true,
+            showLoading: true,
+        });
+        this.debounced(response);
+    }
+
+    setSelected(newlySelected: string) {
+        this.setState({ selected: newlySelected });
     }
 
     render() {
@@ -50,11 +71,13 @@ export default class Prompt extends React.Component {
                         doSomething: this.doStuff,
                         idKey: this.props.idKey,
                         choices: this.props.choices,
+                        state: this.state,
+                        stateManager: this.setSelected,
                     })}
                     <LoadingIcon
-                        key={this.showIcon}
-                        showIcon={this.showIcon}
-                        showLoading={this.showLoading}
+                        key={this.state.showIcon}
+                        showIcon={this.state.showIcon}
+                        showLoading={this.state.showLoading}
                     />
                 </Field>
             </div>
