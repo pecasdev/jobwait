@@ -1,10 +1,10 @@
-import { PromptDefinition, SendUpdateToCollector } from "../PromptTypes";
+import { SimplePromptDefinition } from "../PromptTypes";
 import ListBoxPrompt from "./ListBoxPrompt";
 import TextPrompt from "./TextPrompt";
 
 export const PromptMapping: Map<
     string,
-    (props: PromptDefinition & SendUpdateToCollector) => React.ReactNode
+    (props: SimplePromptDefinition) => React.ReactNode
 > = new Map([
     ["text", TextPrompt],
     ["listbox", ListBoxPrompt],

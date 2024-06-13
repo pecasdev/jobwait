@@ -15,7 +15,7 @@ export default function ListBoxPrompt(props: SimplePromptDefinition) {
         <Listbox
             onChange={(e) => {
                 props.stateManager(e);
-                if (props.doSomething) props.doSomething(e);
+                props.doSomething(e);
             }}
             value={currentSelected}
         >

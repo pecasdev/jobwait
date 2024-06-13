@@ -11,7 +11,7 @@ export type PromptDefinition = {
 
 export type SimplePromptDefinition = {
     idKey: string;
-    doSomething?: (response: string) => void;
+    doSomething: (response: string) => void;
     choices?: string[];
     state?: any;
     stateManager?: any;
