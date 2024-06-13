@@ -1,7 +1,7 @@
 CREATE TABLE questions(
     id SERIAL PRIMARY KEY,
-    text TEXT,
     key TEXT,
+    text TEXT,
     answertable TEXT -- refers to a table starting with 'answer_'
 );
 CREATE TABLE users(
