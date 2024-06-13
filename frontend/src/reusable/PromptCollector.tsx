@@ -90,7 +90,11 @@ export default class PromptCollector extends React.Component<
                             Submit
                         </Button>
                     </tbody>
-                    <img id="gatitoImage" src="gatito.jpg" />
+                    <img
+                        className="object-contain"
+                        id="gatitoImage"
+                        src="gatito.jpg"
+                    />
                 </div>
             </div>
         );

@@ -29,7 +29,7 @@ export default class Prompt extends React.Component<
         this.state = {
             showIcon: false,
             showLoading: false,
-            selected: this.props.choices ? this.props.choices[0] : "",
+            selected: "",
         };
 
         this.debounced = debounceFunction((response: string) => {
