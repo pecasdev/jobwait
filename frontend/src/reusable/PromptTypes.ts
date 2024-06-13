@@ -11,6 +11,8 @@ export type PromptDefinition = {
 
 export type SimplePromptDefinition = {
     idKey: string;
-    doSomething?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    doSomething?: (response: string) => void;
     choices?: string[];
+    state?: any;
+    stateManager?: any;
 };
