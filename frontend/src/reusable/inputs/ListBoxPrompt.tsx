@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SimplePromptDefinition } from "../PromptTypes";
+import { PromptTypeProps } from "../PromptTypes";
 import {
     Listbox,
     ListboxButton,
@@ -8,14 +8,15 @@ import {
     Transition,
 } from "@headlessui/react";
 import { ChevronDownIcon, CheckIcon } from "@heroicons/react/20/solid";
+import { clsx } from "clsx";
 
-export default function ListBoxPrompt(props: SimplePromptDefinition) {
+export default function ListBoxPrompt(props: PromptTypeProps) {
     let currentSelected = props.state.selected;
     return (
         <Listbox
-            onChange={(e) => {
+            onChange={(e: string) => {
+                props.validateAndUpdate(e);
                 props.stateManager(e);
-                props.doSomething(e);
             }}
             value={currentSelected}
         >
@@ -42,10 +43,25 @@ export default function ListBoxPrompt(props: SimplePromptDefinition) {
                         <ListboxOption
                             key={choice}
                             value={choice}
-                            className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-black/10"
+                            as={React.Fragment}
                         >
-                            <CheckIcon className="invisible size-4 fill-black group-data-[selected]:visible" />
-                            <div className="text-sm/6 text-black">{choice}</div>
+                            {({ focus, selected }) => (
+                                <div
+                                    className={clsx(
+                                        "group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-black/10",
+                                        "group flex text-sm/6 text-black",
+                                        focus,
+                                    )}
+                                >
+                                    <CheckIcon
+                                        className={clsx(
+                                            "size-4 fill-black",
+                                            !selected && "invisible",
+                                        )}
+                                    />
+                                    {choice}
+                                </div>
+                            )}
                         </ListboxOption>
                     ))}
                 </ListboxOptions>

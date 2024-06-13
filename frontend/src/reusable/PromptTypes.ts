@@ -9,9 +9,8 @@ export type PromptDefinition = {
     choices?: string[];
 };
 
-export type SimplePromptDefinition = {
-    idKey: string;
-    doSomething: (response: string) => void;
+export type PromptTypeProps = {
+    validateAndUpdate: (response: string) => void;
     choices?: string[];
     state?: any;
     stateManager?: any;

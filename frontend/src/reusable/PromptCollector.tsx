@@ -2,6 +2,7 @@ import * as React from "react";
 import Prompt from "./Prompt";
 import { PromptDefinition, PromptResponse } from "./PromptTypes";
 import { Button } from "@headlessui/react";
+import { createContext } from "react";
 
 type PromptCollectorProps = { promptDefinitions: PromptDefinition[] };
 type PromptCollectorState = { promptResponses: Map<string, PromptResponse> };

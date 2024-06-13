@@ -1,18 +1,14 @@
 import * as React from "react";
-import debounceFunction from "../util/debounceFunction";
 import { Field, Label } from "@headlessui/react";
 import {
     PromptDefinition,
+    PromptTypeProps,
     SendUpdateToCollector,
-    SimplePromptDefinition,
 } from "./PromptTypes";
 import { PromptMapping } from "./inputs/PromptInputMapping";
 import TextPrompt from "./inputs/TextPrompt";
-import { LoadingIcon } from "./LoadingIcon";
 
 type PromptState = {
-    showIcon: boolean;
-    showLoading: boolean;
     selected: string;
 };
 
@@ -20,25 +16,17 @@ export default class Prompt extends React.Component<
     PromptDefinition & SendUpdateToCollector,
     PromptState
 > {
-    debounced: (...args: any[]) => void;
-    promptType: (props: SimplePromptDefinition) => React.ReactNode;
+    promptType: (props: PromptTypeProps) => React.ReactNode;
 
     constructor(public props: PromptDefinition & SendUpdateToCollector) {
         super(props);
 
         this.state = {
-            showIcon: false,
-            showLoading: false,
             selected: "",
         };
 
-        this.debounced = debounceFunction((response: string) => {
-            this.changeResponse(response);
-            this.setState({ showLoading: false });
-        }, 2000);
-
         this.promptType = PromptMapping.get(this.props.inputType) ?? TextPrompt;
-        this.doStuff = this.doStuff.bind(this);
+        this.validateAndUpdate = this.validateAndUpdate.bind(this);
         this.setSelected = this.setSelected.bind(this);
     }
 
@@ -48,12 +36,9 @@ export default class Prompt extends React.Component<
         console.log(`response for "${this.props.idKey}" changed to "${text}"`);
     }
 
-    doStuff(response: string) {
-        this.setState({
-            showIcon: true,
-            showLoading: true,
-        });
-        this.debounced(response);
+    validateAndUpdate(response: string) {
+        //do some validation here
+        this.changeResponse(response);
     }
 
     setSelected(newlySelected: string) {
@@ -68,17 +53,11 @@ export default class Prompt extends React.Component<
                         {this.props.displayText}
                     </Label>
                     {this.promptType({
-                        doSomething: this.doStuff,
-                        idKey: this.props.idKey,
+                        validateAndUpdate: this.validateAndUpdate,
                         choices: this.props.choices,
                         state: this.state,
                         stateManager: this.setSelected,
                     })}
-                    <LoadingIcon
-                        key={this.state.showIcon}
-                        showIcon={this.state.showIcon}
-                        showLoading={this.state.showLoading}
-                    />
                 </Field>
             </div>
         );
