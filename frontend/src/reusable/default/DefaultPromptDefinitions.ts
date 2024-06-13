@@ -9,12 +9,12 @@ export const defaultPromptDefinitions: PromptDefinition[] = [
     {
         displayText: "When did you accept your position?",
         idKey: "date_of_acceptance",
-        inputType: "slider",
+        inputType: "datetime",
     },
     {
         displayText: "When did you start applying for jobs?",
         idKey: "date_of_app_start",
-        inputType: "slider",
+        inputType: "datetime",
     },
     {
         displayText: "What choice best describes your work model?",

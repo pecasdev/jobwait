@@ -9,7 +9,9 @@ export default function TextPrompt(props: SimplePromptDefinition) {
             focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-black/25`}
             id={props.idKey}
             name="displayText"
-            onChange={props.doSomething}
+            onChange={(e) => {
+                if (props.doSomething) props.doSomething(e.target.value);
+            }}
         />
     );
 }
