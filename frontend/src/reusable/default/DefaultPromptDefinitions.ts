@@ -4,7 +4,8 @@ export const defaultPromptDefinitions: PromptDefinition[] = [
     {
         displayText: "Are you currently employed?",
         idKey: "employment_status",
-        inputType: "text",
+        inputType: "listbox",
+        choices: ["Yes", "No"],
     },
     {
         displayText: "When did you accept your position?",

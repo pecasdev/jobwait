@@ -47,19 +47,19 @@ export default class Prompt extends React.Component<
 
     render() {
         return (
-            <div className="w-full max-w-md px-4">
-                <Field>
-                    <Label className="text-sm/6 font-medium text-black">
-                        {this.props.displayText}
-                    </Label>
+            <Field className="grid grid-cols-2 gap-x-4">
+                <Label className="w-auto h-auto inline whitespace-normal text-lg/6 font-semibold text-black">
+                    {this.props.displayText}
+                </Label>
+                <div>
                     {this.promptType({
                         validateAndUpdate: this.validateAndUpdate,
                         choices: this.props.choices,
                         state: this.state,
                         stateManager: this.setSelected,
                     })}
-                </Field>
-            </div>
+                </div>
+            </Field>
         );
     }
 }

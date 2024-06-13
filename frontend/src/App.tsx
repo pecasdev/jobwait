@@ -1,6 +1,5 @@
 import * as React from "react";
 import "./App.css";
-import GraphExample from "./GraphExample";
 import PromptCollector from "./reusable/PromptCollector";
 import { Chart, registerables } from "chart.js";
 import { defaultPromptDefinitions } from "./reusable/default/DefaultPromptDefinitions";
@@ -14,7 +13,6 @@ export default function App() {
             <PromptCollector
                 promptDefinitions={defaultPromptDefinitions}
             ></PromptCollector>
-            <GraphExample></GraphExample>
         </div>
     );
 }
