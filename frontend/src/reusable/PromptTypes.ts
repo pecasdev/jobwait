@@ -5,5 +5,14 @@ export type PromptResponse = string | number | "skipped";
 export type PromptDefinition = {
     displayText: string;
     idKey: string;
-    inputType: "text" | "slider" | "whatever" | "radio";
+    inputType: string;
+    choices?: string[];
+};
+
+export type SimplePromptDefinition = {
+    idKey: string;
+    doSomething: (response: string) => void;
+    choices?: string[];
+    state?: any;
+    stateManager?: any;
 };

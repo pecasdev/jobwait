@@ -1,6 +1,7 @@
 import * as React from "react";
 import Prompt from "./Prompt";
 import { PromptDefinition, PromptResponse } from "./PromptTypes";
+import { Button } from "@headlessui/react";
 
 type PromptCollectorProps = { promptDefinitions: PromptDefinition[] };
 type PromptCollectorState = { promptResponses: Map<string, PromptResponse> };
@@ -26,7 +27,7 @@ export default class PromptCollector extends React.Component<
 
         const image = document.getElementById("gatitoImage");
         if (!image) {
-            console.error("CANNOT FIND GATITO!!! :(((");
+            console.error("CANNOT FIND GATITO!!! :((");
         } else {
             image.style.filter = `blur(${blurQuantity * blurScaling}px)`;
         }
@@ -34,7 +35,12 @@ export default class PromptCollector extends React.Component<
 
     private initSendUpdate(idKey: string) {
         return (response: PromptResponse) => {
-            this.state.promptResponses.set(idKey, response);
+            this.setState({
+                promptResponses: this.state.promptResponses.set(
+                    idKey,
+                    response,
+                ),
+            });
             this.updateImageBlur();
         };
     }
@@ -64,21 +70,32 @@ export default class PromptCollector extends React.Component<
                                     displayText={promptDef.displayText}
                                     idKey={promptDef.idKey}
                                     inputType={promptDef.inputType}
+                                    choices={promptDef.choices}
                                     sendUpdateToCollector={this.initSendUpdate(
                                         promptDef.idKey,
                                     )}
                                 />
                             ),
                         )}
+                        <Button
+                            onClick={this.submitResponses.bind(this)}
+                            className="gap-2 rounded-md bg-gray-700 py-1.5 
+                            px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 
+                            focus:outline-none 
+                            data-[hover]:bg-gray-600 
+                            data-[open]:bg-gray-700 
+                            data-[focus]:outline-1 
+                            data-[focus]:outline-white"
+                        >
+                            Submit
+                        </Button>
                     </tbody>
-                    <img id="gatitoImage" src="gatito.jpg" />
+                    <img
+                        className="object-contain"
+                        id="gatitoImage"
+                        src="gatito.jpg"
+                    />
                 </div>
-                <button
-                    className="text-lg m-4 w-32 h-16 bg-blue-200 hover:bg-blue-400"
-                    onClick={this.submitResponses.bind(this)}
-                >
-                    SUBMIT
-                </button>
             </div>
         );
     }
