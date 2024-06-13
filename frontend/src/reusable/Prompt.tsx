@@ -1,66 +1,62 @@
 import * as React from "react";
 import debounceFunction from "../util/debounceFunction";
+import { Field, Label } from "@headlessui/react";
+import {
+    PromptDefinition,
+    SendUpdateToCollector,
+    SimplePromptDefinition,
+} from "./PromptTypes";
+import { PromptMapping } from "./inputs/PromptInputMapping";
+import TextPrompt from "./inputs/TextPrompt";
 import { LoadingIcon } from "./LoadingIcon";
-import { PromptDefinition, SendUpdateToCollector } from "./PromptTypes";
 
-type PromptState = { showIcon: boolean; showLoading: boolean };
-
-export default class Prompt extends React.Component<
-    PromptDefinition & SendUpdateToCollector,
-    PromptState
-> {
+export default class Prompt extends React.Component {
     debounced: (...args: any[]) => void;
+    promptType: (props: SimplePromptDefinition) => React.ReactNode;
+    showIcon: boolean = false;
+    showLoading: boolean = false;
 
     constructor(public props: PromptDefinition & SendUpdateToCollector) {
         super(props);
 
-        this.state = {
-            showIcon: false,
-            showLoading: false,
-        };
-
         this.debounced = debounceFunction((response: string) => {
             this.changeResponse(response);
-            this.setState({ showLoading: false });
+            this.showLoading = false;
         }, 2000);
+
+        this.promptType = PromptMapping.get(this.props.inputType) ?? TextPrompt;
     }
 
     changeResponse(text: string) {
         // put some "send to backend" code here
-        this.props.sendUpdateToCollector(text)
-        console.log(
-            `response for "${this.props.idKey}" changed to "${text}"`,
-        );
+        this.props.sendUpdateToCollector(text);
+        console.log(`response for "${this.props.idKey}" changed to "${text}"`);
     }
 
     doStuff(event: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({
-            showIcon: true,
-            showLoading: true,
-        });
+        this.showIcon = true;
+        this.showLoading = true;
         this.debounced(event.target.value);
     }
 
     render() {
         return (
-            <div>
-                <label className="flex flex-col">
-                    {this.props.displayText}
-
-                    <div className="flex flex-row">
-                        <input
-                            className="border border-black border-4"
-                            id={this.props.idKey}
-                            name="displayText"
-                            onChange={this.doStuff.bind(this)}
-                        />
-                        <LoadingIcon
-                            key={this.state.showIcon}
-                            showIcon={this.state.showIcon}
-                            showLoading={this.state.showLoading}
-                        />
-                    </div>
-                </label>
+            <div className="w-full max-w-md px-4">
+                <Field>
+                    <Label className="text-sm/6 font-medium text-black">
+                        {this.props.displayText}
+                    </Label>
+                    {this.promptType({
+                        doSomething: this.doStuff,
+                        idKey: this.props.idKey,
+                        choices: this.props.choices,
+                    })}
+                    <LoadingIcon
+                        key={this.showIcon}
+                        showIcon={this.showIcon}
+                        showLoading={this.showLoading}
+                    />
+                </Field>
             </div>
         );
     }
