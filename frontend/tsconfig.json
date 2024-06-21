@@ -2,8 +2,10 @@
     "compilerOptions": {
         "outDir": "./dist",
         "module": "es2015",
-        "target": "es5",
-        "lib": ["es6", "dom"],
+        "target": "ESNext",
+        "lib": ["es6", "dom", "esnext"],
+        "types": ["vite/client"],
+        "isolatedModules": true,
         "sourceMap": true,
         "allowJs": false,
         "jsx": "react",

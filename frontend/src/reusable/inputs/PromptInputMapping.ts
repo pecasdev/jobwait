@@ -1,4 +1,4 @@
-import { PromptDefinition, PromptTypeProps } from "../PromptTypes";
+import { PromptTypeProps } from "../PromptTypes";
 import ListBoxPrompt from "./ListBoxPrompt";
 import TextPrompt from "./TextPrompt";
 
