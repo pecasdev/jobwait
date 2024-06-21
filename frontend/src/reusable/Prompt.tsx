@@ -38,7 +38,9 @@ export default class Prompt extends React.Component<
 
     validateAndUpdate(response: string) {
         //do some validation here
-        this.changeResponse(response);
+        if (response.trim()) {
+            this.changeResponse(response);
+        }
     }
 
     setSelected(newlySelected: string) {
