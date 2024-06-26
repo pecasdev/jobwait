@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type SendUpdateToCollector = {
     sendUpdateToCollector: (_: PromptResponse) => void;
 };
@@ -5,13 +7,16 @@ export type PromptResponse = string | number | "skipped";
 export type PromptDefinition = {
     displayText: string;
     idKey: string;
-    inputType: string;
+    inputType: (props: any) => ReactNode;
     choices?: string[];
+    max?: number;
 };
 
 export type PromptTypeProps = {
+    idKey: string;
+    labelText: string;
     validateAndUpdate: (response: string) => void;
     choices?: string[];
-    state?: any;
-    stateManager?: any;
+    form: any;
+    max: number;
 };
