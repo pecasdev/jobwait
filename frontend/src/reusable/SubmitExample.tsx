@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../documents/UserDocument";
-import * as React from "react";
 
 export default function SubmitExample() {
     let input: HTMLInputElement;

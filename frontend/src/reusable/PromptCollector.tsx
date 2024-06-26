@@ -60,9 +60,8 @@ export default class PromptCollector extends React.Component<
     render(): React.ReactNode {
         return (
             <div className="border border-black">
-                <p className="text-2xl">super cool form you should fill out</p>
-                <div className="flex flex-row gap-x-40">
-                    <tbody className="space-y-6">
+                <div className="grid grid-cols-2 gap-x-52">
+                    <div className="grid grid-rows-10 gap-y-5 content-start">
                         {this.props.promptDefinitions.map(
                             (promptDef, index) => (
                                 <Prompt
@@ -77,24 +76,28 @@ export default class PromptCollector extends React.Component<
                                 />
                             ),
                         )}
-                        <Button
-                            onClick={this.submitResponses.bind(this)}
-                            className="gap-2 rounded-md bg-gray-700 py-1.5 
+                        <div className="flex place-content-center">
+                            <Button
+                                onClick={this.submitResponses.bind(this)}
+                                className="w-20 h-10 gap-2 rounded-md bg-gray-700 py-1.5 
                             px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 
                             focus:outline-none 
                             data-[hover]:bg-gray-600 
                             data-[open]:bg-gray-700 
                             data-[focus]:outline-1 
                             data-[focus]:outline-white"
-                        >
-                            Submit
-                        </Button>
-                    </tbody>
-                    <img
-                        className="object-contain"
-                        id="gatitoImage"
-                        src="gatito.jpg"
-                    />
+                            >
+                                Submit
+                            </Button>
+                        </div>
+                    </div>
+                    <div className="flex place-content-center">
+                        <img
+                            className="obtain-content"
+                            id="gatitoImage"
+                            src="gatito.jpg"
+                        />
+                    </div>
                 </div>
             </div>
         );
