@@ -4,6 +4,7 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { createRoot } from "react-dom/client";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { MantineProvider } from "@mantine/core";
 
 const client = new ApolloClient({
     uri: "http://localhost:9000/graphql",
@@ -17,7 +18,12 @@ if (rootElement) {
     root.render(
         <React.StrictMode>
             <ApolloProvider client={client}>
-                <App />
+                <MantineProvider
+                    defaultColorScheme="light"
+                    forceColorScheme="light"
+                >
+                    <App />
+                </MantineProvider>
             </ApolloProvider>
         </React.StrictMode>,
     );

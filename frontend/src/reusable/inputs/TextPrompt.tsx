@@ -1,16 +1,18 @@
-import * as React from "react";
 import { PromptTypeProps } from "../PromptTypes";
-import { Input } from "@headlessui/react";
+import { TextInput } from "@mantine/core";
 
 export default function TextPrompt(props: PromptTypeProps) {
     return (
-        <Input
-            className={`mt-3 block w-full rounded-lg border-none bg-black/5 py-1.5 px-3 text-sm/6 text-black
-            focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-black/25`}
+        <TextInput
+            label={props.labelText}
             name="displayText"
-            onBlur={(e: React.FocusEvent<HTMLInputElement, Element>) =>
-                props.validateAndUpdate(e.target.value)
-            }
+            onBlur={(val) => {
+                if (val.target.value.trim())
+                    props.form.setFieldValue(
+                        `prompts.${props.idKey}.data`,
+                        val.target.value.trim(),
+                    );
+            }}
         />
     );
 }
