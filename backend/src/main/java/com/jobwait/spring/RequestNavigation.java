@@ -1,30 +1,28 @@
-package com.jobwait;
+package com.jobwait.spring;
 
 import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicLong;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jobwait.db.DbConfiguration;
+import com.jobwait.control.RequestController;
 import com.jobwait.db.PostgreSQLExample;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.jobwait.domain.Answers;
+import com.jobwait.domain.User;
+import com.jobwait.security.AuthToken;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
-public class GreetingController {
-	private static final String template = "Hello, %s!";
-	private final AtomicLong counter = new AtomicLong();
-
+public class RequestNavigation {
 	// #2
 	// Use created env configuration class to pull env vars from application.yml
-	@Autowired
-	private DbConfiguration dbconfig;
+	// @Autowired
+	// private DbConfiguration dbconfig;
 
 	// #1
 	// PULL VALUES STRAIGHT FROM application.yml or Spring env
@@ -63,8 +61,26 @@ public class GreetingController {
 		}
 	}
 
-	@GetMapping("/greeting")
-	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return new Greeting(counter.incrementAndGet(), String.format(template, name));
+	private static RequestController requestController = new RequestController();
+
+	@GetMapping("/user")
+	public static String getUserFromAuthToken(@RequestParam("at") String authToken) {
+		AuthToken token = AuthToken.fromClientId(authToken);
+		User user = requestController.getUserFromAuthToken(token);
+		return user.id().toString();
+	}
+
+	@PostMapping("/user/create")
+	public static String createUserFromAuthToken(@RequestParam("at") String authToken) {
+		AuthToken token = AuthToken.fromClientId(authToken);
+		User user = requestController.createUserFromAuthToken(token);
+		return user.id().toString();
+	}
+
+	@PostMapping("/answer/submit")
+	public static String submitUserAnswers(@RequestParam("at") String authToken, @RequestBody Answers answers) {
+		AuthToken token = AuthToken.fromClientId(authToken);
+		User user = requestController.submitUserAnswers(token, answers);
+		return user.id().toString();
 	}
 }
