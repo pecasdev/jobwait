@@ -2,13 +2,16 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-RestServiceApplication<jobwait>",
+            "name": "Spring Boot-Main<jobwait>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "mainClass": "com.jobwait.RestServiceApplication",
+            "mainClass": "com.jobwait.spring.Main",
             "projectName": "jobwait",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "PGPASSWORD": "password"
+            }
         }
     ]
 }

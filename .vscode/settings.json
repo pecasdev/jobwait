@@ -23,6 +23,9 @@
       "username": "postgres",
       "database": "mydatabase"
     }
-  ]
+  ],
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java"
+  }
   
 }
