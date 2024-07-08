@@ -6,7 +6,7 @@ CREATE TABLE questions(
 );
 CREATE TABLE users(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    authhash TEXT -- for hashing API id returned by linkedin/google/whatever
+    authhash TEXT UNIQUE -- for hashing API id returned by linkedin/google/whatever
 );
 CREATE TABLE answer_jobacceptdate(
     userid UUID REFERENCES users(id) UNIQUE,
@@ -16,18 +16,20 @@ CREATE TABLE answer_jobsearchstartdate(
     userid UUID REFERENCES users(id) UNIQUE,
     response TIMESTAMPTZ
 );
-CREATE TYPE validworkmodel AS ENUM('on-site', 'hybrid', 'remote');
+CREATE TYPE validworkmodel AS ENUM('ON_SITE', 'HYBRID', 'REMOTE');
+CREATE CAST (character varying AS validworkmodel) WITH INOUT AS ASSIGNMENT;
 CREATE TABLE answer_workmodel(
     userid UUID REFERENCES users(id) UNIQUE,
     response validworkmodel
 );
 CREATE TYPE validworkcontract AS ENUM(
-    'full-time',
-    'part-time',
-    'contract',
-    'internship',
-    'other'
+    'FULL_TIME',
+    'PART_TIME',
+    'CONTRACT',
+    'INTERNSHIP',
+    'OTHER'
 );
+CREATE CAST (character varying AS validworkcontract) WITH INOUT AS ASSIGNMENT;
 CREATE TABLE answer_workcontract(
     userid UUID REFERENCES users(id) UNIQUE,
     response validworkcontract
@@ -51,14 +53,15 @@ CREATE TABLE answer_yearsofproexperience(
     )
 );
 CREATE TYPE valideducationlevel AS ENUM(
-    'less than highschool',
-    'high school diploma',
-    'associate degree',
-    'bachelor degree',
-    'master degree',
-    'doctoral degree',
-    'other'
+    'LESS_THAN_HIGHSCHOOL',
+    'HIGHSCHOOL_DIPLOMA',
+    'ASSOCIATE_DEGREE',
+    'BACHELOR_DEGREE',
+    'MASTER_DEGREE',
+    'DOCTORAL_DEGREE',
+    'OTHER'
 );
+CREATE CAST (character varying AS valideducationlevel) WITH INOUT AS ASSIGNMENT;
 CREATE TABLE answer_educationlevel(
     userid UUID REFERENCES users(id) UNIQUE,
     response valideducationlevel
