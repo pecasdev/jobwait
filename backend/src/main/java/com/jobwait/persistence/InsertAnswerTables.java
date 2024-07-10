@@ -24,7 +24,8 @@ public class InsertAnswerTables {
     // frankly I don't think we'll ever need 2 columns for a user answer
     private PreparedStatement createStatementForTable(String tableName) throws SQLException {
         return connection.prepareStatement(
-                String.format("INSERT INTO %s VALUES (?, ?) ON CONFLICT(userid) DO UPDATE SET response = EXCLUDED.response",
+                String.format(
+                        "INSERT INTO %s VALUES (?, ?) ON CONFLICT(userid) DO UPDATE SET response = EXCLUDED.response",
                         tableName));
     }
 
@@ -45,7 +46,7 @@ public class InsertAnswerTables {
         if (response == null)
             return;
         PreparedStatement statement = createStatementAndSetFields(tableName, setResponse);
-        Util.assertSingleRowUpdated(statement.executeUpdate());
+        PersistenceUtil.assertSingleRowUpdated(statement.executeUpdate());
     }
 
     private class TimestampSetter implements ResponseSetter {
@@ -100,4 +101,3 @@ public class InsertAnswerTables {
         handleAnswerInsertion("answer_educationlevel", setResponse, response);
     }
 }
-
