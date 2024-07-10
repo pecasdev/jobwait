@@ -27,8 +27,8 @@ public class PostgresController extends PersistenceController {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE authhash = ?");
             statement.setString(1, authId);
             ResultSet resultSet = statement.executeQuery();
-            List<User> users = Util.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
-            return Util.assertSingleElement(users);
+            List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
+            return PersistenceUtil.assertSingleElement(users);
         } catch (ElementNotFoundException e) {
             throw new RuntimeException(String.format("Could not find user with authId: %s", authId));
         } catch (SQLException e) {
@@ -68,8 +68,8 @@ public class PostgresController extends PersistenceController {
                     .prepareStatement("INSERT INTO users(authhash) VALUES (?) RETURNING *");
             statement.setString(1, authId);
             ResultSet resultSet = statement.executeQuery();
-            List<User> users = Util.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
-            return Util.assertSingleElement(users);
+            List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
+            return PersistenceUtil.assertSingleElement(users);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

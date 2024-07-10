@@ -8,7 +8,7 @@ import java.util.List;
 import com.jobwait.persistence.adapters.AdapterException;
 import com.jobwait.persistence.adapters.PersistenceAdapter;
 
-public class Util {
+public class PersistenceUtil {
     public static <A> A assertSingleElement(List<A> results) throws SQLException {
         switch (results.size()) {
             case 0:
