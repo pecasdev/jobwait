@@ -1,6 +1,6 @@
 import LineChart from "./LineChart";
 
-const labels = ["3 days ago", "2 days ago", "1 day ago", "today", "tomorrow"];
+const labels = ["3 days ago", "2 days ago", "1 day ago", "today"];
 const Data = [100, 90, 85, 87, 77, 60, 67, 45, 32];
 
 export default function GraphExample() {

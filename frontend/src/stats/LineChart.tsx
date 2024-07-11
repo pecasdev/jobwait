@@ -7,8 +7,8 @@ export default function LineChart(
     options: ChartOptions<"line">,
 ) {
     return (
-        <span className="max-h-80 max-w-96">
-            <Line data={data} options={options} />
+        <span>
+            <Line data={data} options={options} width="250px" />
         </span>
     );
 }
