@@ -11,7 +11,7 @@ import com.jobwait.security.OAuthValidator;
 public class RequestController {
     private PersistenceController persistence = new PostgresController();
     private OAuthValidator oAuthValidator = new LinkedInOAuthValidator();
-    
+
     public User getUserFromAuthToken(AuthToken token) {
         oAuthValidator.validateToken(token);
         User user = persistence.getUserFromAuthId(token.clientId());
@@ -22,6 +22,11 @@ public class RequestController {
         oAuthValidator.validateToken(token);
         User user = persistence.createUserFromAuthId(token.clientId());
         return user;
+    }
+
+    public Answers getUserAnswers(AuthToken token) {
+        oAuthValidator.validateToken(token);
+        return persistence.getUserAnswersFromAuthId(token.clientId());
     }
 
     public User submitUserAnswers(AuthToken token, Answers answers) {

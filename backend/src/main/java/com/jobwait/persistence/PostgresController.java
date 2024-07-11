@@ -10,6 +10,7 @@ import java.util.List;
 import com.jobwait.domain.Answers;
 import com.jobwait.domain.User;
 import com.jobwait.persistence.adapters.PostgresUserAdapter;
+import com.jobwait.persistence.adapters.AnswerAdapter;
 
 public class PostgresController extends PersistenceController {
     private String jdbcUrl = "jdbc:postgresql://localhost:5432/mydatabase";
@@ -29,6 +30,22 @@ public class PostgresController extends PersistenceController {
             ResultSet resultSet = statement.executeQuery();
             List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
             return PersistenceUtil.assertSingleElement(users);
+        } catch (ElementNotFoundException e) {
+            throw new RuntimeException(String.format("Could not find user with authId: %s", authId));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Answers getUserAnswersFromAuthId(String authId) {
+        try {
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE authhash = ?");
+            statement.setString(1, authId);
+            ResultSet resultSet = statement.executeQuery();
+            List<Answers> answers = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new AnswerAdapter());
+            return PersistenceUtil.assertSingleElement(answers);
         } catch (ElementNotFoundException e) {
             throw new RuntimeException(String.format("Could not find user with authId: %s", authId));
         } catch (SQLException e) {

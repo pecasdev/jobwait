@@ -45,7 +45,7 @@ public class RequestNavigation {
 	public String postMethodName(@RequestBody String entity) {
 		// TODO: process POST request
 
-		//return getDbEnvironmentVars();
+		// return getDbEnvironmentVars();
 		return attemptDbConnection();
 	}
 
@@ -75,6 +75,13 @@ public class RequestNavigation {
 		AuthToken token = AuthToken.fromClientId(authToken);
 		User user = requestController.createUserFromAuthToken(token);
 		return user.id().toString();
+	}
+
+	@PostMapping("/answer")
+	public static String getUserAnswers(@RequestParam("at") String authToken) {
+		AuthToken token = AuthToken.fromClientId(authToken);
+		Answers answers = requestController.getUserAnswers(token);
+		return answers.toString();
 	}
 
 	@PostMapping("/answer/submit")
