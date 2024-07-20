@@ -5,8 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
+import com.jobwait.domain.Answer;
 import com.jobwait.domain.Answers;
 import com.jobwait.domain.User;
 import com.jobwait.persistence.adapters.PostgresUserAdapter;
@@ -38,14 +42,27 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
-    public Answers getUserAnswersFromAuthId(String authId) {
+    public Map<String, List<Answer>> getUserAnswersFromAuthId(String authId) {
         try {
+            UUID userId = this.getUserFromAuthId(authId).id();
+
             Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE authhash = ?");
-            statement.setString(1, authId);
+            PreparedStatement statement = connection.prepareStatement("""
+                       SELECT
+                       answer_jobacceptdate, answer_jobsearchstartdate,
+                       answer_workmodel, answer_workcontract,
+                       answer_jobapplicationcount, answer_jobtitle,
+                       answer_yearsofproexperience, answer_educationlevel
+                    FROM answers WHERE userid = ?""");
+
+            statement.setObject(1, userId);
             ResultSet resultSet = statement.executeQuery();
-            List<Answers> answers = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new AnswerAdapter());
-            return PersistenceUtil.assertSingleElement(answers);
+
+            Map<String, List<Answer>> returnMap = new HashMap<>();
+            List<Answer> usersAnswers = new AnswerAdapter().fromResultSetRow(resultSet);
+            returnMap.put(authId, usersAnswers);
+
+            return returnMap;
         } catch (ElementNotFoundException e) {
             throw new RuntimeException(String.format("Could not find user with authId: %s", authId));
         } catch (SQLException e) {
@@ -54,24 +71,40 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
-    public User updateUserAnswers(User user, Answers answers) {
+    public Map<String, List<Answer>> updateUserAnswers(User user, Answers answers) {
         try {
             System.out.format("answers given: %s", answers.toString());
             Connection connection = getConnection();
-            connection.setAutoCommit(false);
 
-            InsertAnswerTables insertAnswerTables = new InsertAnswerTables(connection, user.id());
-            insertAnswerTables.jobAcceptDate(answers.jobAcceptDate());
-            insertAnswerTables.jobSearchStartDate(answers.jobSearchStartDate());
-            insertAnswerTables.workModel(answers.workModel());
-            insertAnswerTables.workContract(answers.workContract());
-            insertAnswerTables.jobApplicationCount(answers.jobApplicationCount());
-            insertAnswerTables.jobTitle(answers.jobTitle());
-            insertAnswerTables.yearsOfProExperience(answers.yearsOfProExperience());
-            insertAnswerTables.educationLevel(answers.educationLevel());
+            PreparedStatement updateStatement = connection.prepareStatement(
+                    """
+                            INSERT INTO answers
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            ON CONFLICT (userid) DO UPDATE
+                            SET
+                            answer_jobacceptdate = EXCLUDED.answer_jobacceptdate , answer_jobsearchstartdate = EXCLUDED.answer_jobsearchstartdate,
+                            answer_workmodel = EXCLUDED.answer_workmodel , answer_workcontract = EXCLUDED.answer_workcontract ,
+                            answer_jobapplicationcount = EXCLUDED.answer_jobapplicationcount, answer_jobtitle = EXCLUDED.answer_jobtitle ,
+                            answer_yearsofproexperience = EXCLUDED.answer_yearsofproexperience , answer_educationlevel = EXCLUDED.answer_educationlevel
+                            RETURNING answer_jobacceptdate, answer_jobsearchstartdate,
+                            answer_workmodel, answer_workcontract,
+                            answer_jobapplicationcount, answer_jobtitle,
+                            answer_yearsofproexperience, answer_educationlevel;
+                                    """);
 
-            connection.commit();
-            return user;
+            updateStatement.setObject(1, user.id());
+
+            AnswersCaretaker answersCaretaker = new AnswersCaretaker();
+
+            answers.listOfAnswers()
+                    .forEach(answer -> answersCaretaker.answerToStatement(updateStatement, answer));
+
+            ResultSet updateResultSet = updateStatement.executeQuery();
+            List<Answer> updatedAnswers = new AnswerAdapter().fromResultSetRow(updateResultSet);
+
+            Map<String, List<Answer>> returnMap = new HashMap<>();
+            returnMap.put(user.id().toString(), updatedAnswers);
+            return returnMap;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

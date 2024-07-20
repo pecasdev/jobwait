@@ -1,5 +1,9 @@
 package com.jobwait.control;
 
+import java.util.List;
+import java.util.Map;
+
+import com.jobwait.domain.Answer;
 import com.jobwait.domain.Answers;
 import com.jobwait.domain.User;
 import com.jobwait.persistence.PersistenceController;
@@ -24,12 +28,12 @@ public class RequestController {
         return user;
     }
 
-    public Answers getUserAnswers(AuthToken token) {
+    public Map<String, List<Answer>> getUserAnswers(AuthToken token) {
         oAuthValidator.validateToken(token);
         return persistence.getUserAnswersFromAuthId(token.clientId());
     }
 
-    public User submitUserAnswers(AuthToken token, Answers answers) {
+    public Map<String, List<Answer>> submitUserAnswers(AuthToken token, Answers answers) {
         User user = getUserFromAuthToken(token);
         return persistence.updateUserAnswers(user, answers);
     }
