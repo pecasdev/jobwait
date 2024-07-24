@@ -1,16 +1,24 @@
 package com.jobwait.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.jobwait.answerconversion.AnswerDeserializer;
+
+@JsonDeserialize(using = AnswerDeserializer.class)
 public class Answer<T> {
     private T answerValue;
     private String answerType;
 
-    public Answer(T answerValue) {
-        this.answerValue = answerValue;
+    public Answer() {
+        this.answerValue = null;
     }
 
-    public Answer(T answerValue, String answerType) {
+    public Answer(String answerType, T answerValue) {
         this.answerValue = answerValue;
         this.answerType = answerType;
+    }
+
+    public Boolean isEmpty() {
+        return this.answerValue == null;
     }
 
     public T getValue() {
@@ -23,5 +31,9 @@ public class Answer<T> {
 
     public String getAnswerType() {
         return this.answerType;
+    }
+
+    public void setType(String type) {
+        this.answerType = type;
     }
 }
