@@ -77,7 +77,7 @@ public class PostgresController extends PersistenceController {
         try {
             Connection connection = getConnection();
 
-            Stream<String> streamOfAnswerTypes = Answers.ATypeAnswerMap.keySet().stream();
+            Stream<String> streamOfAnswerTypes = Answers.listOfTypeOfAnswers.stream();
 
             PreparedStatement updateStatement = connection.prepareStatement(
                     """

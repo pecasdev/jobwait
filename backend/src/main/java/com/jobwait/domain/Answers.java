@@ -10,6 +10,12 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.jobwait.answerconversion.AnswerDeserializer;
+import com.jobwait.persistence.answerpersistence.IntegerAnswer;
+import com.jobwait.persistence.answerpersistence.OffsetDateTimeAnswer;
+import com.jobwait.persistence.answerpersistence.StringAnswer;
+import com.jobwait.persistence.answerpersistence.ValidEducationLevelAnswer;
+import com.jobwait.persistence.answerpersistence.ValidWorkContractAnswer;
+import com.jobwait.persistence.answerpersistence.ValidWorkModelAnswer;
 
 import static java.util.Map.entry;
 
@@ -20,31 +26,21 @@ import static java.util.Map.entry;
  * java (int, double, float) cannot be null, so they get set to zero by jackson,
  * which is a problem. Using the class Integer fixes this issue.
  */
-@JsonDeserialize(using = AnswerDeserializer.class)
 public class Answers {
         public static final Map<String, Answer> ATypeAnswerMap = new HashMap<String, Answer>(
                         Map.ofEntries(
-                                        entry("jobAcceptDate", new Answer<OffsetDateTime>()),
-                                        entry("jobSearchStartDate", new Answer<OffsetDateTime>()),
-                                        entry("workModel", new Answer<ValidWorkModel>()),
-                                        entry("workContract", new Answer<ValidWorkContract>()),
-                                        entry("jobApplicationCount", new Answer<Integer>()),
-                                        entry("jobTitle", new Answer<String>()),
-                                        entry("yearsOfProExperience", new Answer<Integer>()),
-                                        entry("educationLevel", new Answer<ValidEducationLevel>())));
+                                        entry("jobAcceptDate", new OffsetDateTimeAnswer("jobAcceptDate", null)),
+                                        entry("jobSearchStartDate",
+                                                        new OffsetDateTimeAnswer("jobSearchStartDate", null)),
+                                        entry("workModel", new ValidWorkModelAnswer("workModel", null)),
+                                        entry("workContract", new ValidWorkContractAnswer("workContract", null)),
+                                        entry("jobApplicationCount", new IntegerAnswer("jobApplicationCount", null)),
+                                        entry("jobTitle", new StringAnswer("jobTitle", null)),
+                                        entry("yearsOfProExperience", new IntegerAnswer("yearsOfProExperience", null)),
+                                        entry("educationLevel",
+                                                        new ValidEducationLevelAnswer("educationLevel", null))));
 
-        @JsonProperty("answers")
-        public List<Answer> listOfAnswers = ATypeAnswerMap.values().stream().toList();
-
-        // public Map<String,
-
-        public Answers() {
-                super();
-        }
-
-        public Answers(List<Answer> answers) {
-                this.listOfAnswers = answers;
-        }
+        public static final List<String> listOfTypeOfAnswers = ATypeAnswerMap.keySet().stream().toList();
 }
 // public static final Map<String, Answer> ATypeAnswerMap =
 // Map.ofEntries(

@@ -29,7 +29,7 @@ public class Answer<T> {
         this.answerValue = value;
     }
 
-    public String getAnswerType() {
+    public String getType() {
         return this.answerType;
     }
 
