@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Answers;
@@ -73,30 +75,38 @@ public class PostgresController extends PersistenceController {
     @Override
     public Map<String, List<Answer>> updateUserAnswers(User user, Answers answers) {
         try {
-            System.out.format("answers given: %s", answers.toString());
             Connection connection = getConnection();
+
+            Stream<String> streamOfAnswerTypes = Answers.ATypeAnswerMap.keySet().stream();
 
             PreparedStatement updateStatement = connection.prepareStatement(
                     """
                             INSERT INTO answers
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            VALUES (%s)
                             ON CONFLICT (userid) DO UPDATE
-                            SET
-                            answer_jobacceptdate = EXCLUDED.answer_jobacceptdate , answer_jobsearchstartdate = EXCLUDED.answer_jobsearchstartdate,
-                            answer_workmodel = EXCLUDED.answer_workmodel , answer_workcontract = EXCLUDED.answer_workcontract ,
-                            answer_jobapplicationcount = EXCLUDED.answer_jobapplicationcount, answer_jobtitle = EXCLUDED.answer_jobtitle ,
-                            answer_yearsofproexperience = EXCLUDED.answer_yearsofproexperience , answer_educationlevel = EXCLUDED.answer_educationlevel
-                            RETURNING answer_jobacceptdate, answer_jobsearchstartdate,
-                            answer_workmodel, answer_workcontract,
-                            answer_jobapplicationcount, answer_jobtitle,
-                            answer_yearsofproexperience, answer_educationlevel;
-                                    """);
+                            SET %s
+                            RETURNING %s;
+                                    """
+                            .formatted(
+                                    streamOfAnswerTypes.map((answerString) -> "?").collect(Collectors.joining(", "))
+                                            .concat(", ?"), // concat for userid
+
+                                    streamOfAnswerTypes.map((answerString) -> answerString + " = " + "EXCLUDED."
+                                            + answerString).reduce(
+                                                    (answerString, answerString2) -> answerString + " , "
+                                                            + answerString2)
+                                            .orElseThrow(),
+                                    streamOfAnswerTypes
+                                            .reduce((answerString, answerString2) -> answerString + " , "
+                                                    + answerString2)
+                                            .orElseThrow())); // getOrElse("") is wrong for sure, perhaps an OK use-case
+                                                              // for raw get(), throw is safer for sure!
 
             updateStatement.setObject(1, user.id());
 
             AnswersCaretaker answersCaretaker = new AnswersCaretaker();
 
-            answers.listOfAnswers()
+            answers.listOfAnswers
                     .forEach(answer -> answersCaretaker.answerToStatement(updateStatement, answer));
 
             ResultSet updateResultSet = updateStatement.executeQuery();
