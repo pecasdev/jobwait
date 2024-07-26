@@ -27,8 +27,7 @@ public class AnswerDeserializerUTest {
 
         // Integer test = answers.get(0).getValue();
 
-        Answers answersWrapper = new Answers();
-        answersWrapper.setAnswers(answers);
+        Answers answersWrapper = new Answers(answers);
         System.out.println(answersWrapper);
 
         String jsonString = mapper.writeValueAsString(answersWrapper);

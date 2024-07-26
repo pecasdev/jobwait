@@ -34,6 +34,10 @@ public class Answers {
         public Answers() {
         }
 
+        public Answers(List<Answer> answers) {
+                this.answers = answers;
+        }
+
         public List<Answer> getListOfAnswers() {
                 return this.answers;
         }

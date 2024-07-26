@@ -103,7 +103,7 @@ public class PostgresController extends PersistenceController {
                                             .orElseThrow())); // getOrElse("") is wrong for sure, perhaps an OK use-case
                                                               // for raw get(), throw is safer for sure!
 
-            updateStatement.setObject(1, user.id());
+            updateStatement.setObject(listOfAnswerTypes.size() + 1, user.id());
 
             AnswersCaretaker answersCaretaker = new AnswersCaretaker();
 
