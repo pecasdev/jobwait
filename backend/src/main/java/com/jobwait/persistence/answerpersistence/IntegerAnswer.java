@@ -1,10 +1,12 @@
 package com.jobwait.persistence.answerpersistence;
 
+import java.sql.Types;
+
 import com.jobwait.domain.Answer;
 
 public class IntegerAnswer implements Answer<Integer> {
     private Integer value;
-
+    public final int sqlType = Types.INTEGER;
     private String type;
 
     public IntegerAnswer() {

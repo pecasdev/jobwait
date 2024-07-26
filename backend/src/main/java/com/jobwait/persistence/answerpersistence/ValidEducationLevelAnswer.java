@@ -1,10 +1,13 @@
 package com.jobwait.persistence.answerpersistence;
 
+import java.sql.Types;
+
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.ValidEducationLevel;
 
 public class ValidEducationLevelAnswer implements Answer<ValidEducationLevel> {
     private ValidEducationLevel value;
+    public final int sqlType = Types.OTHER;
     private String type;
 
     public ValidEducationLevelAnswer() {

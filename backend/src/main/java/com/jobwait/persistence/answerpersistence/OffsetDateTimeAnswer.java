@@ -1,11 +1,13 @@
 package com.jobwait.persistence.answerpersistence;
 
+import java.sql.Types;
 import java.time.OffsetDateTime;
 
 import com.jobwait.domain.Answer;
 
 public class OffsetDateTimeAnswer implements Answer<OffsetDateTime> {
     private OffsetDateTime value;
+    public final int sqlType = Types.TIMESTAMP_WITH_TIMEZONE;
     private String type;
 
     public OffsetDateTimeAnswer() {

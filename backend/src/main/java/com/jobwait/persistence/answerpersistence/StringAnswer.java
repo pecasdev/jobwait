@@ -1,9 +1,12 @@
 package com.jobwait.persistence.answerpersistence;
 
+import java.sql.Types;
+
 import com.jobwait.domain.Answer;
 
 public class StringAnswer implements Answer<String> {
     private String value;
+    public final int sqlType = Types.VARCHAR;
     private String type;
 
     public StringAnswer() {

@@ -1,10 +1,13 @@
 package com.jobwait.persistence.answerpersistence;
 
+import java.sql.Types;
+
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.ValidWorkModel;
 
 public class ValidWorkModelAnswer implements Answer<ValidWorkModel> {
     private ValidWorkModel value;
+    public final int sqlType = Types.OTHER;
     private String type;
 
     public ValidWorkModelAnswer() {
