@@ -1,5 +1,8 @@
 package com.jobwait.persistence.answerpersistence;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.OffsetDateTime;
 
@@ -32,6 +35,15 @@ public class OffsetDateTimeAnswer implements Answer<OffsetDateTime> {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setSQLStatement(PreparedStatement statement, Integer statementIndex) throws SQLException {
+        if (this.getValue() == null) {
+            statement.setNull(statementIndex, this.sqlType);
+        } else {
+            statement.setTimestamp(statementIndex,
+                    Timestamp.from((this.getValue()).toInstant()));
+        }
     }
 
     @Override
