@@ -3,15 +3,36 @@ package com.jobwait.persistence.answerpersistence;
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.ValidWorkModel;
 
-public class ValidWorkModelAnswer extends Answer<ValidWorkModel> {
-    private ValidWorkModel answerValue;
-    private String answerType;
+public class ValidWorkModelAnswer implements Answer<ValidWorkModel> {
+    private ValidWorkModel value;
+    private String type;
 
-    public ValidWorkModelAnswer(String answerType, ValidWorkModel answerValue) {
-        super();
+    public ValidWorkModelAnswer() {
+    }
+
+    public ValidWorkModelAnswer(String type, ValidWorkModel value) {
+        this.type = type;
+        this.value = value;
     }
 
     public ValidWorkModel getValue() {
-        return this.answerValue;
+        return this.value;
+    }
+
+    public void setValue(ValidWorkModel value) {
+        this.value = value;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "(type -> " + this.type + "," + "value -> " + String.valueOf(this.value) + ")";
     }
 }

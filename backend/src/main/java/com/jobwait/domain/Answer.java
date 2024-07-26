@@ -1,39 +1,31 @@
 package com.jobwait.domain;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.jobwait.answerconversion.AnswerDeserializer;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.jobwait.persistence.answerpersistence.IntegerAnswer;
+import com.jobwait.persistence.answerpersistence.OffsetDateTimeAnswer;
+import com.jobwait.persistence.answerpersistence.StringAnswer;
+import com.jobwait.persistence.answerpersistence.ValidEducationLevelAnswer;
+import com.jobwait.persistence.answerpersistence.ValidWorkContractAnswer;
+import com.jobwait.persistence.answerpersistence.ValidWorkModelAnswer;
 
-@JsonDeserialize(using = AnswerDeserializer.class)
-public class Answer<T> {
-    private T answerValue;
-    private String answerType;
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", include = JsonTypeInfo.As.EXISTING_PROPERTY, visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = StringAnswer.class, name = "jobTitle"),
+        @JsonSubTypes.Type(value = IntegerAnswer.class, names = { "yearsOfProExperience",
+                "jobApplicationCount" }),
+        @JsonSubTypes.Type(value = ValidEducationLevelAnswer.class, name = "educationLevel"),
+        @JsonSubTypes.Type(value = ValidWorkModelAnswer.class, name = "workModel"),
+        @JsonSubTypes.Type(value = ValidWorkContractAnswer.class, name = "workContract"),
+        @JsonSubTypes.Type(value = OffsetDateTimeAnswer.class, names = { "jobAcceptDate",
+                "jobSearchStartDate" }),
+})
+public interface Answer<T> {
+    public T getValue();
 
-    public Answer() {
-        this.answerValue = null;
-    }
+    public void setValue(T value);
 
-    public Answer(String answerType, T answerValue) {
-        this.answerValue = answerValue;
-        this.answerType = answerType;
-    }
+    public String getType();
 
-    public Boolean isEmpty() {
-        return this.answerValue == null;
-    }
-
-    public T getValue() {
-        return this.answerValue;
-    }
-
-    public void setValue(T value) {
-        this.answerValue = value;
-    }
-
-    public String getType() {
-        return this.answerType;
-    }
-
-    public void setType(String type) {
-        this.answerType = type;
-    }
+    public void setType(String type);
 }

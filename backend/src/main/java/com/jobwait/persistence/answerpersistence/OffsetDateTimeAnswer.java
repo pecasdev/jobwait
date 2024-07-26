@@ -4,15 +4,36 @@ import java.time.OffsetDateTime;
 
 import com.jobwait.domain.Answer;
 
-public class OffsetDateTimeAnswer extends Answer<OffsetDateTime> {
-    private OffsetDateTime answerValue;
-    private String answerType;
+public class OffsetDateTimeAnswer implements Answer<OffsetDateTime> {
+    private OffsetDateTime value;
+    private String type;
 
-    public OffsetDateTimeAnswer(String answerType, OffsetDateTime answerValue) {
-        super();
+    public OffsetDateTimeAnswer() {
+    }
+
+    public OffsetDateTimeAnswer(String type, OffsetDateTime value) {
+        this.type = type;
+        this.value = value;
     }
 
     public OffsetDateTime getValue() {
-        return this.answerValue;
+        return this.value;
+    }
+
+    public void setValue(OffsetDateTime value) {
+        this.value = value;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "(type -> " + this.type + "," + "value -> " + String.valueOf(this.value) + ")";
     }
 }

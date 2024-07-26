@@ -37,9 +37,9 @@ public class AnswerDeserializerUTest {
         Answers mappedAnswersWrapper = mapper.readValue(jsonString, Answers.class);
         System.out.println(mappedAnswersWrapper);
 
-        Assertions.assertEquals(2, mappedAnswersWrapper.getAnswers().size());
+        Assertions.assertEquals(2, mappedAnswersWrapper.getListOfAnswers().size());
         Assertions.assertIterableEquals(
-                mappedAnswersWrapper.getAnswers().stream().map(answer -> answer.toString()).toList(),
+                mappedAnswersWrapper.getListOfAnswers().stream().map(answer -> answer.toString()).toList(),
                 answers.stream().map(answer -> answer.toString()).toList());
     }
 }

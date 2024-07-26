@@ -77,7 +77,7 @@ public class PostgresController extends PersistenceController {
         try {
             Connection connection = getConnection();
 
-            Stream<String> streamOfAnswerTypes = Answers.listOfTypeOfAnswers.stream();
+            List<String> listOfAnswerTypes = Answers.listOfTypeOfAnswers;
 
             PreparedStatement updateStatement = connection.prepareStatement(
                     """
@@ -88,15 +88,16 @@ public class PostgresController extends PersistenceController {
                             RETURNING %s;
                                     """
                             .formatted(
-                                    streamOfAnswerTypes.map((answerString) -> "?").collect(Collectors.joining(", "))
+                                    listOfAnswerTypes.stream().map((answerString) -> "?")
+                                            .collect(Collectors.joining(", "))
                                             .concat(", ?"), // concat for userid
 
-                                    streamOfAnswerTypes.map((answerString) -> answerString + " = " + "EXCLUDED."
+                                    listOfAnswerTypes.stream().map((answerString) -> answerString + " = " + "EXCLUDED."
                                             + answerString).reduce(
                                                     (answerString, answerString2) -> answerString + " , "
                                                             + answerString2)
                                             .orElseThrow(),
-                                    streamOfAnswerTypes
+                                    listOfAnswerTypes.stream()
                                             .reduce((answerString, answerString2) -> answerString + " , "
                                                     + answerString2)
                                             .orElseThrow())); // getOrElse("") is wrong for sure, perhaps an OK use-case
@@ -106,8 +107,7 @@ public class PostgresController extends PersistenceController {
 
             AnswersCaretaker answersCaretaker = new AnswersCaretaker();
 
-            answers.listOfAnswers
-                    .forEach(answer -> answersCaretaker.answerToStatement(updateStatement, answer));
+            answers.getListOfAnswers().forEach(answer -> answersCaretaker.answerToStatement(updateStatement, answer));
 
             ResultSet updateResultSet = updateStatement.executeQuery();
             List<Answer> updatedAnswers = new AnswerAdapter().fromResultSetRow(updateResultSet);
