@@ -41,7 +41,7 @@ public class Answers {
                 this.answers = answers;
         }
 
-        public List<Answer> getListOfAnswers() {
+        public List<Answer> getAnswers() {
                 return this.answers;
         }
 

@@ -9,7 +9,7 @@ import com.jobwait.domain.ValidEducationLevel;
 
 public class ValidEducationLevelAnswer implements Answer<ValidEducationLevel> {
     private ValidEducationLevel value;
-    public final int sqlType = Types.OTHER;
+    private final int sqlType = Types.OTHER;
     private String type;
 
     public ValidEducationLevelAnswer() {

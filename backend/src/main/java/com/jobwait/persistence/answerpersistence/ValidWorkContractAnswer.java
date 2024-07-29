@@ -9,7 +9,7 @@ import com.jobwait.domain.ValidWorkContract;
 
 public class ValidWorkContractAnswer implements Answer<ValidWorkContract> {
     private ValidWorkContract value;
-    public final int sqlType = Types.OTHER;
+    private final int sqlType = Types.OTHER;
     private String type;
 
     public ValidWorkContractAnswer() {

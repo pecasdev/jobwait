@@ -8,7 +8,7 @@ import com.jobwait.domain.Answer;
 
 public class StringAnswer implements Answer<String> {
     private String value;
-    public final int sqlType = Types.VARCHAR;
+    private final int sqlType = Types.VARCHAR;
     private String type;
 
     public StringAnswer() {

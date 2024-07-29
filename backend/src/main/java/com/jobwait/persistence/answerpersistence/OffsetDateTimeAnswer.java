@@ -10,7 +10,7 @@ import com.jobwait.domain.Answer;
 
 public class OffsetDateTimeAnswer implements Answer<OffsetDateTime> {
     private OffsetDateTime value;
-    public final int sqlType = Types.TIMESTAMP_WITH_TIMEZONE;
+    private final int sqlType = Types.TIMESTAMP_WITH_TIMEZONE;
     private String type;
 
     public OffsetDateTimeAnswer() {
