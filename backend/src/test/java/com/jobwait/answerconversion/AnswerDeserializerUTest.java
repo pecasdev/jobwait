@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Answers;
 import com.jobwait.persistence.answerpersistence.IntegerAnswer;
@@ -16,11 +18,14 @@ import com.jobwait.persistence.answerpersistence.StringAnswer;
 public class AnswerDeserializerUTest {
     @Test
     public void testAnswerDeserialize() throws Exception {
-        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,
-                true);
+        ObjectMapper mapper = JsonMapper.builder()
+                .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+                .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
+                .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
+                .build();
 
-        IntegerAnswer intAnswer = new IntegerAnswer("jobApplicationCount", 10);
-        StringAnswer strAnswer = new StringAnswer("jobTitle", "Software Developer");
+        IntegerAnswer intAnswer = new IntegerAnswer("jobapplicationcount", 10);
+        StringAnswer strAnswer = new StringAnswer("jobtitle", "Software Developer");
         List<Answer> answers = new ArrayList<>();
         answers.add(intAnswer);
         answers.add(strAnswer);
@@ -36,9 +41,9 @@ public class AnswerDeserializerUTest {
         Answers mappedAnswersWrapper = mapper.readValue(jsonString, Answers.class);
         System.out.println(mappedAnswersWrapper);
 
-        Assertions.assertEquals(2, mappedAnswersWrapper.getListOfAnswers().size());
+        Assertions.assertEquals(2, mappedAnswersWrapper.getAnswers().size());
         Assertions.assertIterableEquals(
-                mappedAnswersWrapper.getListOfAnswers().stream().map(answer -> answer.toString()).toList(),
+                mappedAnswersWrapper.getAnswers().stream().map(answer -> answer.toString()).toList(),
                 answers.stream().map(answer -> answer.toString()).toList());
     }
 }
