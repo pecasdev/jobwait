@@ -46,27 +46,24 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
-    public Map<String, List<Answer>> getUserAnswersFromAuthId(String authId) {
+    public Answers getUserAnswersFromAuthId(String authId) {
         try {
             UUID userId = this.getUserFromAuthId(authId).id();
-
             Connection connection = getConnection();
+
+            List<String> listOfAnswerTypes = Answers.listOfTypeOfAnswers;
             PreparedStatement statement = connection.prepareStatement("""
                        SELECT
-                       answer_jobacceptdate, answer_jobsearchstartdate,
-                       answer_workmodel, answer_workcontract,
-                       answer_jobapplicationcount, answer_jobtitle,
-                       answer_yearsofproexperience, answer_educationlevel
-                    FROM answers WHERE userid = ?""");
+                       %s
+                    FROM answers WHERE userid = ?"""
+                    .formatted(listOfAnswerTypes.stream().collect(Collectors.joining(", "))));
 
             statement.setObject(1, userId);
             ResultSet resultSet = statement.executeQuery();
 
-            Map<String, List<Answer>> returnMap = new HashMap<>();
-            List<Answer> usersAnswers = new AnswerAdapter().fromResultSetRow(resultSet);
-            returnMap.put(authId, usersAnswers);
+            Answers usersAnswers = new AnswerAdapter().fromResultSetRow(resultSet);
 
-            return returnMap;
+            return usersAnswers;
         } catch (ElementNotFoundException e) {
             throw new RuntimeException(String.format("Could not find user with authId: %s", authId));
         } catch (SQLException e) {
@@ -75,11 +72,11 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
-    public Map<String, List<Answer>> updateUserAnswers(User user, Answers answers) {
+    public Answers updateUserAnswers(User user, Answers answers) {
         try {
             Connection connection = getConnection();
 
-            List<Answer> listOfAnswers = answers.getListOfAnswers();
+            List<Answer> listOfAnswers = answers.getAnswers();
             List<String> listOfAnswerTypes = Answers.listOfTypeOfAnswers;
 
             PreparedStatement updateStatement = connection.prepareStatement(
@@ -100,7 +97,7 @@ public class PostgresController extends PersistenceController {
                                                     (answerString, answerString2) -> answerString + " , "
                                                             + answerString2)
                                             .orElseThrow(),
-                                    listOfAnswerTypes.stream()
+                                    listOfAnswerTypes.stream().map(answerString -> answerString + " AS " + answerString)
                                             .reduce((answerString, answerString2) -> answerString + " , "
                                                     + answerString2)
                                             .orElseThrow())); // getOrElse("") is wrong for sure, perhaps an OK use-case
@@ -121,11 +118,9 @@ public class PostgresController extends PersistenceController {
             }
 
             ResultSet updateResultSet = updateStatement.executeQuery();
-            List<Answer> updatedAnswers = new AnswerAdapter().fromResultSetRow(updateResultSet);
+            Answers updatedAnswers = new AnswerAdapter().fromResultSetRow(updateResultSet);
 
-            Map<String, List<Answer>> returnMap = new HashMap<>();
-            returnMap.put(user.id().toString(), updatedAnswers);
-            return returnMap;
+            return updatedAnswers;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

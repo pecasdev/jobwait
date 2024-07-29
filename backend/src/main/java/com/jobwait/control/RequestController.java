@@ -28,12 +28,12 @@ public class RequestController {
         return user;
     }
 
-    public Map<String, List<Answer>> getUserAnswers(AuthToken token) {
+    public Answers getUserAnswers(AuthToken token) {
         oAuthValidator.validateToken(token);
         return persistence.getUserAnswersFromAuthId(token.clientId());
     }
 
-    public Map<String, List<Answer>> submitUserAnswers(AuthToken token, Answers answers) {
+    public Answers submitUserAnswers(AuthToken token, Answers answers) {
         User user = getUserFromAuthToken(token);
         return persistence.updateUserAnswers(user, answers);
     }

@@ -1,69 +1,45 @@
 package com.jobwait.persistence.adapters;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.jobwait.domain.Answer;
-import com.jobwait.domain.ValidEducationLevel;
-import com.jobwait.domain.ValidWorkContract;
-import com.jobwait.domain.ValidWorkModel;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.jobwait.domain.Answers;
 
 public class AnswerAdapter {
-    public List<Answer> fromResultSetRow(ResultSet rs) throws AdapterException {
+    public Answers fromResultSetRow(ResultSet rs) throws AdapterException {
         try {
-            List<Answer> listOfAnswers = new ArrayList<>();
+            JSONObject answersArrayJSONObject = new JSONObject();
+            JSONArray listOfAnswersJSON = new JSONArray();
+            ResultSetMetaData rsmd = rs.getMetaData();
             while (rs.next()) {
-                if (rs.getDate("answer_jobacceptdate") != null) {
-                    listOfAnswers.add(new Answer<OffsetDateTime>(
-                            rs.getDate("answer_jobacceptdate").toInstant().atOffset(ZoneOffset.UTC)));
-                }
-
-                if (rs.getDate("answer_jobsearchstartdate") != null) {
-                    listOfAnswers.add(new Answer<OffsetDateTime>(
-                            rs.getDate("answer_jobacceptdate").toInstant().atOffset(ZoneOffset.UTC)));
-                }
-
-                if (rs.getString("answer_workmodel") != null) {
-                    listOfAnswers.add(new Answer<ValidWorkModel>(
-                            ValidWorkModel.valueOf(rs.getString("answer_workmodel"))));
-                }
-
-                if (rs.getString("answer_workcontract") != null) {
-                    listOfAnswers.add(new Answer<ValidWorkContract>(
-                            ValidWorkContract.valueOf(rs.getString("answer_workcontract"))));
-                }
-
-                if (rs.getInt("answer_jobapplicationcount") != 0) {
-                    listOfAnswers.add(new Answer<Integer>(
-                            Integer.valueOf(rs.getInt("answer_jobapplicationcount"))));
-                }
-
-                if (rs.getString("answer_educationlevel") != null) {
-                    listOfAnswers.add(new Answer<ValidEducationLevel>(
-                            ValidEducationLevel.valueOf(rs.getString("answer_educationlevel"))));
-                }
-
-                if (rs.getString("answer_jobtitle") != null) {
-                    listOfAnswers.add(new Answer<String>(
-                            rs.getString("answer_jobtitle")));
-                }
-
-                if (rs.getString("answer_jobtitle") != null) {
-                    listOfAnswers.add(new Answer<String>(
-                            rs.getString("answer_jobtitle")));
-                }
-
-                if (rs.getInt("answer_yearsofproexperience") != 0) {
-                    listOfAnswers.add(new Answer<Integer>(
-                            Integer.valueOf(rs.getInt("answer_yearsofproexperience"))));
+                int numColumns = rsmd.getColumnCount();
+                for (int i = 1; i <= numColumns; i++) {
+                    JSONObject answerObj = new JSONObject();
+                    String column_name = rsmd.getColumnLabel(i);
+                    Object value = rs.getObject(i);
+                    if (value != null) {
+                        answerObj.put("type", column_name);
+                        answerObj.put("value", value);
+                        listOfAnswersJSON.put(answerObj);
+                    }
                 }
             }
-            return listOfAnswers;
-        } catch (SQLException e) {
+            answersArrayJSONObject.put("answers", listOfAnswersJSON);
+
+            ObjectMapper mapper = JsonMapper.builder()
+                    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
+                    .build();
+
+            return mapper.readValue(answersArrayJSONObject.toString(), Answers.class);
+        } catch (SQLException | JsonProcessingException e) {
             throw new AdapterException(e);
         }
     }

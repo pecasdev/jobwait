@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.jobwait.control.RequestController;
 import com.jobwait.domain.Answers;
 import com.jobwait.domain.User;
@@ -38,25 +41,31 @@ public class RequestNavigation {
 	}
 
 	@GetMapping(path = "/answer", produces = MediaType.APPLICATION_JSON_VALUE)
-	public static Map getUserAnswers(@RequestParam("at") String authToken) {
-		AuthToken token = AuthToken.fromClientId(authToken);
-		Map answers = requestController.getUserAnswers(token);
-		return answers;
+	public static String getUserAnswers(@RequestParam("at") String authToken) {
+		try {
+			AuthToken token = AuthToken.fromClientId(authToken);
+			Answers answers = requestController.getUserAnswers(token);
+			return new ObjectMapper().writeValueAsString(answers);
+		} catch (JsonProcessingException e) {
+			return e.getMessage();
+		}
 	}
 
 	@PostMapping(path = "/answer/submit", produces = MediaType.APPLICATION_JSON_VALUE)
-	public static Map submitUserAnswers(@RequestParam("at") String authToken, @RequestBody String payload) {
+	public static String submitUserAnswers(@RequestParam("at") String authToken, @RequestBody String payload) {
 		try {
-			ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,
-					true);
+			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+					.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,
+							true)
+					.build();
+
 			Answers answers = mapper.readValue(payload, Answers.class);
 
 			AuthToken token = AuthToken.fromClientId(authToken);
-			Map returnMap = requestController.submitUserAnswers(token, answers);
-			return returnMap;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new HashMap<>();
+			Answers returnAnswers = requestController.submitUserAnswers(token, answers);
+			return mapper.writeValueAsString(returnAnswers);
+		} catch (JsonProcessingException e) {
+			return e.getMessage();
 		}
 
 	}
