@@ -39,7 +39,7 @@ public class IntegerAnswer implements Answer<Integer> {
         if (this.getValue() == null) {
             statement.setNull(statementIndex, this.sqlType);
         } else {
-            statement.setInt(statementIndex, this.getValue());
+            statement.setInt(statementIndex, this.getValue().intValue());
         }
     }
 

@@ -1,8 +1,9 @@
 package com.jobwait.domain;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import com.jobwait.persistence.answerpersistence.IntegerAnswer;
 import com.jobwait.persistence.answerpersistence.OffsetDateTimeAnswer;
@@ -11,23 +12,25 @@ import com.jobwait.persistence.answerpersistence.ValidEducationLevelAnswer;
 import com.jobwait.persistence.answerpersistence.ValidWorkContractAnswer;
 import com.jobwait.persistence.answerpersistence.ValidWorkModelAnswer;
 
-import static java.util.Map.entry;
-
 public class Answers {
-        public static final Map<String, Answer> ATypeAnswerMap = new HashMap<>(
-                        Map.ofEntries(
-                                        entry("jobAcceptDate", new OffsetDateTimeAnswer("jobAcceptDate", null)),
-                                        entry("jobSearchStartDate",
-                                                        new OffsetDateTimeAnswer("jobSearchStartDate", null)),
-                                        entry("workModel", new ValidWorkModelAnswer("workModel", null)),
-                                        entry("workContract", new ValidWorkContractAnswer("workContract", null)),
-                                        entry("jobApplicationCount", new IntegerAnswer("jobApplicationCount", null)),
-                                        entry("jobTitle", new StringAnswer("jobTitle", null)),
-                                        entry("yearsOfProExperience", new IntegerAnswer("yearsOfProExperience", null)),
-                                        entry("educationLevel",
-                                                        new ValidEducationLevelAnswer("educationLevel", null))));
+        public static final Map<String, Answer> ATypeAnswerMap = Answers.createMap();
 
-        public static final List<String> listOfTypeOfAnswers = ATypeAnswerMap.keySet().stream().toList();
+        public static final List<String> listOfTypeOfAnswers = new ArrayList<>(ATypeAnswerMap.keySet());
+
+        // Map.ofEntries() was giving me trouble with order, this helps for some reason.
+        // Leave this alone.
+        private static Map<String, Answer> createMap() {
+                Map<String, Answer> mapping = new LinkedHashMap<>();
+                mapping.put("jobAcceptDate", new OffsetDateTimeAnswer("jobAcceptDate", null));
+                mapping.put("jobSearchStartDate", new OffsetDateTimeAnswer("jobSearchStartDate", null));
+                mapping.put("workModel", new ValidWorkModelAnswer("workModel", null));
+                mapping.put("workContract", new ValidWorkContractAnswer("workContract", null));
+                mapping.put("jobApplicationCount", new IntegerAnswer("jobApplicationCount", null));
+                mapping.put("jobTitle", new StringAnswer("jobTitle", null));
+                mapping.put("yearsOfProExperience", new IntegerAnswer("yearsOfProExperience", null));
+                mapping.put("educationLevel", new ValidEducationLevelAnswer("educationLevel", null));
+                return mapping;
+        }
 
         private List<Answer> answers;
 

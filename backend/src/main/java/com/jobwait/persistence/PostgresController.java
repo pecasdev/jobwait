@@ -5,12 +5,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Answers;
@@ -77,6 +79,7 @@ public class PostgresController extends PersistenceController {
         try {
             Connection connection = getConnection();
 
+            List<Answer> listOfAnswers = answers.getListOfAnswers();
             List<String> listOfAnswerTypes = Answers.listOfTypeOfAnswers;
 
             PreparedStatement updateStatement = connection.prepareStatement(
@@ -103,11 +106,19 @@ public class PostgresController extends PersistenceController {
                                             .orElseThrow())); // getOrElse("") is wrong for sure, perhaps an OK use-case
                                                               // for raw get(), throw is safer for sure!
 
-            updateStatement.setObject(listOfAnswerTypes.size() + 1, user.id());
+            updateStatement.setObject(1, user.id());
 
-            AnswersCaretaker answersCaretaker = new AnswersCaretaker();
+            int idx = 0;
+            Map<String, Answer> updateMap = new LinkedHashMap<>(Answers.ATypeAnswerMap);
 
-            answers.getListOfAnswers().forEach(answer -> answersCaretaker.answerToStatement(updateStatement, answer));
+            while (idx < listOfAnswerTypes.size()) {
+                if (idx < listOfAnswers.size()) {
+                    updateMap.replace(listOfAnswers.get(idx).getType(), listOfAnswers.get(idx));
+                }
+                // will throw if key not in map (which is fair)
+                updateMap.get(listOfAnswerTypes.get(idx)).setSQLStatement(updateStatement, idx + 2);
+                idx += 1;
+            }
 
             ResultSet updateResultSet = updateStatement.executeQuery();
             List<Answer> updatedAnswers = new AnswerAdapter().fromResultSetRow(updateResultSet);
