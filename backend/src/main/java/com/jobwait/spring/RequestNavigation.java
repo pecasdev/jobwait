@@ -1,17 +1,14 @@
 package com.jobwait.spring;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -53,8 +50,9 @@ public class RequestNavigation {
 		}
 	}
 
-	@PostMapping(path = "/answer/submit", produces = MediaType.APPLICATION_JSON_VALUE)
-	public static String submitUserAnswers(@RequestParam("at") String authToken, @RequestBody String payload) {
+	@PostMapping(path = "/answer/submit")
+	public static ResponseEntity<String> submitUserAnswers(@RequestParam("at") String authToken,
+			@RequestBody String payload) {
 		try {
 			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 					.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,
@@ -64,10 +62,10 @@ public class RequestNavigation {
 			Answers answers = mapper.readValue(payload, Answers.class);
 
 			AuthToken token = AuthToken.fromClientId(authToken);
-			Answers returnAnswers = requestController.submitUserAnswers(token, answers);
-			return mapper.writeValueAsString(returnAnswers);
-		} catch (JsonProcessingException e) {
-			return e.getMessage();
+			requestController.submitUserAnswers(token, answers);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (JsonProcessingException | RuntimeException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
