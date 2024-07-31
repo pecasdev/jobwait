@@ -1,19 +1,28 @@
 package com.jobwait.answerconversion;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Answers;
+import com.jobwait.domain.ValidEducationLevel;
+import com.jobwait.domain.ValidWorkContract;
+import com.jobwait.domain.ValidWorkModel;
 import com.jobwait.persistence.answerpersistence.IntegerAnswer;
+import com.jobwait.persistence.answerpersistence.OffsetDateTimeAnswer;
 import com.jobwait.persistence.answerpersistence.StringAnswer;
+import com.jobwait.persistence.answerpersistence.ValidEducationLevelAnswer;
+import com.jobwait.persistence.answerpersistence.ValidWorkContractAnswer;
+import com.jobwait.persistence.answerpersistence.ValidWorkModelAnswer;
 
 public class AnswerDeserializerUTest {
     @Test
@@ -22,15 +31,20 @@ public class AnswerDeserializerUTest {
                 .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
                 .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
                 .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
-                .build();
+                .build().registerModule(new JavaTimeModule());
 
-        IntegerAnswer intAnswer = new IntegerAnswer("jobapplicationcount", 10);
-        StringAnswer strAnswer = new StringAnswer("jobtitle", "Software Developer");
-        List<Answer> answers = new ArrayList<>();
-        answers.add(intAnswer);
-        answers.add(strAnswer);
+        IntegerAnswer integerAnswer = new IntegerAnswer("jobapplicationcount", 10);
+        StringAnswer stringAnswer = new StringAnswer("jobtitle", "Software Developer");
+        OffsetDateTimeAnswer offsetDateTimeAnswer = new OffsetDateTimeAnswer("jobsearchstartdate",
+                OffsetDateTime.now());
+        ValidWorkContractAnswer validWorkContractAnswer = new ValidWorkContractAnswer("workContract",
+                ValidWorkContract.FULL_TIME);
+        ValidWorkModelAnswer validWorkModelAnswer = new ValidWorkModelAnswer("workModel", ValidWorkModel.HYBRID);
+        ValidEducationLevelAnswer ValidEducationLevelAnswer = new ValidEducationLevelAnswer("educationLevel",
+                ValidEducationLevel.BACHELOR_DEGREE);
 
-        // Integer test = answers.get(0).getValue();
+        List<Answer> answers = Arrays.asList(integerAnswer, stringAnswer, offsetDateTimeAnswer, validWorkContractAnswer,
+                validWorkModelAnswer, ValidEducationLevelAnswer);
 
         Answers answersWrapper = new Answers(answers);
         System.out.println(answersWrapper);
@@ -41,7 +55,7 @@ public class AnswerDeserializerUTest {
         Answers mappedAnswersWrapper = mapper.readValue(jsonString, Answers.class);
         System.out.println(mappedAnswersWrapper);
 
-        Assertions.assertEquals(2, mappedAnswersWrapper.getAnswers().size());
+        Assertions.assertEquals(answers.size(), mappedAnswersWrapper.getAnswers().size());
         Assertions.assertIterableEquals(
                 mappedAnswersWrapper.getAnswers().stream().map(answer -> answer.toString()).toList(),
                 answers.stream().map(answer -> answer.toString()).toList());
