@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jobwait.control.RequestController;
 import com.jobwait.domain.Answers;
 import com.jobwait.domain.User;
@@ -57,7 +59,7 @@ public class RequestNavigation {
 			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 					.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,
 							true)
-					.build();
+					.build().registerModule(new JavaTimeModule());
 
 			Answers answers = mapper.readValue(payload, Answers.class);
 

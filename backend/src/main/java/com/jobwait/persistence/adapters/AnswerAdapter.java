@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jobwait.domain.Answers;
 
 public class AnswerAdapter {
@@ -34,7 +35,7 @@ public class AnswerAdapter {
 
             ObjectMapper mapper = JsonMapper.builder()
                     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
-                    .build();
+                    .build().registerModule(new JavaTimeModule());
 
             return mapper.readValue(answersArrayJSONObject.toString(), Answers.class);
         } catch (SQLException | JsonProcessingException e) {
