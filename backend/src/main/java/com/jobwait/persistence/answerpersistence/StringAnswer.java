@@ -46,6 +46,7 @@ public class StringAnswer implements Answer<String> {
 
     @Override
     public String toString() {
-        return "(type -> " + this.type + "," + "value -> " + this.value + ")";
+        return "(type -> " + this.type + " , " + "value -> " + "[" + String.valueOf(this.value.getClass()) + "] "
+                + this.value + ")";
     }
 }

@@ -51,6 +51,8 @@ public class Answers {
 
         @Override
         public String toString() {
-                return String.join("\n", this.answers.stream().map(answer -> answer.toString()).toList());
+                return "Answers : {\n\t"
+                                + String.join("\n\t", this.answers.stream().map(answer -> answer.toString()).toList())
+                                + "\n}";
         }
 }

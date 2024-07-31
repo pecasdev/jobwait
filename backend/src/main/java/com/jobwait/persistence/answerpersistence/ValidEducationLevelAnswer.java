@@ -46,6 +46,7 @@ public class ValidEducationLevelAnswer implements Answer<ValidEducationLevel> {
 
     @Override
     public String toString() {
-        return "(type -> " + this.type + "," + "value -> " + String.valueOf(this.value) + ")";
+        return "(type -> " + this.type + " , " + "value -> " + "[" + String.valueOf(this.value.getClass()) + "] "
+                + String.valueOf(this.value) + ")";
     }
 }
