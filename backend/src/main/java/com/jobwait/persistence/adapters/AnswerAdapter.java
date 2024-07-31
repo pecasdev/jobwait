@@ -24,12 +24,10 @@ public class AnswerAdapter {
                 for (int i = 1; i <= numColumns; i++) {
                     JSONObject answerObj = new JSONObject();
                     String column_name = rsmd.getColumnLabel(i);
-                    Object value = rs.getObject(i);
-                    if (value != null) {
-                        answerObj.put("type", column_name);
-                        answerObj.put("value", value);
-                        listOfAnswersJSON.put(answerObj);
-                    }
+                    Object value = rs.getObject(i) == null ? JSONObject.NULL : rs.getObject(i);
+                    answerObj.put("type", column_name);
+                    answerObj.put("value", value);
+                    listOfAnswersJSON.put(answerObj);
                 }
             }
             answersArrayJSONObject.put("answers", listOfAnswersJSON);
