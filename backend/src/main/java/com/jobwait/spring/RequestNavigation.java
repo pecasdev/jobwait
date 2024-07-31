@@ -55,6 +55,7 @@ public class RequestNavigation {
 			@RequestBody String payload) {
 		try {
 			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
 					.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,
 							true)
 					.build().registerModule(new JavaTimeModule());

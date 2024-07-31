@@ -5,12 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -24,6 +20,24 @@ public class PostgresController extends PersistenceController {
     private String jdbcUrl = "jdbc:postgresql://localhost:5432/mydatabase";
     private String dbUser = "postgres";
     private String dbPassword = "password";
+
+    private final String answerValueQuestionString = Answers.listOfTypeOfAnswers.stream().map((answerString) -> "?")
+            .collect(Collectors.joining(", "))
+            .concat(", ?");// concat for userid
+
+    private final String answerValueExcludedUpdateString = Answers.listOfTypeOfAnswers.stream()
+            .map((answerString) -> answerString + " = " + "EXCLUDED."
+                    + answerString)
+            .reduce(
+                    (answerString, answerString2) -> answerString + " , "
+                            + answerString2)
+            .orElseThrow();
+
+    private final String answerValueReturnString = Answers.listOfTypeOfAnswers.stream()
+            .map(answerString -> answerString + " AS " + answerString)
+            .reduce((answerString, answerString2) -> answerString + " , "
+                    + answerString2)
+            .orElseThrow();
 
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(jdbcUrl, dbUser, dbPassword);
@@ -46,9 +60,9 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
-    public Answers getUserAnswersFromAuthId(String authId) {
+    public Answers getUserAnswersFromAuthId(User user) {
         try {
-            UUID userId = this.getUserFromAuthId(authId).id();
+            UUID userId = user.id();
             Connection connection = getConnection();
 
             List<String> listOfAnswerTypes = Answers.listOfTypeOfAnswers;
@@ -64,11 +78,39 @@ public class PostgresController extends PersistenceController {
             Answers usersAnswers = new AnswerAdapter().fromResultSetRow(resultSet);
 
             return usersAnswers;
-        } catch (ElementNotFoundException e) {
-            throw new RuntimeException(String.format("Could not find user with authId: %s", authId));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Returns an Answers object that is the result of comparing persisted and newly
+     * submitted Answers. The returned Answers object should have the least
+     * null/empty
+     * answer values between the two.
+     * <p>
+     * This method always returns an Answers object with a List< Answer > that
+     * is
+     * full. For example, the List will always have all the possible answer
+     * types.
+     *
+     * @param persistedAnswers the currently persisted answers for the user
+     * @param submittedAnswers the newly submitted answers for the user
+     * @return Answers object with the least number of null/empty answer values.
+     * @see Answers
+     */
+    private Answers mergeAnswers(Answers persistedAnswers, Answers submittedAnswers) {
+        Map<String, Answer> mergerMap = persistedAnswers.getAnswers().stream()
+                .collect(Collectors.toMap(Answer::getType, answer -> answer));
+
+        submittedAnswers.getAnswers().forEach(answer -> {
+            String answerType = answer.getType().toLowerCase();
+            if (mergerMap.containsKey(answerType) && answer.getValue() != null) {
+                mergerMap.replace(answerType, answer);
+            }
+        });
+
+        return new Answers(mergerMap.values().stream().toList());
     }
 
     @Override
@@ -76,45 +118,31 @@ public class PostgresController extends PersistenceController {
         try {
             Connection connection = getConnection();
 
-            List<Answer> listOfAnswers = answers.getAnswers();
-            List<String> listOfAnswerTypes = Answers.listOfTypeOfAnswers;
+            List<Answer> listOfAnswers = this.mergeAnswers(this.getUserAnswersFromAuthId(user),
+                    answers).getAnswers();
+
+            String answerValueColumnString = listOfAnswers.stream().map(Answer::getType)
+                    .collect(Collectors.joining(", "))
+                    .concat(", userid");// concat for userid
 
             PreparedStatement updateStatement = connection.prepareStatement(
                     """
-                            INSERT INTO answers
+                            INSERT INTO answers (%s)
                             VALUES (%s)
                             ON CONFLICT (userid) DO UPDATE
                             SET %s
                             RETURNING %s;
                                     """
                             .formatted(
-                                    listOfAnswerTypes.stream().map((answerString) -> "?")
-                                            .collect(Collectors.joining(", "))
-                                            .concat(", ?"), // concat for userid
+                                    answerValueColumnString,
+                                    answerValueQuestionString,
+                                    answerValueExcludedUpdateString,
+                                    answerValueReturnString));
 
-                                    listOfAnswerTypes.stream().map((answerString) -> answerString + " = " + "EXCLUDED."
-                                            + answerString).reduce(
-                                                    (answerString, answerString2) -> answerString + " , "
-                                                            + answerString2)
-                                            .orElseThrow(),
-                                    listOfAnswerTypes.stream().map(answerString -> answerString + " AS " + answerString)
-                                            .reduce((answerString, answerString2) -> answerString + " , "
-                                                    + answerString2)
-                                            .orElseThrow())); // getOrElse("") is wrong for sure, perhaps an OK use-case
-                                                              // for raw get(), throw is safer for sure!
+            updateStatement.setObject(listOfAnswers.size() + 1, user.id());
 
-            updateStatement.setObject(1, user.id());
-
-            int idx = 0;
-            Map<String, Answer> updateMap = new LinkedHashMap<>(Answers.ATypeAnswerMap);
-
-            while (idx < listOfAnswerTypes.size()) {
-                if (idx < listOfAnswers.size()) {
-                    updateMap.replace(listOfAnswers.get(idx).getType(), listOfAnswers.get(idx));
-                }
-                // will throw if key not in map (which is fair)
-                updateMap.get(listOfAnswerTypes.get(idx)).setSQLStatement(updateStatement, idx + 2);
-                idx += 1;
+            for (int idx = 0; idx < listOfAnswers.size(); idx++) {
+                listOfAnswers.get(idx).setSQLStatement(updateStatement, idx + 1);
             }
 
             ResultSet updateResultSet = updateStatement.executeQuery();
