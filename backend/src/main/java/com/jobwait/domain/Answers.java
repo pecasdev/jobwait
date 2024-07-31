@@ -21,14 +21,14 @@ public class Answers {
         // Leave this alone.
         private static Map<String, Answer> createMap() {
                 Map<String, Answer> mapping = new LinkedHashMap<>();
-                mapping.put("jobAcceptDate", new OffsetDateTimeAnswer("jobAcceptDate", null));
-                mapping.put("jobSearchStartDate", new OffsetDateTimeAnswer("jobSearchStartDate", null));
-                mapping.put("workModel", new ValidWorkModelAnswer("workModel", null));
-                mapping.put("workContract", new ValidWorkContractAnswer("workContract", null));
-                mapping.put("jobApplicationCount", new IntegerAnswer("jobApplicationCount", null));
-                mapping.put("jobTitle", new StringAnswer("jobTitle", null));
-                mapping.put("yearsOfProExperience", new IntegerAnswer("yearsOfProExperience", null));
-                mapping.put("educationLevel", new ValidEducationLevelAnswer("educationLevel", null));
+                mapping.put("jobacceptdate", new OffsetDateTimeAnswer("jobacceptdate", null));
+                mapping.put("jobsearchstartdate", new OffsetDateTimeAnswer("jobsearchstartdate", null));
+                mapping.put("workmodel", new ValidWorkModelAnswer("workmodel", null));
+                mapping.put("workcontract", new ValidWorkContractAnswer("workcontract", null));
+                mapping.put("jobapplicationcount", new IntegerAnswer("jobapplicationcount", null));
+                mapping.put("jobtitle", new StringAnswer("jobtitle", null));
+                mapping.put("yearsofproexperience", new IntegerAnswer("yearsofproexperience", null));
+                mapping.put("educationlevel", new ValidEducationLevelAnswer("educationlevel", null));
                 return mapping;
         }
 
