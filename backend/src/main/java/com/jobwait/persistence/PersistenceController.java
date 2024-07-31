@@ -6,7 +6,9 @@ import com.jobwait.domain.User;
 public abstract class PersistenceController {
     public abstract User getUserFromAuthId(String authId);
 
-    public abstract User updateUserAnswers(User user, Answers answers);
+    public abstract Answers getUserAnswersFromAuthId(User user);
+
+    public abstract Answers updateUserAnswers(User user, Answers answers);
 
     public abstract User createUserFromAuthId(String authId);
 
