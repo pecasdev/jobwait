@@ -1,9 +1,9 @@
 CREATE TABLE questions(
     id SERIAL PRIMARY KEY,
     key TEXT,
-    text TEXT,
-    answers TEXT
+    text TEXT
 );
+
 CREATE TABLE users(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     authhash TEXT UNIQUE -- for hashing API id returned by linkedin/google/whatever
