@@ -29,8 +29,8 @@ public class RequestController {
     }
 
     public Answers getUserAnswers(AuthToken token) {
-        oAuthValidator.validateToken(token);
-        return persistence.getUserAnswersFromAuthId(token.clientId());
+        User user = getUserFromAuthToken(token);
+        return persistence.getUserAnswersFromAuthId(user);
     }
 
     public Answers submitUserAnswers(AuthToken token, Answers answers) {
