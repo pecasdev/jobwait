@@ -39,7 +39,7 @@ public class RequestNavigation {
 		return user.id().toString();
 	}
 
-	@GetMapping(path = "/answer", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
 	public static String getUserAnswers(@RequestParam("at") String authToken) {
 		try {
 			AuthToken token = AuthToken.fromClientId(authToken);
@@ -50,7 +50,7 @@ public class RequestNavigation {
 		}
 	}
 
-	@PostMapping(path = "/answer/submit")
+	@PostMapping(path = "/answers/submit")
 	public static ResponseEntity<String> submitUserAnswers(@RequestParam("at") String authToken,
 			@RequestBody String payload) {
 		try {
