@@ -1,11 +1,10 @@
 import { useForm } from "@mantine/form";
 import { Button, Fieldset, Group } from "@mantine/core";
 import { PromptDefinition } from "./PromptTypes";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Answers } from "../models/Answers";
 import { handleFormSubmission } from "./output/FormSubmissionHandler";
-
-type PromptCollectorProps = { promptDefinitions: PromptDefinition[] };
+import { FailAlert, SuccessAlert } from "./output/AlertOnSubmission";
 
 function updateImageBlur(
     imageName: string,
@@ -21,9 +20,18 @@ function updateImageBlur(
     }
 }
 
+type PromptCollectorProps = { promptDefinitions: PromptDefinition[] };
+
+export enum Status {
+    PENDING = "pending",
+    SUCCESS = "success",
+    ERROR = "error",
+}
+
 export function BasicForm(props: PromptCollectorProps) {
-    let formValues : Answers = {"answers" : []};
+    let formValues: Answers = { answers: [] };
     let children: ReactNode[] = [];
+    const [open, setOpen] = useState<Status>(Status.PENDING);
 
     const form = useForm({
         mode: "uncontrolled",
@@ -33,7 +41,9 @@ export function BasicForm(props: PromptCollectorProps) {
                 Object.keys(previous).length != 0 &&
                 Object.keys(values).length != 0
             ) {
-                const changedValues = values.answers.filter(answer => answer.value != "")
+                const changedValues = values.answers.filter(
+                    (answer) => answer.value != "",
+                );
 
                 updateImageBlur(
                     "gatitoImage",
@@ -44,11 +54,13 @@ export function BasicForm(props: PromptCollectorProps) {
     });
 
     props.promptDefinitions.forEach((promptDef: PromptDefinition) => {
-        formValues.answers.push({"type": promptDef.idKey, "value": ""});
+        formValues.answers.push({ type: promptDef.idKey, value: "" });
         const index = formValues.answers.length - 1;
 
         //this could be curried but it would serve no purpose in this case)
-        const validateAndUpdateForm = (value : any) => {form.setFieldValue(`answers.${index}.value`, value)}; 
+        const validateAndUpdateForm = (value: any) => {
+            form.setFieldValue(`answers.${index}.value`, value);
+        };
 
         const { inputType, ...childProps } = promptDef;
         children.push(
@@ -75,7 +87,24 @@ export function BasicForm(props: PromptCollectorProps) {
                 >
                     {...children}
                     <Group justify="flex-end" mt="md">
-                        <Button onClick={() => handleFormSubmission(form.getValues())}>Submit</Button>
+                        {open == Status.SUCCESS && (
+                            <SuccessAlert setState={setOpen}></SuccessAlert>
+                        )}
+                        {open == Status.ERROR && (
+                            <FailAlert setState={setOpen}></FailAlert>
+                        )}
+                        <Button
+                            onClick={() => {
+                                handleFormSubmission(form.getValues())
+                                    .then((_) => setOpen(Status.SUCCESS))
+                                    .catch((error) => {
+                                        console.error(error);
+                                        setOpen(Status.ERROR);
+                                    });
+                            }}
+                        >
+                            Submit
+                        </Button>
                     </Group>
                 </Fieldset>
             </div>
