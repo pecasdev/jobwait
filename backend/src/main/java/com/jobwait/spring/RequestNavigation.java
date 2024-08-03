@@ -20,7 +20,7 @@ import com.jobwait.domain.Answers;
 import com.jobwait.domain.User;
 import com.jobwait.security.AuthToken;
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://127.0.0.1:3000")
 @RestController
 public class RequestNavigation {
 	private static RequestController requestController = new RequestController();
