@@ -60,8 +60,8 @@ public class RequestNavigation {
 		try {
 			ObjectMapper mapper = JsonMapper.builder().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
 					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
-					.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,
-							true)
+					.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
+					.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true) // used for "" -> null
 					.build().registerModule(new JavaTimeModule());
 
 			Answers answers = mapper.readValue(payload, Answers.class);

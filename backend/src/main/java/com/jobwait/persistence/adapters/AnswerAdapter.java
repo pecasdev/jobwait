@@ -35,6 +35,7 @@ public class AnswerAdapter {
 
             ObjectMapper mapper = JsonMapper.builder()
                     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
+                    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
                     .build().registerModule(new JavaTimeModule());
 
             return mapper.readValue(answersArrayJSONObject.toString(), Answers.class);
