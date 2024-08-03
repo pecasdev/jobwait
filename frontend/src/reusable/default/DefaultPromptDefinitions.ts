@@ -50,7 +50,15 @@ export const defaultPromptDefinitions: PromptDefinition[] = [
         displayText:
             "What is the highest level of education you have achieved?",
         idKey: "educationlevel",
-        choices: ["High School", "College", "University", "Other"],
+        choices: [
+            "Less than high school",
+            "High school Diploma",
+            "Associate Degree",
+            "Bachelor's Degree",
+            "Master's Degree",
+            "Doctorate Degree",
+            "Other",
+        ],
         inputType: ComboboxPrompt,
     },
 ];
