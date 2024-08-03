@@ -34,8 +34,8 @@ CREATE CAST (character varying AS valideducationlevel) WITH INOUT AS ASSIGNMENT;
 
 CREATE TABLE answers(
     userid UUID REFERENCES users(id) UNIQUE,
-    jobacceptdate TIMESTAMPTZ,
-    jobsearchstartdate TIMESTAMPTZ,
+    jobacceptdate DATE,
+    jobsearchstartdate DATE,
     workmodel validworkmodel,
     workcontract validworkcontract,
     jobapplicationcount INT CHECK (
