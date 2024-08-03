@@ -6,12 +6,6 @@ import TextPrompt from "../inputs/TextPrompt";
 
 export const defaultPromptDefinitions: PromptDefinition[] = [
     {
-        displayText: "Are you currently employed?",
-        idKey: "employmentstatus",
-        choices: ["Yes", "No"],
-        inputType: ComboboxPrompt,
-    },
-    {
         displayText: "When did you accept your position?",
         idKey: "jobacceptdate",
         inputType: DatePickerPrompt,

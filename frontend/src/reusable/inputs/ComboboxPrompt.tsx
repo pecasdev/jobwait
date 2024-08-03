@@ -27,7 +27,6 @@ export function ComboboxPrompt(props: PromptTypeProps) {
     return (
         <Combobox
             resetSelectionOnOptionHover
-            transitionProps={{ duration: 50, transition: "pop" }}
             onOptionSubmit={(val) => {
                 props.validateAndUpdate(val);
                 setValue(val);
