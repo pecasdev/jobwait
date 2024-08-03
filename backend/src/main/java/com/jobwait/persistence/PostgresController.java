@@ -107,6 +107,8 @@ public class PostgresController extends PersistenceController {
             String answerType = answer.getType().toLowerCase();
             if (mergerMap.containsKey(answerType) && answer.getValue() != null) {
                 mergerMap.replace(answerType, answer);
+            } else if (mergerMap.containsKey(answerType) == false) {
+                mergerMap.put(answerType, answer);
             }
         });
 

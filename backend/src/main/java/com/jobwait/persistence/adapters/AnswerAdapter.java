@@ -8,11 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jobwait.domain.Answers;
+import com.jobwait.spring.utils.Utils;
 
 public class AnswerAdapter {
     public Answers fromResultSetRow(ResultSet rs) throws AdapterException {
@@ -33,12 +31,7 @@ public class AnswerAdapter {
             }
             answersArrayJSONObject.put("answers", listOfAnswersJSON);
 
-            ObjectMapper mapper = JsonMapper.builder()
-                    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
-                    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
-                    .build().registerModule(new JavaTimeModule());
-
-            return mapper.readValue(answersArrayJSONObject.toString(), Answers.class);
+            return Utils.mapper.readValue(answersArrayJSONObject.toString(), Answers.class);
         } catch (SQLException | JsonProcessingException e) {
             throw new AdapterException(e);
         }
