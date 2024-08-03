@@ -33,10 +33,14 @@ public class RequestNavigation {
 	}
 
 	@PostMapping("/user/create")
-	public static String createUserFromAuthToken(@RequestParam("at") String authToken) {
-		AuthToken token = AuthToken.fromClientId(authToken);
-		User user = requestController.createUserFromAuthToken(token);
-		return user.id().toString();
+	public static ResponseEntity<String> createUserFromAuthToken(@RequestParam("at") String authToken) {
+		try {
+			AuthToken token = AuthToken.fromClientId(authToken);
+			requestController.createUserFromAuthToken(token);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GetMapping(path = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
