@@ -2,6 +2,8 @@ import { useForm } from "@mantine/form";
 import { Button, Fieldset, Group } from "@mantine/core";
 import { PromptDefinition } from "./PromptTypes";
 import { ReactNode } from "react";
+import { Answers } from "../models/Answers";
+import { handleFormSubmission } from "./output/FormSubmissionHandler";
 
 type PromptCollectorProps = { promptDefinitions: PromptDefinition[] };
 
@@ -18,12 +20,6 @@ function updateImageBlur(
         image.style.filter = `blur(${blurQuantity * blurScaling}px)`;
     }
 }
-
-export type Answer = {type: string, value: string}
-
-export type Answers = {
-    answers : Answer[];
-};
 
 export function BasicForm(props: PromptCollectorProps) {
     let formValues : Answers = {"answers" : []};
@@ -79,7 +75,7 @@ export function BasicForm(props: PromptCollectorProps) {
                 >
                     {...children}
                     <Group justify="flex-end" mt="md">
-                        <Button>Submit</Button>
+                        <Button onClick={() => handleFormSubmission(form.getValues())}>Submit</Button>
                     </Group>
                 </Fieldset>
             </div>
