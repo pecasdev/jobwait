@@ -7,7 +7,7 @@ import TextPrompt from "../inputs/TextPrompt";
 export const defaultPromptDefinitions: PromptDefinition[] = [
     {
         displayText: "Are you currently employed?",
-        idKey: "employment_status",
+        idKey: "employmentstatus",
         choices: ["Yes", "No"],
         inputType: ComboboxPrompt,
     },

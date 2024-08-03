@@ -16,10 +16,7 @@ export default function SliderPrompt(props: PromptTypeProps) {
                 onChange={setValue}
                 onChangeEnd={(val) => {
                     setEndValue(val);
-                    props.form.setFieldValue(
-                        `prompts.${props.idKey}.data`,
-                        val,
-                    );
+                    props.validateAndUpdate(val);
                 }}
                 max={props.max}
             />

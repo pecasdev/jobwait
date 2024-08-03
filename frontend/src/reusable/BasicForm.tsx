@@ -19,57 +19,55 @@ function updateImageBlur(
     }
 }
 
-type FormValues = {
-    prompts: {
-        [key: string]: {
-            data: string;
-        };
-    };
+export type Answer = {type: string, value: string}
+
+export type Answers = {
+    answers : Answer[];
 };
 
 export function BasicForm(props: PromptCollectorProps) {
-    let formValues: Map<string, any> = new Map<string, any>();
-
+    let formValues : Answers = {"answers" : []};
     let children: ReactNode[] = [];
 
     const form = useForm({
         mode: "uncontrolled",
-        initialValues: {} as FormValues,
+        initialValues: {} as Answers,
         onValuesChange(values, previous) {
             if (
                 Object.keys(previous).length != 0 &&
                 Object.keys(values).length != 0
             ) {
-                const changedValues = [...Object.values(values.prompts)].filter(
-                    (value) => value.data != "",
-                );
+                const changedValues = values.answers.filter(answer => answer.value != "")
 
                 updateImageBlur(
                     "gatitoImage",
-                    Object.keys(previous.prompts).length - changedValues.length,
+                    Object.keys(previous.answers).length - changedValues.length,
                 );
             }
         },
     });
 
     props.promptDefinitions.forEach((promptDef: PromptDefinition) => {
-        formValues.set(promptDef.idKey, { data: "" });
+        formValues.answers.push({"type": promptDef.idKey, "value": ""});
+        const index = formValues.answers.length - 1;
+
+        //this could be curried but it would serve no purpose in this case)
+        const validateAndUpdateForm = (value : any) => {form.setFieldValue(`answers.${index}.value`, value)}; 
+
         const { inputType, ...childProps } = promptDef;
         children.push(
             promptDef.inputType({
                 idKey: childProps.idKey,
                 labelText: childProps.displayText,
                 choices: childProps.choices,
+                validateAndUpdate: validateAndUpdateForm,
                 form: form,
                 max: childProps.max,
             }),
         );
     });
 
-    const formSet = { prompts: Object.fromEntries(formValues) };
-
-    form.setInitialValues(formSet);
-    form.initialize(formSet);
+    form.initialize(formValues);
 
     return (
         <div className="grid grid-cols-2 gap-x-52">

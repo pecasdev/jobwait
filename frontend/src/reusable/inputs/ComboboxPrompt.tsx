@@ -29,7 +29,7 @@ export function ComboboxPrompt(props: PromptTypeProps) {
             resetSelectionOnOptionHover
             transitionProps={{ duration: 50, transition: "pop" }}
             onOptionSubmit={(val) => {
-                props.form.setFieldValue(`prompts.${props.idKey}.data`, val);
+                props.validateAndUpdate(val);
                 setValue(val);
                 comboboxStore.updateSelectedOptionIndex("active");
                 comboboxStore.closeDropdown();

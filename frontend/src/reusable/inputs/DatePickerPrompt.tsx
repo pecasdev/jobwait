@@ -11,7 +11,7 @@ export default function DatePickerPrompt(props: PromptTypeProps) {
             value={value}
             onChange={(val) => {
                 setValue(val);
-                props.form.setFieldValue(`prompts.${props.idKey}.data`, val);
+                props.validateAndUpdate(val);
             }}
         />
     );

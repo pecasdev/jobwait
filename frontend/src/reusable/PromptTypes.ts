@@ -15,7 +15,7 @@ export type PromptDefinition = {
 export type PromptTypeProps = {
     idKey: string;
     labelText: string;
-    validateAndUpdate: (response: string) => void;
+    validateAndUpdate: (value : any) => void;
     choices?: string[];
     form: any;
     max: number;
