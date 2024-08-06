@@ -105,9 +105,7 @@ public class PostgresController extends PersistenceController {
 
         submittedAnswers.getAnswers().forEach(answer -> {
             String answerType = answer.getType().toLowerCase();
-            if (mergerMap.containsKey(answerType) && answer.getValue() != null) {
-                mergerMap.replace(answerType, answer);
-            } else if (mergerMap.containsKey(answerType) == false) {
+            if (answer.getValue() != null || !mergerMap.containsKey(answerType)) {
                 mergerMap.put(answerType, answer);
             }
         });
@@ -165,7 +163,9 @@ public class PostgresController extends PersistenceController {
             statement.setString(1, authId);
             ResultSet resultSet = statement.executeQuery();
             List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
-            return PersistenceUtil.assertSingleElement(users);
+            User user = PersistenceUtil.assertSingleElement(users);
+            this.updateUserAnswers(user, new Answers());
+            return user;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

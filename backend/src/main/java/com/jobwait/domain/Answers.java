@@ -35,6 +35,7 @@ public class Answers {
         private List<Answer> answers;
 
         public Answers() {
+                this.answers = ATypeAnswerMap.values().stream().toList();
         }
 
         public Answers(List<Answer> answers) {
