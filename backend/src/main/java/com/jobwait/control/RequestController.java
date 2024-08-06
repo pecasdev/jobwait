@@ -1,9 +1,5 @@
 package com.jobwait.control;
 
-import java.util.List;
-import java.util.Map;
-
-import com.jobwait.domain.Answer;
 import com.jobwait.domain.Answers;
 import com.jobwait.domain.User;
 import com.jobwait.persistence.PersistenceController;

@@ -6,12 +6,6 @@ spring:
         url: jdbc:postgresql://localhost:5432/mydatabase
         username: postgres
         password: ${PGPASSWORD}
-    graphql:
-        cors:
-            allowed-origins: http://localhost:3000
-        schema:
-            introspection:
-                enabled: true
 
 server:
     port: 9000

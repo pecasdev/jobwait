@@ -1,9 +1,10 @@
 import { useForm } from "@mantine/form";
 import { Button, Fieldset, Group } from "@mantine/core";
 import { PromptDefinition } from "./PromptTypes";
-import { ReactNode } from "react";
-
-type PromptCollectorProps = { promptDefinitions: PromptDefinition[] };
+import { ReactNode, useState } from "react";
+import { Answers } from "../models/Answers";
+import { handleFormSubmission } from "./output/FormSubmissionHandler";
+import { FailAlert, SuccessAlert } from "./output/AlertOnSubmission";
 
 function updateImageBlur(
     imageName: string,
@@ -19,57 +20,62 @@ function updateImageBlur(
     }
 }
 
-type FormValues = {
-    prompts: {
-        [key: string]: {
-            data: string;
-        };
-    };
-};
+type PromptCollectorProps = { promptDefinitions: PromptDefinition[] };
+
+export enum Status {
+    PENDING = "pending",
+    SUCCESS = "success",
+    ERROR = "error",
+}
 
 export function BasicForm(props: PromptCollectorProps) {
-    let formValues: Map<string, any> = new Map<string, any>();
-
+    let formValues: Answers = { answers: [] };
     let children: ReactNode[] = [];
+    const [open, setOpen] = useState<Status>(Status.PENDING);
 
     const form = useForm({
         mode: "uncontrolled",
-        initialValues: {} as FormValues,
+        initialValues: {} as Answers,
         onValuesChange(values, previous) {
             if (
                 Object.keys(previous).length != 0 &&
                 Object.keys(values).length != 0
             ) {
-                const changedValues = [...Object.values(values.prompts)].filter(
-                    (value) => value.data != "",
+                const changedValues = values.answers.filter(
+                    (answer) => answer.value != "",
                 );
 
                 updateImageBlur(
                     "gatitoImage",
-                    Object.keys(previous.prompts).length - changedValues.length,
+                    Object.keys(previous.answers).length - changedValues.length,
                 );
             }
         },
     });
 
     props.promptDefinitions.forEach((promptDef: PromptDefinition) => {
-        formValues.set(promptDef.idKey, { data: "" });
+        formValues.answers.push({ type: promptDef.idKey, value: "" });
+        const index = formValues.answers.length - 1;
+
+        //this could be curried but it would serve no purpose in this case)
+        const validateAndUpdateForm = (value: any) => {
+            form.setFieldValue(`answers.${index}.value`, value);
+        };
+
         const { inputType, ...childProps } = promptDef;
         children.push(
             promptDef.inputType({
                 idKey: childProps.idKey,
                 labelText: childProps.displayText,
                 choices: childProps.choices,
+                validateAndUpdate: validateAndUpdateForm,
                 form: form,
                 max: childProps.max,
             }),
         );
     });
 
-    const formSet = { prompts: Object.fromEntries(formValues) };
-
-    form.setInitialValues(formSet);
-    form.initialize(formSet);
+    form.initialize(formValues);
 
     return (
         <div className="grid grid-cols-2 gap-x-52">
@@ -81,7 +87,24 @@ export function BasicForm(props: PromptCollectorProps) {
                 >
                     {...children}
                     <Group justify="flex-end" mt="md">
-                        <Button>Submit</Button>
+                        {open == Status.SUCCESS && (
+                            <SuccessAlert setState={setOpen}></SuccessAlert>
+                        )}
+                        {open == Status.ERROR && (
+                            <FailAlert setState={setOpen}></FailAlert>
+                        )}
+                        <Button
+                            onClick={() => {
+                                handleFormSubmission(form.getValues())
+                                    .then((_) => setOpen(Status.SUCCESS))
+                                    .catch((error) => {
+                                        console.error(error);
+                                        setOpen(Status.ERROR);
+                                    });
+                            }}
+                        >
+                            Submit
+                        </Button>
                     </Group>
                 </Fieldset>
             </div>

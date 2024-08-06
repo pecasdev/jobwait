@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.ArrayList;
 
 import com.jobwait.persistence.answerpersistence.IntegerAnswer;
-import com.jobwait.persistence.answerpersistence.OffsetDateTimeAnswer;
+import com.jobwait.persistence.answerpersistence.LocalDateAnswer;
 import com.jobwait.persistence.answerpersistence.StringAnswer;
 import com.jobwait.persistence.answerpersistence.ValidEducationLevelAnswer;
 import com.jobwait.persistence.answerpersistence.ValidWorkContractAnswer;
@@ -21,8 +21,8 @@ public class Answers {
         // Leave this alone.
         private static Map<String, Answer> createMap() {
                 Map<String, Answer> mapping = new LinkedHashMap<>();
-                mapping.put("jobacceptdate", new OffsetDateTimeAnswer("jobacceptdate", null));
-                mapping.put("jobsearchstartdate", new OffsetDateTimeAnswer("jobsearchstartdate", null));
+                mapping.put("jobacceptdate", new LocalDateAnswer("jobacceptdate", null));
+                mapping.put("jobsearchstartdate", new LocalDateAnswer("jobsearchstartdate", null));
                 mapping.put("workmodel", new ValidWorkModelAnswer("workmodel", null));
                 mapping.put("workcontract", new ValidWorkContractAnswer("workcontract", null));
                 mapping.put("jobapplicationcount", new IntegerAnswer("jobapplicationcount", null));
@@ -35,6 +35,7 @@ public class Answers {
         private List<Answer> answers;
 
         public Answers() {
+                this.answers = ATypeAnswerMap.values().stream().toList();
         }
 
         public Answers(List<Answer> answers) {

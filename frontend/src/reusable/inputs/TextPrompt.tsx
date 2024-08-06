@@ -8,10 +8,7 @@ export default function TextPrompt(props: PromptTypeProps) {
             name="displayText"
             onBlur={(val) => {
                 if (val.target.value.trim())
-                    props.form.setFieldValue(
-                        `prompts.${props.idKey}.data`,
-                        val.target.value.trim(),
-                    );
+                    props.validateAndUpdate(val.target.value.trim());
             }}
         />
     );
