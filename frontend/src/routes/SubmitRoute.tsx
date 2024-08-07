@@ -1,6 +1,10 @@
-import { BasicForm } from "../reusable/BasicForm";
+import { DataSubmitForm } from "../reusable/DataSubmitForm";
 import { defaultPromptDefinitions } from "../reusable/default/DefaultPromptDefinitions";
 
 export function SubmitRoute() {
-    return <BasicForm promptDefinitions={defaultPromptDefinitions}></BasicForm>;
+    return (
+        <DataSubmitForm
+            promptDefinitions={defaultPromptDefinitions}
+        ></DataSubmitForm>
+    );
 }

@@ -1,6 +1,6 @@
 import { Alert } from "@mantine/core";
 import { IconCheck, IconExclamationCircle } from "@tabler/icons-react";
-import { Status } from "../BasicForm";
+import { Status } from "../DataSubmitForm";
 
 export function FailAlert(props: { setState: (state: Status) => void }) {
     const failIcon = <IconExclamationCircle />;

@@ -4,6 +4,8 @@ import { Component, ReactNode, useState } from "react";
 import { LoadingIcon } from "../reusable/LoadingIcon";
 import GraphExample from "./GraphExample";
 import { irandom_range } from "../util/randomRange";
+import { Box, LoadingOverlay } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 
 export type StatRenderType = "box" | "line";
 export type StatRenderBundleProps = {
@@ -18,35 +20,29 @@ export type StatRenderBundleState = {
     renderData: any | null;
 };
 
-export default function StatRenderBundle({queryPath, renderType}: StatRenderBundleProps) {
+export default function StatRenderBundle({
+    queryPath,
+    renderType,
+}: StatRenderBundleProps) {
     const [renderData, setRenderData] = useState<any>(null);
-    
-    function dummySetData() {
-        console.log("ye");
-        setRenderData("something");
-    }
+    const [_, { toggle }] = useDisclosure(false);
 
-    function renderStateData() {
-        if (renderData == null) {
-            return (
-                <p className="text-center w-80 m-10">
-                    grabbing your stats hngggggg
-                    <LoadingIcon showIcon={true} showLoading={true} />
-                </p>
-            );
-        } else {
-            return <GraphExample />;
-        }
-    }
-
-    function render() {
-        return (
-            <div className="flex w-64 h-64 bg-blue-200 align-middle items-center">
-                {renderStateData()}
-            </div>
-        );
-    }
-
-    setTimeout(dummySetData, irandom_range(1000, 3000));
-    return render();
+    return (
+        <Box
+            align-items="center"
+            justify-content="center"
+            ml="lg"
+            pos="relative"
+        >
+            <LoadingOverlay
+                visible={renderData == null}
+                overlayProps={{ radius: "sm", blur: 2 }}
+                onClick={() => {
+                    setRenderData("test");
+                    toggle;
+                }}
+            ></LoadingOverlay>
+            <GraphExample />
+        </Box>
+    );
 }

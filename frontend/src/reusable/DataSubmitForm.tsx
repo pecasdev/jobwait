@@ -1,5 +1,5 @@
 import { useForm } from "@mantine/form";
-import { Button, Fieldset, Group } from "@mantine/core";
+import { Button, Fieldset, Grid, Group } from "@mantine/core";
 import { PromptDefinition } from "./PromptTypes";
 import { ReactNode, useState } from "react";
 import { Answers } from "../models/Answers";
@@ -28,7 +28,7 @@ export enum Status {
     ERROR = "error",
 }
 
-export function BasicForm(props: PromptCollectorProps) {
+export function DataSubmitForm(props: PromptCollectorProps) {
     let formValues: Answers = { answers: [] };
     let children: ReactNode[] = [];
     const [open, setOpen] = useState<Status>(Status.PENDING);
@@ -78,10 +78,10 @@ export function BasicForm(props: PromptCollectorProps) {
     form.initialize(formValues);
 
     return (
-        <div className="grid grid-cols-2 gap-x-52">
-            <div>
+        <Grid columns={3} align="center" justify="center">
+            <Grid.Col span={1}>
                 <Fieldset
-                    legend="Give us your data!"
+                    legend="We need more data!"
                     radius="md"
                     variant="filled"
                 >
@@ -107,14 +107,14 @@ export function BasicForm(props: PromptCollectorProps) {
                         </Button>
                     </Group>
                 </Fieldset>
-            </div>
-            <div>
+            </Grid.Col>
+            <Grid.Col span={1} offset={1}>
                 <img
-                    className="obtain-content blur-3xl"
+                    className="blur-3xl"
                     id="gatitoImage" //THE BOY
                     src="gatito.jpg"
                 />
-            </div>
-        </div>
+            </Grid.Col>
+        </Grid>
     );
 }
