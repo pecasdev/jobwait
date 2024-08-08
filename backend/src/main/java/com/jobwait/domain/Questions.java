@@ -1,5 +1,6 @@
 package com.jobwait.domain;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Questions {
@@ -23,10 +24,10 @@ public class Questions {
     // don't touch this stuff
     public static List<String> knownQuestionKeys = Questions.known.stream().map(x -> x.key).toList();
 
-    public static Question questionFromKey(String questionKey) {
+    public static Question questionFromKey(String questionKey) throws IOException {
         List<Question> matches = known.stream().filter(q -> q.key.equals(questionKey)).toList();
         if (matches.size() == 0) {
-            throw new InvalidQuestionKey(questionKey);
+            throw new IOException("questionKey '%s' does not exist in known questions".formatted(questionKey));
         }
         return matches.getFirst();
     }
