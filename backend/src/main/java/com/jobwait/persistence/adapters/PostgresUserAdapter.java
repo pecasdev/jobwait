@@ -12,7 +12,18 @@ public class PostgresUserAdapter extends PostgresAdapter<User> {
         try {
             String id = rs.getString("id");
             UUID uuid = UUID.fromString(id);
-            return new User(uuid);
+
+            String authHash = rs.getString("authhash");
+
+            return new User(uuid, authHash);
+        } catch (SQLException e) {
+            throw new AdapterException(e);
+        }
+    }
+
+    public void statementSetPlaceholders(PreparedStatement ps, User user) throws AdapterException {
+        try {
+            ps.setString(1, user.authHash().toString());
         } catch (SQLException e) {
             throw new AdapterException(e);
         }
