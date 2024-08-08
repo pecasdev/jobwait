@@ -1,13 +1,8 @@
 package com.jobwait.spring;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,21 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jobwait.control.RequestController;
-import com.jobwait.domain.Answer;
 import com.jobwait.fault.FaultException;
-import com.jobwait.security.AuthToken;
 import com.jobwait.spring.utils.Utils;
 
-// todo - remove all try/catch blocks from jobwait, there should be a single try/catch at the end or whenever we want to convert a runtimeexception/sqlexception into a more generic Fault exception
 @CrossOrigin("http://127.0.0.1:3000")
 @RestController
 public class SpringEndpoints {
-	private static RequestController requestController = new RequestController();
-
 	private static ResponseEntity<ObjectNode> processAndHandleException(Supplier<ObjectNode> func) {
 		ObjectNode responseNode = Utils.mapper.createObjectNode();
 		responseNode.set("data", null);
