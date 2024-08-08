@@ -21,8 +21,6 @@ import com.jobwait.spring.utils.Utils;
 public class SpringEndpoints {
 	private static ResponseEntity<ObjectNode> processAndHandleException(Supplier<ObjectNode> func) {
 		ObjectNode responseNode = Utils.mapper.createObjectNode();
-		responseNode.set("data", null);
-		responseNode.set("error", null);
 
 		try {
 			responseNode.set("data", func.get());
