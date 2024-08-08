@@ -5,39 +5,20 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import com.jobwait.domain.Answer;
-import com.jobwait.domain.Answers;
+import com.jobwait.domain.Questions;
 import com.jobwait.domain.User;
+import com.jobwait.persistence.adapters.PostgresAnswerAdapter;
 import com.jobwait.persistence.adapters.PostgresUserAdapter;
-import com.jobwait.persistence.adapters.AnswerAdapter;
 
 public class PostgresController extends PersistenceController {
     private String jdbcUrl = "jdbc:postgresql://localhost:5432/mydatabase";
     private String dbUser = "postgres";
     private String dbPassword = "password";
-
-    private final String answerValueQuestionString = Answers.listOfTypeOfAnswers.stream().map((answerString) -> "?")
-            .collect(Collectors.joining(", "))
-            .concat(", ?");// concat for userid
-
-    private final String answerValueExcludedUpdateString = Answers.listOfTypeOfAnswers.stream()
-            .map((answerString) -> answerString + " = " + "EXCLUDED."
-                    + answerString)
-            .reduce(
-                    (answerString, answerString2) -> answerString + " , "
-                            + answerString2)
-            .orElseThrow();
-
-    private final String answerValueReturnString = Answers.listOfTypeOfAnswers.stream()
-            .map(answerString -> answerString + " AS " + answerString)
-            .reduce((answerString, answerString2) -> answerString + " , "
-                    + answerString2)
-            .orElseThrow();
 
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(jdbcUrl, dbUser, dbPassword);
@@ -60,95 +41,84 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
-    public Answers getUserAnswersFromAuthId(User user) {
+    public List<Answer> getUserAnswersFromAuthId(User user) {
         try {
             UUID userId = user.id();
             Connection connection = getConnection();
 
-            List<String> listOfAnswerTypes = Answers.listOfTypeOfAnswers;
-            PreparedStatement statement = connection.prepareStatement("""
-                       SELECT
-                       %s
-                    FROM answers WHERE userid = ?"""
-                    .formatted(listOfAnswerTypes.stream().collect(Collectors.joining(", "))));
+            String answerColumnValues = String.join(", ", Questions.knownQuestionKeys);
+            String statementText = "SELECT %s FROM answers WHERE userid = ?".formatted(answerColumnValues);
+            PreparedStatement statement = connection.prepareStatement(statementText);
 
             statement.setObject(1, userId);
             ResultSet resultSet = statement.executeQuery();
-
-            Answers usersAnswers = new AnswerAdapter().fromResultSetRow(resultSet);
-
-            return usersAnswers;
+            List<List<Answer>> answers = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
+                    new PostgresAnswerAdapter());
+            return PersistenceUtil.assertSingleElement(answers);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * Returns an Answers object that is the result of comparing persisted and newly
-     * submitted Answers. The returned Answers object should have the least
-     * null/empty
-     * answer values between the two.
-     * <p>
-     * This method always returns an Answers object with a List< Answer > that
-     * is
-     * full. For example, the List will always have all the possible answer
-     * types.
-     *
-     * @param persistedAnswers the currently persisted answers for the user
-     * @param submittedAnswers the newly submitted answers for the user
-     * @return Answers object with the least number of null/empty answer values.
-     * @see Answers
+    /*
+     * modification specifications:
+     * if answerValue is null, we are deleting an answer
+     * if answerValue is not null, we are inserting/updating an answer
+     * if an answer is not present in a modification request, we ignore it
      */
-    private Answers mergeAnswers(Answers persistedAnswers, Answers submittedAnswers) {
-        Map<String, Answer> mergerMap = persistedAnswers.getAnswers().stream()
-                .collect(Collectors.toMap(Answer::getType, answer -> answer));
-
-        submittedAnswers.getAnswers().forEach(answer -> {
-            String answerType = answer.getType().toLowerCase();
-            if (answer.getValue() != null || !mergerMap.containsKey(answerType)) {
-                mergerMap.put(answerType, answer);
-            }
-        });
-
-        return new Answers(mergerMap.values().stream().toList());
-    }
-
     @Override
-    public Answers updateUserAnswers(User user, Answers answers) {
+    public void updateUserAnswers(User user, List<Answer> answers) {
         try {
             Connection connection = getConnection();
 
-            List<Answer> listOfAnswers = this.mergeAnswers(this.getUserAnswersFromAuthId(user),
-                    answers).getAnswers();
+            ArrayList<String> columnsToUpdate = new ArrayList<String>(
+                    answers.stream().map(x -> x.getQuestionKey()).toList());
 
-            String answerValueColumnString = listOfAnswers.stream().map(Answer::getType)
-                    .collect(Collectors.joining(", "))
-                    .concat(", userid");// concat for userid
+            ArrayList<String> valuesToUpdate = new ArrayList<String>(
+                    columnsToUpdate
+                            .stream()
+                            .map(_ -> "?")
+                            .toList());
 
-            PreparedStatement updateStatement = connection.prepareStatement(
-                    """
-                            INSERT INTO answers (%s)
-                            VALUES (%s)
-                            ON CONFLICT (userid) DO UPDATE
-                            SET %s
-                            RETURNING %s;
-                                    """
-                            .formatted(
-                                    answerValueColumnString,
-                                    answerValueQuestionString,
-                                    answerValueExcludedUpdateString,
-                                    answerValueReturnString));
+            List<String> excludedColumnsToUpdate = columnsToUpdate
+                    .stream()
+                    .map(x -> "%s = EXCLUDED.%s".formatted(x, x))
+                    .toList();
 
-            updateStatement.setObject(listOfAnswers.size() + 1, user.id());
+            // manually add userid column
+            columnsToUpdate.add(0, "userid");
+            valuesToUpdate.add(0, "'%s'".formatted(user.id()));
 
-            for (int idx = 0; idx < listOfAnswers.size(); idx++) {
-                listOfAnswers.get(idx).setSQLStatement(updateStatement, idx + 1);
+            String columnsToUpdateText = String.join(",", columnsToUpdate);
+            String valuesToUpdateText = String.join(",", valuesToUpdate);
+            String excludedColumnsToUpdateText = String.join(",", excludedColumnsToUpdate);
+
+            String statementText;
+            if (columnsToUpdate.size() == 1) {
+                // relevant when user submits a request with zero modified answers
+                // or when we are initing null answers for a new user
+                statementText = """
+                        INSERT INTO answers (%s)
+                        VALUES (%s)
+                        ON CONFLICT (userid) DO NOTHING
+                        """.formatted(
+                        columnsToUpdateText,
+                        valuesToUpdateText);
+            } else {
+                statementText = """
+                        INSERT INTO answers (%s)
+                        VALUES (%s)
+                        ON CONFLICT (userid) DO UPDATE SET %s;
+                        """.formatted(
+                        columnsToUpdateText,
+                        valuesToUpdateText,
+                        excludedColumnsToUpdateText);
             }
 
-            ResultSet updateResultSet = updateStatement.executeQuery();
-            Answers updatedAnswers = new AnswerAdapter().fromResultSetRow(updateResultSet);
+            PreparedStatement updateStatement = connection.prepareStatement(statementText);
+            new PostgresAnswerAdapter().statementSetPlaceholders(updateStatement, answers);
 
-            return updatedAnswers;
+            PersistenceUtil.assertSingleRowUpdated(updateStatement.executeUpdate());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
