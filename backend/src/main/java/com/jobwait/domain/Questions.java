@@ -22,9 +22,6 @@ public class Questions {
 
     // don't touch this stuff
     public static List<String> knownQuestionKeys = Questions.known.stream().map(x -> x.key).toList();
-    public static List<AnswerType> knownAnswerTypes = Questions.known.stream().map(x -> x.answerType).toList();
-    public static List<String> knownAnswerTypeNames = Questions.knownAnswerTypes.stream()
-            .map(x -> x.getClass().getName()).toList();
 
     public static Question questionFromKey(String questionKey) {
         List<Question> matches = known.stream().filter(q -> q.key.equals(questionKey)).toList();
