@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -28,33 +29,40 @@ public class AnswerDeserializer extends StdDeserializer<Answer> {
 
         JsonNode questionKeyNode = node.get("questionKey");
         if (questionKeyNode == null) {
-            throw new IOException("questionKey not found");
+            throw new AnswerDeserializingException("questionKey not found");
         }
 
         String questionKey = questionKeyNode.asText();
         Question question = Questions.questionFromKey(questionKey);
-        
+
         JsonNode answerTypeNode = node.get("answerValue");
         if (answerTypeNode == null) {
-            throw new IOException("answerValue not found");
+            throw new AnswerDeserializingException("answerValue not found");
         }
-        
+
         AnswerType answerType = question.answerType;
-        
+
         Object answerValue = Utils.mapper.treeToValue(node.get("answerValue"), Object.class);
-        
+
         // assert valid data type
         if (!Answer.assertValidAnswerType(answerType, answerValue)) {
-            throw new IOException("value %s does not match type %s".formatted(answerValue, answerType));
+            throw new AnswerDeserializingException(
+                    "value %s does not match type %s".formatted(answerValue, answerType));
         }
-        
+
         // assert valid enum value
         if (answerType == AnswerType.ENUM && !question.answerChoices.contains(answerValue)) {
-            throw new IOException(
+            throw new AnswerDeserializingException(
                     "%s is not in valid choices: %s".formatted(answerValue, String.join(",", question.answerChoices)));
         }
 
         return new Answer(questionKey, answerType, answerValue);
+    }
+
+    private class AnswerDeserializingException extends JsonProcessingException {
+        public AnswerDeserializingException(String message) {
+            super(message);
+        }
     }
 
 }
