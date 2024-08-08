@@ -55,41 +55,18 @@ public class SpringEndpoints {
 	}
 
 	@PostMapping("/user/create")
-	public static ResponseEntity<String> createUserFromAuthToken(@RequestParam("at") String authToken) {
-		try {
-			AuthToken token = AuthToken.fromClientId(authToken);
-			requestController.createUserFromAuthToken(token);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (RuntimeException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public static ResponseEntity<ObjectNode> createUserFromAuthToken(@RequestParam("at") String authToken) {
+		return processAndHandleException(RequestNavigation.createUserFromAuthToken(authToken));
 	}
 
-	@GetMapping(path = "/answers", produces = MediaType.APPLICATION_JSON_VALUE)
-	public static String getUserAnswers(@RequestParam("at") String authToken) {
-		try {
-			AuthToken token = AuthToken.fromClientId(authToken);
-			List<Answer> answers = requestController.getUserAnswers(token);
-			return Utils.mapper.writeValueAsString(answers);
-		} catch (JsonProcessingException e) {
-			return e.getMessage();
-		}
+	@GetMapping("/answers")
+	public static ResponseEntity<ObjectNode> getUserAnswers(@RequestParam("at") String authToken) {
+		return processAndHandleException(RequestNavigation.getUserAnswers(authToken));
 	}
 
-	@PostMapping(path = "/answers/submit")
-	public static ResponseEntity<String> submitUserAnswers(@RequestParam("at") String authToken,
+	@PostMapping("/answers/submit")
+	public static ResponseEntity<ObjectNode> submitUserAnswers(@RequestParam("at") String authToken,
 			@RequestBody String payload) {
-		try {
-			JsonNode root = Utils.mapper.readTree(payload).path("answers");
-			Answer[] answersArray = Utils.mapper.treeToValue(root, Answer[].class);
-			List<Answer> answersList = Arrays.asList(answersArray);
-
-			AuthToken token = AuthToken.fromClientId(authToken);
-			requestController.submitUserAnswers(token, answersList);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (JsonProcessingException | RuntimeException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
+		return processAndHandleException(RequestNavigation.submitUserAnswers(authToken, payload));
 	}
 }
