@@ -61,8 +61,7 @@ public class RequestNavigation {
 			@RequestBody String payload) {
 		try {
 			JsonNode root = Utils.mapper.readTree(payload).path("answers");
-			Answer[] answersArray =Utils.mapper.treeToValue(root,Answer[].class);
-			List<Answer> answersList = Arrays.asList(answersArray);
+			List<Answer> answersList = Arrays.asList(Utils.mapper.treeToValue(root, Answer[].class));
 
 			AuthToken token = AuthToken.fromClientId(authToken);
 			requestController.submitUserAnswers(token, answersList);
