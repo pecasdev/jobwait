@@ -1,6 +1,8 @@
 package com.jobwait.control;
 
-import com.jobwait.domain.Answers;
+import java.util.List;
+
+import com.jobwait.domain.Answer;
 import com.jobwait.domain.User;
 import com.jobwait.persistence.PersistenceController;
 import com.jobwait.persistence.PostgresController;
@@ -24,14 +26,14 @@ public class RequestController {
         return user;
     }
 
-    public Answers getUserAnswers(AuthToken token) {
+    public List<Answer> getUserAnswers(AuthToken token) {
         User user = getUserFromAuthToken(token);
         return persistence.getUserAnswersFromAuthId(user);
     }
 
-    public Answers submitUserAnswers(AuthToken token, Answers answers) {
+    public void submitUserAnswers(AuthToken token, List<Answer> answers) {
         User user = getUserFromAuthToken(token);
-        return persistence.updateUserAnswers(user, answers);
+        persistence.updateUserAnswers(user, answers);
     }
 
     public void deleteUserAndPurgeAnswers(AuthToken token) {

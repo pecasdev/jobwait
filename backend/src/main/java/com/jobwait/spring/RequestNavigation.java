@@ -43,7 +43,7 @@ public class RequestNavigation {
 	public static String getUserAnswers(@RequestParam("at") String authToken) {
 		try {
 			AuthToken token = AuthToken.fromClientId(authToken);
-			Answers answers = requestController.getUserAnswers(token);
+			List<Answer> answers = requestController.getUserAnswers(token);
 			return Utils.mapper.writeValueAsString(answers);
 		} catch (JsonProcessingException e) {
 			return e.getMessage();
