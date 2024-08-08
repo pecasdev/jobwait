@@ -6,21 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jobwait.persistence.adapters.AdapterException;
-import com.jobwait.persistence.adapters.PersistenceAdapter;
+import com.jobwait.persistence.adapters.PostgresAdapter;
 
 public class PersistenceUtil {
-    public static <A> A assertSingleElement(List<A> results) throws SQLException {
-        switch (results.size()) {
-            case 0:
-                throw new ElementNotFoundException();
-            case 1:
-                return results.getFirst();
-            default:
-                throw new SQLException(String.format("Expected results length=1, got length=%d", results.size()));
-        }
-    }
-
-    public static <A> List<A> resultSetRowsToAdaptedRows(ResultSet rs, PersistenceAdapter<A> adapter)
+    public static <A> List<A> resultSetRowsToAdaptedRows(ResultSet rs, PostgresAdapter<A> adapter)
             throws AdapterException {
         ArrayList<A> adaptedRows = new ArrayList<A>();
 
@@ -33,6 +22,17 @@ public class PersistenceUtil {
         }
 
         return adaptedRows;
+    }
+
+    public static <A> A assertSingleElement(List<A> results) throws SQLException {
+        switch (results.size()) {
+            case 0:
+                throw new ElementNotFoundException();
+            case 1:
+                return results.getFirst();
+            default:
+                throw new SQLException(String.format("Expected results length=1, got length=%d", results.size()));
+        }
     }
 
     public static void assertSingleRowUpdated(int rowsUpdated) throws SQLException {
