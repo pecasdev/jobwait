@@ -12,6 +12,7 @@ import java.util.UUID;
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Questions;
 import com.jobwait.domain.User;
+import com.jobwait.fault.FaultException;
 import com.jobwait.persistence.adapters.PostgresAnswerAdapter;
 import com.jobwait.persistence.adapters.PostgresUserAdapter;
 
@@ -21,11 +22,15 @@ public class PostgresController extends PersistenceController {
     private String dbPassword = "password";
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(jdbcUrl, dbUser, dbPassword);
+        try {
+            return DriverManager.getConnection(jdbcUrl, dbUser, dbPassword);
+        } catch (SQLException e) {
+            throw PostgresControllerFaults.DatabaseGetConnectionFault();
+        }
     }
 
     @Override
-    public User getUserFromAuthId(String authId) {
+    public User getUserFromAuthId(String authId) throws FaultException {
         try {
             Connection connection = getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE authhash = ?");
@@ -34,9 +39,9 @@ public class PostgresController extends PersistenceController {
             List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
             return PersistenceUtil.assertSingleElement(users);
         } catch (ElementNotFoundException e) {
-            throw new RuntimeException(String.format("Could not find user with authId: %s", authId));
+            throw PostgresControllerFaults.UserNotFoundFault(authId);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw PostgresControllerFaults.GenericDatabaseFault();
         }
     }
 
