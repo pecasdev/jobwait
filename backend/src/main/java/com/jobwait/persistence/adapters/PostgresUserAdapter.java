@@ -10,7 +10,7 @@ import com.jobwait.fault.FaultException;
 import com.jobwait.persistence.DatabaseFaults;
 
 public class PostgresUserAdapter extends PostgresAdapter<User> {
-    public User fromResultSetRow(ResultSet rs) throws AdapterException {
+    public User fromResultSetRow(ResultSet rs) throws FaultException {
         try {
             String id = rs.getString("id");
             UUID uuid = UUID.fromString(id);
@@ -23,7 +23,7 @@ public class PostgresUserAdapter extends PostgresAdapter<User> {
         }
     }
 
-    public void statementSetPlaceholders(PreparedStatement ps, User user) throws AdapterException {
+    public void statementSetPlaceholders(PreparedStatement ps, User user) throws FaultException {
         try {
             ps.setString(1, user.authHash().toString());
         } catch (SQLException e) {

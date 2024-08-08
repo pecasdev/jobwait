@@ -13,6 +13,7 @@ import com.jobwait.domain.Answer;
 import com.jobwait.domain.Question;
 import com.jobwait.domain.Questions;
 import com.jobwait.domain.UndefinedAnswerTypeFault;
+import com.jobwait.fault.FaultException;
 import com.jobwait.persistence.DatabaseFaults;
 import com.jobwait.util.Enumerate;
 import com.jobwait.util.Tuple;
@@ -43,7 +44,7 @@ public class PostgresAnswerAdapter extends PostgresAdapter<List<Answer>> {
         }
     };
 
-    public List<Answer> fromResultSetRow(ResultSet rs) throws AdapterException {
+    public List<Answer> fromResultSetRow(ResultSet rs) throws FaultException {
         try {
             ArrayList<Answer> answers = new ArrayList<Answer>();
             for (Question question : Questions.known) {
@@ -84,7 +85,7 @@ public class PostgresAnswerAdapter extends PostgresAdapter<List<Answer>> {
     };
 
     @Override
-    public void statementSetPlaceholders(PreparedStatement ps, List<Answer> answers) throws AdapterException {
+    public void statementSetPlaceholders(PreparedStatement ps, List<Answer> answers) throws FaultException {
         try {
             for (Tuple<Answer, Integer> answerWithIndex : Enumerate.zipWithIndex(answers)) {
                 Answer answer = answerWithIndex.x;
