@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.function.Supplier;
 
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Questions;
@@ -31,50 +29,42 @@ public class PostgresController extends PersistenceController {
         }
     }
 
-    private <A> A processAndConvertSQLExceptionToGenericDatabaseFault(SupplierThrowingSQLException<A> func) {
+    @Override
+    public User getUserFromAuthId(String authId) throws FaultException {
         try {
-            return func.get();
+            Connection connection = getConnection();
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT * FROM users WHERE authhash = ?");
+            statement.setString(1, authId);
+            ResultSet resultSet = statement.executeQuery();
+            List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
+                    new PostgresUserAdapter());
+            return PersistenceUtil.assertSingleElement(users);
+        } catch (ElementNotFoundException e) {
+            throw DatabaseFaults.UserNotFoundFault(authId);
         } catch (SQLException e) {
             throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 
     @Override
-    public User getUserFromAuthId(String authId) throws FaultException {
-        return processAndConvertSQLExceptionToGenericDatabaseFault(
-                () -> {
-                    try {
-                        Connection connection = getConnection();
-                        PreparedStatement statement = connection
-                                .prepareStatement("SELECT * FROM users WHERE authhash = ?");
-                        statement.setString(1, authId);
-                        ResultSet resultSet = statement.executeQuery();
-                        List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
-                                new PostgresUserAdapter());
-                        return PersistenceUtil.assertSingleElement(users);
-                    } catch (ElementNotFoundException e) {
-                        throw DatabaseFaults.UserNotFoundFault(authId);
-                    }
-                });
-    }
-
-    @Override
     public List<Answer> getUserAnswersFromAuthId(User user) {
-        return processAndConvertSQLExceptionToGenericDatabaseFault(
-                () -> {
-                    UUID userId = user.id();
-                    Connection connection = getConnection();
+        try {
+            UUID userId = user.id();
+            Connection connection = getConnection();
 
-                    String answerColumnValues = String.join(", ", Questions.knownQuestionKeys);
-                    String statementText = "SELECT %s FROM answers WHERE userid = ?".formatted(answerColumnValues);
-                    PreparedStatement statement = connection.prepareStatement(statementText);
+            String answerColumnValues = String.join(", ", Questions.knownQuestionKeys);
+            String statementText = "SELECT %s FROM answers WHERE userid = ?".formatted(answerColumnValues);
+            PreparedStatement statement = connection.prepareStatement(statementText);
 
-                    statement.setObject(1, userId);
-                    ResultSet resultSet = statement.executeQuery();
-                    List<List<Answer>> answers = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
-                            new PostgresAnswerAdapter());
-                    return PersistenceUtil.assertSingleElement(answers);
-                });
+            statement.setObject(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            List<List<Answer>> answers = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
+                    new PostgresAnswerAdapter());
+            return PersistenceUtil.assertSingleElement(answers);
+        } catch (SQLException e) {
+            throw DatabaseFaults.GenericDatabaseFault();
+        }
     }
 
     /*
@@ -85,83 +75,82 @@ public class PostgresController extends PersistenceController {
      */
     @Override
     public void updateUserAnswers(User user, List<Answer> answers) {
-        processAndConvertSQLExceptionToGenericDatabaseFault(
-                () -> {
-                    Connection connection = getConnection();
+        try {
+            Connection connection = getConnection();
 
-                    ArrayList<String> columnsToUpdate = new ArrayList<String>(
-                            answers.stream().map(x -> x.getQuestionKey()).toList());
+            ArrayList<String> columnsToUpdate = new ArrayList<String>(
+                    answers.stream().map(x -> x.getQuestionKey()).toList());
 
-                    ArrayList<String> valuesToUpdate = new ArrayList<String>(
-                            columnsToUpdate
-                                    .stream()
-                                    .map(_ -> "?")
-                                    .toList());
-
-                    List<String> excludedColumnsToUpdate = columnsToUpdate
+            ArrayList<String> valuesToUpdate = new ArrayList<String>(
+                    columnsToUpdate
                             .stream()
-                            .map(x -> "%s = EXCLUDED.%s".formatted(x, x))
-                            .toList();
+                            .map(_ -> "?")
+                            .toList());
 
-                    // manually add userid column
-                    columnsToUpdate.add(0, "userid");
-                    valuesToUpdate.add(0, "'%s'".formatted(user.id()));
+            List<String> excludedColumnsToUpdate = columnsToUpdate
+                    .stream()
+                    .map(x -> "%s = EXCLUDED.%s".formatted(x, x))
+                    .toList();
 
-                    String columnsToUpdateText = String.join(",", columnsToUpdate);
-                    String valuesToUpdateText = String.join(",", valuesToUpdate);
-                    String excludedColumnsToUpdateText = String.join(",", excludedColumnsToUpdate);
+            // manually add userid column
+            columnsToUpdate.add(0, "userid");
+            valuesToUpdate.add(0, "'%s'".formatted(user.id()));
 
-                    String statementText;
-                    if (columnsToUpdate.size() == 1) {
-                        // relevant when user submits a request with zero modified answers
-                        // or when we are initing null answers for a new user
-                        statementText = """
-                                INSERT INTO answers (%s)
-                                VALUES (%s)
-                                ON CONFLICT (userid) DO NOTHING
-                                """.formatted(
-                                columnsToUpdateText,
-                                valuesToUpdateText);
-                    } else {
-                        statementText = """
-                                INSERT INTO answers (%s)
-                                VALUES (%s)
-                                ON CONFLICT (userid) DO UPDATE SET %s;
-                                """.formatted(
-                                columnsToUpdateText,
-                                valuesToUpdateText,
-                                excludedColumnsToUpdateText);
-                    }
+            String columnsToUpdateText = String.join(",", columnsToUpdate);
+            String valuesToUpdateText = String.join(",", valuesToUpdate);
+            String excludedColumnsToUpdateText = String.join(",", excludedColumnsToUpdate);
 
-                    PreparedStatement updateStatement = connection.prepareStatement(statementText);
-                    new PostgresAnswerAdapter().statementSetPlaceholders(updateStatement, answers);
+            String statementText;
+            if (columnsToUpdate.size() == 1) {
+                // relevant when user submits a request with zero modified answers
+                // or when we are initing null answers for a new user
+                statementText = """
+                        INSERT INTO answers (%s)
+                        VALUES (%s)
+                        ON CONFLICT (userid) DO NOTHING
+                        """.formatted(
+                        columnsToUpdateText,
+                        valuesToUpdateText);
+            } else {
+                statementText = """
+                        INSERT INTO answers (%s)
+                        VALUES (%s)
+                        ON CONFLICT (userid) DO UPDATE SET %s;
+                        """.formatted(
+                        columnsToUpdateText,
+                        valuesToUpdateText,
+                        excludedColumnsToUpdateText);
+            }
 
-                    PersistenceUtil.assertSingleRowUpdated(updateStatement.executeUpdate());
+            PreparedStatement updateStatement = connection.prepareStatement(statementText);
+            new PostgresAnswerAdapter().statementSetPlaceholders(updateStatement, answers);
 
-                    // we need this return or SupplierThrowingSQLException breaks
-                    return null;
-                });
+            PersistenceUtil.assertSingleRowUpdated(updateStatement.executeUpdate());
+        } catch (SQLException e) {
+            throw DatabaseFaults.GenericDatabaseFault();
+        }
     }
 
     @Override
     public User createUserFromAuthId(String authHash) {
-        return processAndConvertSQLExceptionToGenericDatabaseFault(
-                () -> {
-                    Connection connection = getConnection();
+        try {
+            Connection connection = getConnection();
 
-                    PreparedStatement statement = connection
-                            .prepareStatement("INSERT INTO users(authhash) VALUES (?) RETURNING *");
-                    new PostgresUserAdapter().statementSetPlaceholders(statement, new User(null, authHash));
+            PreparedStatement statement = connection
+                    .prepareStatement("INSERT INTO users(authhash) VALUES (?) RETURNING *");
+            new PostgresUserAdapter().statementSetPlaceholders(statement, new User(null, authHash));
 
-                    ResultSet resultSet = statement.executeQuery();
-                    List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
-                    User user = PersistenceUtil.assertSingleElement(users);
+            ResultSet resultSet = statement.executeQuery();
+            List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
+            User user = PersistenceUtil.assertSingleElement(users);
 
-                    // init null answers for user
-                    this.updateUserAnswers(user, new ArrayList<Answer>());
+            // init null answers for user
+            this.updateUserAnswers(user, new ArrayList<Answer>());
 
-                    return user;
-                });
+            return user;
+        } catch (SQLException e) {
+            throw DatabaseFaults.GenericDatabaseFault();
+        }
     }
 
     @Override
