@@ -36,7 +36,7 @@ public class Answer {
             case AnswerType.DATE:
                 return this.answerValueAsDate();
             default:
-                throw new RuntimeException("Answer type not defined (impossible error)");
+                throw new UndefinedAnswerTypeFault(this.getAnswerType(), "getAnswerValue");
         }
     }
 
@@ -63,7 +63,7 @@ public class Answer {
             case AnswerType.DATE:
                 return answerValue.getClass().equals(LocalDate.class);
             default:
-                return false;
+                throw new UndefinedAnswerTypeFault(answerType, "assertValidAnswerType");
         }
     }
 }

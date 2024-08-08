@@ -26,7 +26,7 @@ public class Questions {
     public static Question questionFromKey(String questionKey) {
         List<Question> matches = known.stream().filter(q -> q.key.equals(questionKey)).toList();
         if (matches.size() == 0) {
-            throw new RuntimeException("questionKey '%s' does not exist in known questions".formatted(questionKey));
+            throw new InvalidQuestionKey(questionKey);
         }
         return matches.getFirst();
     }

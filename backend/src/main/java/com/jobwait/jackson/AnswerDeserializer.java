@@ -29,7 +29,7 @@ public class AnswerDeserializer extends StdDeserializer<Answer> {
 
         JsonNode questionKeyNode = node.get("questionKey");
         if (questionKeyNode == null) {
-            throw new AnswerDeserializingException("questionKey not found");
+            throw new AnswerDeserializerFault("questionKey not found");
         }
 
         String questionKey = questionKeyNode.asText();
@@ -37,7 +37,7 @@ public class AnswerDeserializer extends StdDeserializer<Answer> {
 
         JsonNode answerTypeNode = node.get("answerValue");
         if (answerTypeNode == null) {
-            throw new AnswerDeserializingException("answerValue not found");
+            throw new AnswerDeserializerFault("answerValue not found");
         }
 
         AnswerType answerType = question.answerType;
@@ -46,14 +46,14 @@ public class AnswerDeserializer extends StdDeserializer<Answer> {
 
         // assert valid data type
         if (!Answer.assertValidAnswerType(answerType, answerValue)) {
-            throw new AnswerDeserializingException(
-                    "value %s does not match type %s".formatted(answerValue, answerType));
+            throw new AnswerDeserializerFault("value %s does not match type %s".formatted(answerValue, answerType));
         }
 
         // assert valid enum value
         if (answerType == AnswerType.ENUM && !question.answerChoices.contains(answerValue)) {
-            throw new AnswerDeserializingException(
-                    "%s is not in valid choices: %s".formatted(answerValue, String.join(",", question.answerChoices)));
+            throw new AnswerDeserializerFault(
+                    "%s is not in valid choices: %s".formatted(
+                            answerValue, String.join(",", question.answerChoices)));
         }
 
         return new Answer(questionKey, answerType, answerValue);

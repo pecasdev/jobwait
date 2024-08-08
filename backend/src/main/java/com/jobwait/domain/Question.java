@@ -13,7 +13,7 @@ public class Question {
         this.answerChoices = answerChoices;
 
         if (answerType == AnswerType.ENUM && (answerChoices == null || answerChoices.size() == 0)) {
-            throw new RuntimeException("Question(%s) of type ENUM has no valid choices".formatted(key));
+            throw new InvalidQuestionDefinitionFault(key);
         }
     }
 
@@ -23,7 +23,7 @@ public class Question {
         this.answerChoices = null;
 
         if (answerType == AnswerType.ENUM) {
-            throw new RuntimeException("Question(%s) of type ENUM has no valid choices".formatted(key));
+            throw new InvalidQuestionDefinitionFault(key);
         }
     }
 }
