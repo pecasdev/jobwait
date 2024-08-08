@@ -1,36 +1,69 @@
 package com.jobwait.domain;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.jobwait.persistence.answerpersistence.IntegerAnswer;
-import com.jobwait.persistence.answerpersistence.LocalDateAnswer;
-import com.jobwait.persistence.answerpersistence.StringAnswer;
-import com.jobwait.persistence.answerpersistence.ValidEducationLevelAnswer;
-import com.jobwait.persistence.answerpersistence.ValidWorkContractAnswer;
-import com.jobwait.persistence.answerpersistence.ValidWorkModelAnswer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.jobwait.jackson.AnswerDeserializer;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", include = JsonTypeInfo.As.EXISTING_PROPERTY, visible = true)
-@JsonSubTypes({
-                @JsonSubTypes.Type(value = StringAnswer.class, name = "jobTitle"),
-                @JsonSubTypes.Type(value = IntegerAnswer.class, names = { "yearsOfProExperience",
-                                "jobApplicationCount" }),
-                @JsonSubTypes.Type(value = ValidEducationLevelAnswer.class, name = "educationLevel"),
-                @JsonSubTypes.Type(value = ValidWorkModelAnswer.class, name = "workModel"),
-                @JsonSubTypes.Type(value = ValidWorkContractAnswer.class, name = "workContract"),
-                @JsonSubTypes.Type(value = LocalDateAnswer.class, names = { "jobAcceptDate",
-                                "jobSearchStartDate" }),
-})
-public interface Answer<T> {
-        public T getValue();
+@JsonDeserialize(using = AnswerDeserializer.class)
+public class Answer {
+    public String questionKey;
+    public AnswerType answerType;
+    public Object answerValue;
 
-        public void setValue(T value);
+    public Answer(String questionKey, AnswerType answerType, Object answerValue) {
+        this.questionKey = questionKey;
+        this.answerType = answerType;
+        this.answerValue = answerValue;
+    }
 
-        public String getType();
+    public String getQuestionKey() {
+        return this.questionKey;
+    }
 
-        public void setType(String type);
+    public AnswerType getAnswerType() {
+        return this.answerType;
+    }
 
-        public void setSQLStatement(PreparedStatement statement, Integer statementIndex) throws SQLException;
+    public Object getAnswerValue() {
+        switch (this.getAnswerType()) {
+            case AnswerType.STRING:
+                return this.answerValueAsString();
+            case AnswerType.INTEGER:
+                return this.answerValueAsInteger();
+            case AnswerType.ENUM:
+                return this.answerValueAsString();
+            case AnswerType.DATE:
+                return this.answerValueAsDate();
+            default:
+                throw new RuntimeException("Answer type not defined (impossible error)");
+        }
+    }
+
+    public String answerValueAsString() {
+        return (String) this.answerValue;
+    }
+
+    public Integer answerValueAsInteger() {
+        return (Integer) this.answerValue;
+    }
+
+    public LocalDate answerValueAsDate() {
+        return (LocalDate) this.answerValue;
+    }
+
+    public static boolean assertValidAnswerType(AnswerType answerType, Object answerValue) {
+        switch (answerType) {
+            case AnswerType.STRING:
+                return answerValue.getClass().equals(String.class);
+            case AnswerType.INTEGER:
+                return answerValue.getClass().equals(Integer.class);
+            case AnswerType.ENUM:
+                return answerValue.getClass().equals(String.class);
+            case AnswerType.DATE:
+                return answerValue.getClass().equals(LocalDate.class);
+            default:
+                return false;
+        }
+    }
 }

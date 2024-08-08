@@ -1,14 +1,16 @@
 package com.jobwait.persistence;
 
-import com.jobwait.domain.Answers;
+import java.util.List;
+
+import com.jobwait.domain.Answer;
 import com.jobwait.domain.User;
 
 public abstract class PersistenceController {
     public abstract User getUserFromAuthId(String authId);
 
-    public abstract Answers getUserAnswersFromAuthId(User user);
+    public abstract List<Answer> getUserAnswersFromAuthId(User user);
 
-    public abstract Answers updateUserAnswers(User user, Answers answers);
+    public abstract void updateUserAnswers(User user, List<Answer> answers);
 
     public abstract User createUserFromAuthId(String authId);
 
