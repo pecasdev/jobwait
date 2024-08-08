@@ -61,7 +61,7 @@ public class PostgresController extends PersistenceController {
                     new PostgresAnswerAdapter());
             return PersistenceUtil.assertSingleElement(answers);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 
@@ -125,7 +125,7 @@ public class PostgresController extends PersistenceController {
 
             PersistenceUtil.assertSingleRowUpdated(updateStatement.executeUpdate());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 
@@ -147,7 +147,7 @@ public class PostgresController extends PersistenceController {
 
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 

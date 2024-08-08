@@ -12,6 +12,7 @@ import java.util.List;
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Question;
 import com.jobwait.domain.Questions;
+import com.jobwait.domain.UndefinedAnswerTypeFault;
 import com.jobwait.persistence.DatabaseFaults;
 import com.jobwait.util.Enumerate;
 import com.jobwait.util.Tuple;
@@ -37,7 +38,7 @@ public class PostgresAnswerAdapter extends PostgresAdapter<List<Answer>> {
                 return new Answer(question.key, AnswerType.DATE, date);
 
             default:
-                throw new RuntimeException("Answer type not defined (impossible error)");
+                throw new UndefinedAnswerTypeFault(question.answerType, "answerFromQuestion");
 
         }
     };
@@ -78,7 +79,7 @@ public class PostgresAnswerAdapter extends PostgresAdapter<List<Answer>> {
                 break;
 
             default:
-                throw new RuntimeException("Answer type not defined (impossible error)");
+                throw new UndefinedAnswerTypeFault(answer.getAnswerType(), "setPlaceholderFromAnswer");
         }
     };
 
