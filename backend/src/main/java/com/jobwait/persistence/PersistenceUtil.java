@@ -5,12 +5,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jobwait.persistence.adapters.AdapterException;
+import com.jobwait.fault.FaultException;
 import com.jobwait.persistence.adapters.PostgresAdapter;
 
 public class PersistenceUtil {
     public static <A> List<A> resultSetRowsToAdaptedRows(ResultSet rs, PostgresAdapter<A> adapter)
-            throws AdapterException {
+            throws FaultException {
         ArrayList<A> adaptedRows = new ArrayList<A>();
 
         try {
