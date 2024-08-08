@@ -18,7 +18,7 @@ public class PersistenceUtil {
                 adaptedRows.add(adapter.fromResultSetRow(rs));
             }
         } catch (SQLException e) {
-            throw new AdapterException(e);
+            throw DatabaseFaults.GenericDatabaseFault();
         }
 
         return adaptedRows;

@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import com.jobwait.fault.FaultException;
 
-public class PostgresControllerFaults {
+public class DatabaseFaults {
     public static FaultException UserNotFoundFault(String authId) {
         return new FaultException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND",
                 "Could not find user with authId: %s".formatted(authId));
