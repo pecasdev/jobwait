@@ -125,16 +125,21 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
-    public User createUserFromAuthId(String authId) {
+    public User createUserFromAuthId(String authHash) {
         try {
             Connection connection = getConnection();
+
             PreparedStatement statement = connection
                     .prepareStatement("INSERT INTO users(authhash) VALUES (?) RETURNING *");
-            statement.setString(1, authId);
+            new PostgresUserAdapter().statementSetPlaceholders(statement, new User(null, authHash));
+
             ResultSet resultSet = statement.executeQuery();
             List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
             User user = PersistenceUtil.assertSingleElement(users);
-            this.updateUserAnswers(user, new Answers());
+
+            // init null answers for user
+            this.updateUserAnswers(user, new ArrayList<Answer>());
+
             return user;
         } catch (SQLException e) {
             throw new RuntimeException(e);
