@@ -25,7 +25,7 @@ public class PostgresController extends PersistenceController {
         try {
             return DriverManager.getConnection(jdbcUrl, dbUser, dbPassword);
         } catch (SQLException e) {
-            throw PostgresControllerFaults.DatabaseGetConnectionFault();
+            throw DatabaseFaults.DatabaseGetConnectionFault();
         }
     }
 
@@ -39,9 +39,9 @@ public class PostgresController extends PersistenceController {
             List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet, new PostgresUserAdapter());
             return PersistenceUtil.assertSingleElement(users);
         } catch (ElementNotFoundException e) {
-            throw PostgresControllerFaults.UserNotFoundFault(authId);
+            throw DatabaseFaults.UserNotFoundFault(authId);
         } catch (SQLException e) {
-            throw PostgresControllerFaults.GenericDatabaseFault();
+            throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 

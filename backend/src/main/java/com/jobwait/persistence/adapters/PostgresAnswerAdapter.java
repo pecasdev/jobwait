@@ -12,6 +12,7 @@ import java.util.List;
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Question;
 import com.jobwait.domain.Questions;
+import com.jobwait.persistence.DatabaseFaults;
 import com.jobwait.util.Enumerate;
 import com.jobwait.util.Tuple;
 import com.jobwait.domain.AnswerType;
@@ -49,7 +50,7 @@ public class PostgresAnswerAdapter extends PostgresAdapter<List<Answer>> {
             }
             return answers;
         } catch (SQLException e) {
-            throw new AdapterException(e);
+            throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 
@@ -63,7 +64,7 @@ public class PostgresAnswerAdapter extends PostgresAdapter<List<Answer>> {
             case AnswerType.STRING:
                 ps.setString(index, answer.answerValueAsString());
                 break;
-            
+
             case AnswerType.ENUM:
                 ps.setString(index, answer.answerValueAsString());
                 break;
@@ -90,7 +91,7 @@ public class PostgresAnswerAdapter extends PostgresAdapter<List<Answer>> {
                 setPlaceholderFromAnswer(ps, answer, index + 1);
             }
         } catch (SQLException e) {
-            throw new AdapterException(e);
+            throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 }

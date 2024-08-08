@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import com.jobwait.domain.User;
+import com.jobwait.fault.FaultException;
+import com.jobwait.persistence.DatabaseFaults;
 
 public class PostgresUserAdapter extends PostgresAdapter<User> {
     public User fromResultSetRow(ResultSet rs) throws AdapterException {
@@ -17,7 +19,7 @@ public class PostgresUserAdapter extends PostgresAdapter<User> {
 
             return new User(uuid, authHash);
         } catch (SQLException e) {
-            throw new AdapterException(e);
+            throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 
@@ -25,7 +27,7 @@ public class PostgresUserAdapter extends PostgresAdapter<User> {
         try {
             ps.setString(1, user.authHash().toString());
         } catch (SQLException e) {
-            throw new AdapterException(e);
+            throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 }
