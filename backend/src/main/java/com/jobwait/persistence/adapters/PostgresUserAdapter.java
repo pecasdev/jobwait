@@ -1,12 +1,13 @@
 package com.jobwait.persistence.adapters;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
 import com.jobwait.domain.User;
 
-public class PostgresUserAdapter extends PersistenceAdapter<User>{
+public class PostgresUserAdapter extends PostgresAdapter<User> {
     public User fromResultSetRow(ResultSet rs) throws AdapterException {
         try {
             String id = rs.getString("id");
