@@ -14,5 +14,5 @@ export default function GraphExample() {
         },
     };
 
-    return LineChart(chartData, chartOptions);
+    return LineChart(chartData, chartOptions, 200, 200);
 }
