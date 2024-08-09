@@ -1,10 +1,10 @@
 import { useForm } from "@mantine/form";
 import { Button, Fieldset, Grid, Group } from "@mantine/core";
-import { PromptDefinition } from "./PromptTypes";
 import { ReactNode, useState } from "react";
-import { Answers } from "../models/Answers";
-import { handleFormSubmission } from "./output/FormSubmissionHandler";
-import { FailAlert, SuccessAlert } from "./output/alert/AlertOnSubmission";
+import { PromptDefinition } from "../../models/PromptTypes";
+import { Answers } from "../../models/Answers";
+import { FailAlert, SuccessAlert } from "../output/alert/AlertOnSubmission";
+import { handleFormSubmission } from "../output/FormSubmissionHandler";
 
 function updateImageBlur(
     imageName: string,

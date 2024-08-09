@@ -1,11 +1,12 @@
 import { Chart, registerables } from "chart.js";
-import { Footer } from "./reusable/Footer";
-import { Header } from "./reusable/header/Header";
+import { Footer } from "./components/footer/Footer";
+import { Header } from "./components/header/Header";
 import { Box, Flex, Paper } from "@mantine/core";
-import { defaultPromptDefinitions } from "./reusable/default/DefaultPromptDefinitions";
-import { DataSubmitForm } from "./reusable/DataSubmitForm";
-import { StatsRoute } from "./routes/StatsRoute";
+import { defaultPromptDefinitions } from "./models/DefaultPromptDefinitions";
+
 import "./App.css";
+import { DataSubmitForm } from "./components/inputs/DataSubmitForm";
+import { StatsComponent } from "./components/stats/StatsComponent";
 
 Chart.register(...registerables);
 
@@ -15,7 +16,7 @@ export default function App() {
             <Header />
             <Paper withBorder radius="xl" m={10} ml={100} mr={100}>
                 <Flex direction="column" align="center">
-                    <StatsRoute></StatsRoute>
+                    <StatsComponent></StatsComponent>
                 </Flex>
             </Paper>
             <Paper withBorder radius="xl" m={10} ml={100} mr={100}>

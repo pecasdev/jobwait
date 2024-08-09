@@ -1,8 +1,7 @@
 import { Box, Grid, LoadingOverlay } from "@mantine/core";
-import "./StatsRoute.css";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import GraphExample from "../stats/GraphExample";
+import GraphExample from "./GraphExample";
 
 export type StatRenderType = "box" | "line";
 export type StatRenderBundleProps = {
@@ -52,7 +51,7 @@ function StatRenderBundle() {
     );
 }
 
-export function StatsRoute() {
+export function StatsComponent() {
     let stats = statsToRender.map((props) => (
         <Grid.Col span={1} id={props.queryPath}>
             <StatRenderBundle key={props.queryPath} />
