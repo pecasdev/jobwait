@@ -33,10 +33,15 @@ export default function StatRenderBundle({
             justify-content="center"
             ml="lg"
             pos="relative"
+            key={queryPath}
         >
             <LoadingOverlay
                 visible={renderData == null}
-                overlayProps={{ radius: "sm", blur: 2 }}
+                overlayProps={{
+                    radius: "sm",
+                    backgroundOpacity: 0.9,
+                    blur: 1,
+                }}
                 onClick={() => {
                     setRenderData("test");
                     toggle;

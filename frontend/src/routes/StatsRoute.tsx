@@ -1,29 +1,51 @@
-import { Grid } from "@mantine/core";
-import StatRenderBundle, {
-    StatRenderBundleProps,
-} from "../stats/StatRenderBundle";
+import { Box, Grid, LoadingOverlay } from "@mantine/core";
 import "./StatsRoute.css";
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import GraphExample from "../stats/GraphExample";
 
-const statsToRender: StatRenderBundleProps[] = [
+const statsToRender = [
     { queryPath: "yoe-to-app-count", renderType: "line" },
     { queryPath: "yoe-to-app-count2", renderType: "line" },
     { queryPath: "yoe-to-app-count3", renderType: "line" },
     { queryPath: "yoe-to-app-count4", renderType: "line" },
 ];
 
-function renderStats() {
-    return statsToRender.map((props) => (
-        <Grid.Col span={1}>
-            <StatRenderBundle
-                key={props.queryPath}
-                queryPath={props.queryPath}
-                renderType={props.renderType}
-            />
-        </Grid.Col>
-    ));
+function StatRenderBundle() {
+    const [renderData, setRenderData] = useState<any>(null);
+    const [_, { toggle }] = useDisclosure(false);
+
+    return (
+        <Box
+            align-items="center"
+            justify-content="center"
+            ml="lg"
+            pos="relative"
+        >
+            <LoadingOverlay
+                visible={renderData == null}
+                overlayProps={{
+                    radius: "sm",
+                    backgroundOpacity: 0.9,
+                    blur: 1,
+                }}
+                onClick={() => {
+                    setRenderData("test");
+                    toggle;
+                }}
+            ></LoadingOverlay>
+            <GraphExample />
+        </Box>
+    );
 }
 
 export function StatsRoute() {
+    let stats = statsToRender.map((props) => (
+        <Grid.Col span={1} id={props.queryPath}>
+            <StatRenderBundle key={props.queryPath} />
+        </Grid.Col>
+    ));
+
     return (
         <Grid
             columns={2}
@@ -33,7 +55,7 @@ export function StatsRoute() {
             justify="center"
             align="center"
         >
-            {renderStats()}
+            {...stats}
         </Grid>
     );
 }
