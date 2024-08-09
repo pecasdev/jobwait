@@ -4,7 +4,7 @@ import { PromptDefinition } from "./PromptTypes";
 import { ReactNode, useState } from "react";
 import { Answers } from "../models/Answers";
 import { handleFormSubmission } from "./output/FormSubmissionHandler";
-import { FailAlert, SuccessAlert } from "./output/AlertOnSubmission";
+import { FailAlert, SuccessAlert } from "./output/alert/AlertOnSubmission";
 
 function updateImageBlur(
     imageName: string,
@@ -79,10 +79,10 @@ export function DataSubmitForm(props: PromptCollectorProps) {
 
     return (
         <Grid columns={3} align="center" justify="center">
-            <Grid.Col span={1}>
+            <Grid.Col span={1} pl={100}>
                 <Fieldset
                     legend="We need more data!"
-                    radius="xl"
+                    radius="lg"
                     variant="filled"
                 >
                     {...children}
