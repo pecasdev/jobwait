@@ -4,6 +4,19 @@ import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import GraphExample from "../stats/GraphExample";
 
+export type StatRenderType = "box" | "line";
+export type StatRenderBundleProps = {
+    queryPath: string;
+    renderType: StatRenderType;
+};
+
+// todo - query the backend /stats/{queryPath} and get back some data
+// todo - use the data above to update an internal state which re-renders the component
+// todo - display some placeholder while the above takes place
+export type StatRenderBundleState = {
+    renderData: any | null;
+};
+
 const statsToRender = [
     { queryPath: "yoe-to-app-count", renderType: "line" },
     { queryPath: "yoe-to-app-count2", renderType: "line" },
