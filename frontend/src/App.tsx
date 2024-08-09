@@ -1,7 +1,7 @@
 import { Chart, registerables } from "chart.js";
 import { Footer } from "./components/footer/Footer";
 import { Header } from "./components/header/Header";
-import { Box, Flex, Paper } from "@mantine/core";
+import { Box, Flex, Paper, rgba } from "@mantine/core";
 import { defaultPromptDefinitions } from "./models/DefaultPromptDefinitions";
 
 import "./App.css";
@@ -9,6 +9,7 @@ import { DataSubmitForm } from "./components/inputs/DataSubmitForm";
 import { StatsComponent } from "./components/stats/StatsComponent";
 
 Chart.register(...registerables);
+Chart.defaults.color = rgba("0, 0, 0", 1); //change chart label to be darker
 
 export default function App() {
     return (

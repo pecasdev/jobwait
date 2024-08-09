@@ -20,12 +20,12 @@ export function Header() {
                     onClick={() => toggleColorScheme()}
                     className={classes.title}
                 >
-                    <Text component="span" c="yellow" inherit>
+                    <Text component="span" c="green" inherit>
                         job!
                     </Text>{" "}
-                    <Text component="span" c="black" inherit>
+                    <Text component="span" inherit>
                         wait...
-                    </Text>{" "}
+                    </Text>
                 </h1>
 
                 <Text className={classes.description}>

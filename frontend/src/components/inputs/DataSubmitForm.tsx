@@ -78,8 +78,8 @@ export function DataSubmitForm(props: PromptCollectorProps) {
     form.initialize(formValues);
 
     return (
-        <Grid columns={3} align="center" justify="center">
-            <Grid.Col span={1} pl={100} pt={20} pb={20}>
+        <Grid columns={2} align="center" justify="center">
+            <Grid.Col span={1} pl={100} pr={100} pt={20} pb={20}>
                 <Fieldset radius="lg" variant="filled">
                     {...children}
                     <Group justify="flex-end" mt="md">
@@ -104,7 +104,7 @@ export function DataSubmitForm(props: PromptCollectorProps) {
                     </Group>
                 </Fieldset>
             </Grid.Col>
-            <Grid.Col span={1} offset={1}>
+            <Grid.Col span={1}>
                 <img
                     className="blur-3xl"
                     id="gatitoImage" //THE BOY
