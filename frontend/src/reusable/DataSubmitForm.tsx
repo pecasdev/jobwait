@@ -79,12 +79,8 @@ export function DataSubmitForm(props: PromptCollectorProps) {
 
     return (
         <Grid columns={3} align="center" justify="center">
-            <Grid.Col span={1} pl={100}>
-                <Fieldset
-                    legend="We need more data!"
-                    radius="lg"
-                    variant="filled"
-                >
+            <Grid.Col span={1} pl={100} pt={20} pb={20}>
+                <Fieldset radius="lg" variant="filled">
                     {...children}
                     <Group justify="flex-end" mt="md">
                         {open == Status.SUCCESS && (

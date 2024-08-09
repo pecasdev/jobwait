@@ -7,7 +7,7 @@ export function FailAlert(props: { setState: (state: Status) => void }) {
     const failIcon = <IconExclamationCircle />;
     return (
         <Alert
-            variant="outline"
+            variant="filled"
             color="red"
             radius="xl"
             title="Submission failed! Please try again!"
@@ -23,7 +23,7 @@ export function SuccessAlert(props: { setState: (state: Status) => void }) {
     const successIcon = <IconCheck />;
     return (
         <Alert
-            variant="outline"
+            variant="filled"
             color="green"
             radius="xl"
             title="Success! Thank you for sharing!"
