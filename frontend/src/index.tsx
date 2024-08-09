@@ -3,25 +3,25 @@ import "./index.css";
 import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { createRoot } from "react-dom/client";
-import { createTheme, MantineProvider } from "@mantine/core";
+import { localStorageColorSchemeManager, MantineProvider } from "@mantine/core";
 
 const rootElement = document.getElementById("root");
 
-const theme = createTheme({
-    headings: { fontFamily: "Greycliff CF, sans-serif" },
+const colorSchemeManager = localStorageColorSchemeManager({
+    key: "mantine-color-scheme-value",
 });
 
 if (rootElement) {
     const root = createRoot(rootElement);
     root.render(
-        <React.StrictMode>
-            <MantineProvider
-                theme={theme}
-                defaultColorScheme="light"
-                forceColorScheme="light"
-            >
+        <MantineProvider
+            defaultColorScheme="dark"
+            colorSchemeManager={colorSchemeManager}
+        >
+            <React.StrictMode>
                 <App />
-            </MantineProvider>
-        </React.StrictMode>,
+            </React.StrictMode>
+            ,
+        </MantineProvider>,
     );
 }

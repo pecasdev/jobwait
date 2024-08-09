@@ -82,7 +82,7 @@ export function DataSubmitForm(props: PromptCollectorProps) {
             <Grid.Col span={1}>
                 <Fieldset
                     legend="We need more data!"
-                    radius="md"
+                    radius="xl"
                     variant="filled"
                 >
                     {...children}
