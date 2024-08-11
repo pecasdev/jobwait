@@ -1,29 +1,29 @@
-import { Flex, Title } from "@mantine/core";
+import { Anchor, Group } from "@mantine/core";
+import classes from "./Footer.module.css";
 
-function peterContact() {
-    return (
-        <a href="https://github.com/pecasdev" target="_blank">
-            peter
-        </a>
-    );
-}
-
-function danielContact() {
-    return (
-        <a href="https://github.com/danielperev" target="_blank">
-            daniel
-        </a>
-    );
-}
+const links = [
+    { link: "https://github.com/pecasdev", label: "Peter" },
+    { link: "https://github.com/danielperev", label: "Daniel" },
+    { link: "https://github.com/pecasdev/jobwait", label: "Source" },
+];
 
 export function Footer() {
+    const items = links.map((link) => (
+        <Anchor
+            key={link.label}
+            href={link.link}
+            target="_blank"
+            className={classes.anchors}
+        >
+            {link.label}
+        </Anchor>
+    ));
+
     return (
-        <footer>
-            <Flex direction="column" align="center" justify="center">
-                <Title fw={400} fz={"lg"}>
-                    give us jobs: {peterContact()}, {danielContact()}
-                </Title>
-            </Flex>
-        </footer>
+        <div className={classes.footer}>
+            <div className={classes.inner}>
+                <Group className={classes.links}>{items}</Group>
+            </div>
+        </div>
     );
 }
