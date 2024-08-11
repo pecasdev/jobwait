@@ -2,6 +2,7 @@ import { Box, Grid, LoadingOverlay } from "@mantine/core";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import GraphExample from "./GraphExample";
+import classes from "./StatsComponent.module.css";
 
 export type StatRenderType = "box" | "line";
 export type StatRenderBundleProps = {
@@ -28,12 +29,7 @@ function StatRenderBundle() {
     const [_, { toggle }] = useDisclosure(false);
 
     return (
-        <Box
-            align-items="center"
-            justify-content="center"
-            ml="lg"
-            pos="relative"
-        >
+        <Box pos="relative">
             <LoadingOverlay
                 visible={renderData == null}
                 overlayProps={{
@@ -59,14 +55,7 @@ export function StatsComponent() {
     ));
 
     return (
-        <Grid
-            columns={2}
-            m="20px"
-            w="800px"
-            h="800px"
-            justify="center"
-            align="center"
-        >
+        <Grid columns={2} className={classes.grid}>
             {...stats}
         </Grid>
     );
