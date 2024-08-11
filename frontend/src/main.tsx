@@ -2,12 +2,15 @@ import "./index.css";
 import App from "./App";
 import { localStorageColorSchemeManager, MantineProvider } from "@mantine/core";
 import React from "react";
+import { createRoot } from "react-dom/client";
+import { Chart, registerables } from "chart.js";
 
 const colorSchemeManager = localStorageColorSchemeManager({
     key: "mantine-color-scheme-value",
 });
 
-import { createRoot } from "react-dom/client";
+Chart.register(...registerables);
+
 const container = document.getElementById("root");
 const root = createRoot(container!);
 

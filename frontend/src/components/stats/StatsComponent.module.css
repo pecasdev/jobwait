@@ -5,3 +5,11 @@
     justify-content: "center";
     align-items: "center";
 }
+
+.dark_bg {
+    background: var(--mantine-color-dark-6);
+}
+
+.light_bg {
+    background: var(--mantine-color-gray-0);
+}

@@ -21,8 +21,8 @@
   }
 
   .anchors {
-    color : var(--mantine-color-green-9);
-    line-height : 1;
-    size: "sm";
-    font-weight: rem(700px);
+    color: var(--mantine-color-green-9);
+    line-height: 1;
+    font-size: rem(14px);
+    font-weight: 700;
   }

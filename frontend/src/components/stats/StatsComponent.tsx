@@ -1,8 +1,14 @@
-import { Box, Grid, LoadingOverlay } from "@mantine/core";
+import {
+    Box,
+    Grid,
+    LoadingOverlay,
+    useComputedColorScheme,
+} from "@mantine/core";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import GraphExample from "./GraphExample";
 import classes from "./StatsComponent.module.css";
+import GraphExample from "./GraphExample";
+import clsx from "clsx";
 
 export type StatRenderType = "box" | "line";
 export type StatRenderBundleProps = {
@@ -25,11 +31,17 @@ const statsToRender = [
 ];
 
 function StatRenderBundle() {
+    const computedColorScheme = useComputedColorScheme("light");
     const [renderData, setRenderData] = useState<any>(null);
     const [_, { toggle }] = useDisclosure(false);
-
     return (
-        <Box pos="relative">
+        <Box
+            pos="relative"
+            className={clsx({
+                [classes.dark_bg]: computedColorScheme === "dark",
+                [classes.light_bg]: computedColorScheme === "light",
+            })}
+        >
             <LoadingOverlay
                 visible={renderData == null}
                 overlayProps={{
@@ -42,15 +54,17 @@ function StatRenderBundle() {
                     toggle;
                 }}
             ></LoadingOverlay>
-            <GraphExample />
+            <GraphExample
+                currentColorScheme={computedColorScheme}
+            ></GraphExample>
         </Box>
     );
 }
 
 export function StatsComponent() {
-    let stats = statsToRender.map((props) => (
-        <Grid.Col span={1} id={props.queryPath}>
-            <StatRenderBundle key={props.queryPath} />
+    let stats = statsToRender.map((stat) => (
+        <Grid.Col span={1} id={stat.queryPath}>
+            <StatRenderBundle />
         </Grid.Col>
     ));
 

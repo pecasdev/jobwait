@@ -1,5 +1,5 @@
 import { useForm } from "@mantine/form";
-import { Button, Fieldset, Grid, Group } from "@mantine/core";
+import { Button, Fieldset, Image, Group } from "@mantine/core";
 import { ReactNode, useState } from "react";
 import { PromptDefinition } from "../../models/PromptTypes";
 import { Answers } from "../../models/Answers";
@@ -78,39 +78,45 @@ export function DataSubmitForm(props: PromptCollectorProps) {
     form.initialize(formValues);
 
     return (
-        <Grid columns={2} align="center" justify="center">
-            <Grid.Col span={1} pl={100} pr={100} pt={20} pb={20}>
-                <Fieldset radius="lg" variant="filled">
-                    {...children}
-                    <Group justify="flex-end" mt="md">
-                        {open == Status.SUCCESS && (
-                            <SuccessAlert setState={setOpen}></SuccessAlert>
-                        )}
-                        {open == Status.ERROR && (
-                            <FailAlert setState={setOpen}></FailAlert>
-                        )}
-                        <Button
-                            onClick={() => {
-                                handleFormSubmission(form.getValues())
-                                    .then((_) => setOpen(Status.SUCCESS))
-                                    .catch((error) => {
-                                        console.error(error);
-                                        setOpen(Status.ERROR);
-                                    });
-                            }}
-                        >
-                            Submit
-                        </Button>
-                    </Group>
-                </Fieldset>
-            </Grid.Col>
-            <Grid.Col span={1}>
-                <img
-                    className="blur-3xl"
-                    id="gatitoImage" //THE BOY
-                    src="gatito.jpg"
-                />
-            </Grid.Col>
-        </Grid>
+        <Group justify="flex" align="center">
+            <Fieldset
+                radius="lg"
+                variant="filled"
+                ml={100}
+                mr={100}
+                mt={20}
+                mb={20}
+            >
+                {...children}
+                <Group justify="flex-end" mt="md">
+                    {open == Status.SUCCESS && (
+                        <SuccessAlert setState={setOpen}></SuccessAlert>
+                    )}
+                    {open == Status.ERROR && (
+                        <FailAlert setState={setOpen}></FailAlert>
+                    )}
+                    <Button
+                        onClick={() => {
+                            handleFormSubmission(form.getValues())
+                                .then((_) => setOpen(Status.SUCCESS))
+                                .catch((error) => {
+                                    console.error(error);
+                                    setOpen(Status.ERROR);
+                                });
+                        }}
+                    >
+                        Submit
+                    </Button>
+                </Group>
+            </Fieldset>
+            <Image
+                className="blur-3xl"
+                draggable="false"
+                radius="md"
+                m={50}
+                id="gatitoImage" //THE BOY
+                src="gatito.jpg"
+            />
+        </Group>
     );
 }
