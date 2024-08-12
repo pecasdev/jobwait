@@ -1,8 +1,10 @@
 package com.jobwait.control;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jobwait.domain.Answer;
+import com.jobwait.domain.Stat;
 import com.jobwait.domain.User;
 import com.jobwait.persistence.PersistenceController;
 import com.jobwait.persistence.PostgresController;
@@ -34,6 +36,11 @@ public class RequestController {
     public void submitUserAnswers(AuthToken token, List<Answer> answers) {
         User user = getUserFromAuthToken(token);
         persistence.updateUserAnswers(user, answers);
+    }
+
+    public Stat getStat(String statId) {
+        Stat stat = new Stat("cool-graph", Map.of("pickles", List.of(5, 7, 8, 9, 30)));
+        return stat;
     }
 
     public void deleteUserAndPurgeAnswers(AuthToken token) {
