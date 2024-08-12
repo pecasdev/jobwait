@@ -70,4 +70,16 @@ public class RequestNavigation {
 			}
 		};
 	}
+
+	public static Supplier<ObjectNode> getStat(String statId) {
+		return () -> {
+			Stat stat = requestController.getStat(statId);
+
+			ObjectNode dataNode = Utils.mapper.createObjectNode();
+			ObjectNode statNode = Utils.mapper.valueToTree(stat);
+			dataNode.set("stat", statNode);
+
+			return dataNode;
+		};
+	}
 }
