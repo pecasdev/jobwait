@@ -1,22 +1,22 @@
 package com.jobwait.domain;
 
-import java.util.List;
 import java.util.Map;
 
-public class Stat {
+public abstract class Stat {
     public String id;
-    public Map<String, List<Integer>> rows;
+    protected Map<String, Object> rows;
 
-    public Stat(String id, Map<String, List<Integer>> rows) {
+    public Stat(String id) {
         this.id = id;
-        this.rows = rows;
     }
 
     String getId() {
         return this.id;
     }
 
-    Map<String, List<Integer>> getRows() {
+    public Map<String, Object> getRows() {
         return this.rows;
     }
+
+    abstract public void fetchAndSetRows();
 }
