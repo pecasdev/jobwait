@@ -18,6 +18,7 @@ import com.jobwait.spring.utils.Utils;
 @CrossOrigin("http://127.0.0.1:3000")
 @RestController
 public class SpringEndpoints {
+	// todo - dont send back body if data is null
 	private static ResponseEntity<ObjectNode> processAndHandleException(Supplier<ObjectNode> func) {
 		ObjectNode responseNode = Utils.mapper.createObjectNode();
 

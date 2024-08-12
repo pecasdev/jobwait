@@ -14,6 +14,8 @@ public abstract class PersistenceController {
 
     public abstract User createUserFromAuthId(String authId);
 
+    public abstract List<List<Answer>> getAllAnswerSets();
+
     public abstract void deleteUserAndPurgeAnswers(User user);
 }
 
