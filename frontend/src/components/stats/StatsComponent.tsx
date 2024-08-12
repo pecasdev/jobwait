@@ -16,9 +16,7 @@ export type StatRenderBundleProps = {
     renderType: StatRenderType;
 };
 
-// todo - query the backend /stats/{queryPath} and get back some data
-// todo - use the data above to update an internal state which re-renders the component
-// todo - display some placeholder while the above takes place
+
 export type StatRenderBundleState = {
     renderData: any | null;
 };
@@ -74,9 +72,3 @@ export function StatsComponent() {
         </Grid>
     );
 }
-
-// stat puller
-// component thats given an endpoint and cache key
-// component will check cache using key for existing data
-// if doesn't exist or older than 1 hour, pull data and update local cache
-// also show some kind of loading icon
