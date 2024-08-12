@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jobwait.control.RequestController;
 import com.jobwait.domain.Answer;
+import com.jobwait.domain.Stat;
 import com.jobwait.domain.User;
 import com.jobwait.jackson.AnswerDeserializerFault;
 import com.jobwait.security.AuthToken;
@@ -75,11 +76,8 @@ public class RequestNavigation {
 		return () -> {
 			Stat stat = requestController.getStat(statId);
 
-			ObjectNode dataNode = Utils.mapper.createObjectNode();
 			ObjectNode statNode = Utils.mapper.valueToTree(stat);
-			dataNode.set("stat", statNode);
-
-			return dataNode;
+			return statNode;
 		};
 	}
 }
