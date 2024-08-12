@@ -2,6 +2,8 @@ package com.jobwait.domain;
 
 import java.util.List;
 
+import com.jobwait.domain.fault.InvalidQuestionDefinitionFault;
+
 public class Question {
     public String key;
     public AnswerType answerType;

@@ -1,11 +1,11 @@
-package com.jobwait.domain;
+package com.jobwait.domain.fault;
 
 import org.springframework.http.HttpStatus;
 
 import com.jobwait.fault.FaultException;
 
-public class InvalidQuestionKey extends FaultException {
-    public InvalidQuestionKey(String key) {
+public class InvalidQuestionKeyFault extends FaultException {
+    public InvalidQuestionKeyFault(String key) {
         super(HttpStatus.BAD_REQUEST, "INVALID_QUESTION_KEY",
                 "questionKey '%s' does not exist in known questions".formatted(key));
     }

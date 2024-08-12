@@ -3,6 +3,7 @@ package com.jobwait.domain;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.jobwait.domain.fault.UndefinedAnswerTypeFault;
 import com.jobwait.jackson.AnswerDeserializer;
 
 @JsonDeserialize(using = AnswerDeserializer.class)

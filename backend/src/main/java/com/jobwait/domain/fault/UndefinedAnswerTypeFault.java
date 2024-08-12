@@ -1,7 +1,8 @@
-package com.jobwait.domain;
+package com.jobwait.domain.fault;
 
 import org.springframework.http.HttpStatus;
 
+import com.jobwait.domain.AnswerType;
 import com.jobwait.fault.FaultException;
 
 public class UndefinedAnswerTypeFault extends FaultException {
