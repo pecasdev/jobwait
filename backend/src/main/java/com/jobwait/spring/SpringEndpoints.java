@@ -18,13 +18,17 @@ import com.jobwait.spring.utils.Utils;
 @CrossOrigin("http://127.0.0.1:3000")
 @RestController
 public class SpringEndpoints {
-	// todo - dont send back body if data is null
 	private static ResponseEntity<ObjectNode> processAndHandleException(Supplier<ObjectNode> func) {
 		ObjectNode responseNode = Utils.mapper.createObjectNode();
 
 		try {
-			responseNode.set("data", func.get());
-			return new ResponseEntity<ObjectNode>(responseNode, HttpStatus.OK);
+			ObjectNode data = func.get();
+			if (data == null) {
+				return new ResponseEntity<ObjectNode>(HttpStatus.OK);
+			} else {
+				responseNode.set("data", func.get());
+				return new ResponseEntity<ObjectNode>(responseNode, HttpStatus.OK);
+			}
 		} catch (FaultException e) {
 			ObjectNode errorNode = Utils.mapper.createObjectNode();
 			errorNode.put("shortCode", e.shortCode);
@@ -60,11 +64,13 @@ public class SpringEndpoints {
 	public static ResponseEntity<ObjectNode> getStat(@RequestParam("id") String statId) {
 		return processAndHandleException(RequestNavigation.getStat(statId));
 	}
-	/* 
+	/*
 	 * 
 	 * frontend can query a specific stat by id
-	 * backend will send a dictionary of string -> list[int] with rowdata for that stat
-	 * frontend takes the rows and a provided schema and renders it using graph library
+	 * backend will send a dictionary of string -> list[int] with rowdata for that
+	 * stat
+	 * frontend takes the rows and a provided schema and renders it using graph
+	 * library
 	 * 
 	 */
 }
