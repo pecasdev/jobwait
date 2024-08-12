@@ -1,10 +1,10 @@
 import { useForm } from "@mantine/form";
-import { Button, Fieldset, Group } from "@mantine/core";
-import { PromptDefinition } from "./PromptTypes";
+import { Button, Fieldset, Image, Group } from "@mantine/core";
 import { ReactNode, useState } from "react";
-import { Answers } from "../models/Answers";
-import { handleFormSubmission } from "./output/FormSubmissionHandler";
-import { FailAlert, SuccessAlert } from "./output/AlertOnSubmission";
+import { PromptDefinition } from "../../models/PromptTypes";
+import { Answers } from "../../models/Answers";
+import { FailAlert, SuccessAlert } from "../output/alert/AlertOnSubmission";
+import { handleFormSubmission } from "../output/FormSubmissionHandler";
 
 function updateImageBlur(
     imageName: string,
@@ -28,7 +28,7 @@ export enum Status {
     ERROR = "error",
 }
 
-export function BasicForm(props: PromptCollectorProps) {
+export function DataSubmitForm(props: PromptCollectorProps) {
     let formValues: Answers = { answers: [] };
     let children: ReactNode[] = [];
     const [open, setOpen] = useState<Status>(Status.PENDING);
@@ -78,43 +78,45 @@ export function BasicForm(props: PromptCollectorProps) {
     form.initialize(formValues);
 
     return (
-        <div className="grid grid-cols-2 gap-x-52">
-            <div>
-                <Fieldset
-                    legend="Give us your data!"
-                    radius="md"
-                    variant="filled"
-                >
-                    {...children}
-                    <Group justify="flex-end" mt="md">
-                        {open == Status.SUCCESS && (
-                            <SuccessAlert setState={setOpen}></SuccessAlert>
-                        )}
-                        {open == Status.ERROR && (
-                            <FailAlert setState={setOpen}></FailAlert>
-                        )}
-                        <Button
-                            onClick={() => {
-                                handleFormSubmission(form.getValues())
-                                    .then((_) => setOpen(Status.SUCCESS))
-                                    .catch((error) => {
-                                        console.error(error);
-                                        setOpen(Status.ERROR);
-                                    });
-                            }}
-                        >
-                            Submit
-                        </Button>
-                    </Group>
-                </Fieldset>
-            </div>
-            <div>
-                <img
-                    className="obtain-content blur-3xl"
-                    id="gatitoImage" //THE BOY
-                    src="gatito.jpg"
-                />
-            </div>
-        </div>
+        <Group justify="flex" align="center">
+            <Fieldset
+                radius="lg"
+                variant="filled"
+                ml={100}
+                mr={100}
+                mt={20}
+                mb={20}
+            >
+                {...children}
+                <Group justify="flex-end" mt="md">
+                    {open == Status.SUCCESS && (
+                        <SuccessAlert setState={setOpen}></SuccessAlert>
+                    )}
+                    {open == Status.ERROR && (
+                        <FailAlert setState={setOpen}></FailAlert>
+                    )}
+                    <Button
+                        onClick={() => {
+                            handleFormSubmission(form.getValues())
+                                .then((_) => setOpen(Status.SUCCESS))
+                                .catch((error) => {
+                                    console.error(error);
+                                    setOpen(Status.ERROR);
+                                });
+                        }}
+                    >
+                        Submit
+                    </Button>
+                </Group>
+            </Fieldset>
+            <Image
+                className="blur-3xl"
+                draggable="false"
+                radius="md"
+                m={50}
+                id="gatitoImage" //THE BOY
+                src="gatito.jpg"
+            />
+        </Group>
     );
 }

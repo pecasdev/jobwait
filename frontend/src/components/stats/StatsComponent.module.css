@@ -1,0 +1,15 @@
+.grid {
+    margin: rem(20px);
+    width: rem(800px);
+    height: rem(800px);
+    justify-content: "center";
+    align-items: "center";
+}
+
+.dark_bg {
+    background: var(--mantine-color-dark-6);
+}
+
+.light_bg {
+    background: var(--mantine-color-gray-0);
+}

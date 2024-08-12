@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PromptTypeProps } from "../PromptTypes";
+import { PromptTypeProps } from "../../models/PromptTypes";
 import {
     CheckIcon,
     Combobox,

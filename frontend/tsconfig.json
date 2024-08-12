@@ -10,6 +10,7 @@
         "allowJs": false,
         "jsx": "react-jsx",
         "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
         "rootDir": "src",
         "noImplicitReturns": true,
         "noImplicitThis": true,

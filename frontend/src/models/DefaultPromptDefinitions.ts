@@ -1,8 +1,8 @@
-import { PromptDefinition } from "../PromptTypes";
-import { ComboboxPrompt } from "../inputs/ComboboxPrompt";
-import DatePickerPrompt from "../inputs/DatePickerPrompt";
-import SliderPrompt from "../inputs/SliderPrompt";
-import TextPrompt from "../inputs/TextPrompt";
+import { PromptDefinition } from "./PromptTypes";
+import { ComboboxPrompt } from "../components/inputs/ComboboxPrompt";
+import DatePickerPrompt from "../components/inputs/DatePickerPrompt";
+import SliderPrompt from "../components/inputs/SliderPrompt";
+import TextPrompt from "../components/inputs/TextPrompt";
 
 export const defaultPromptDefinitions: PromptDefinition[] = [
     {

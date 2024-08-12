@@ -1,5 +1,5 @@
 import { DatePickerInput } from "@mantine/dates";
-import { PromptTypeProps } from "../PromptTypes";
+import { PromptTypeProps } from "../../models/PromptTypes";
 import { useState } from "react";
 
 export default function DatePickerPrompt(props: PromptTypeProps) {
