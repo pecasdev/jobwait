@@ -2,6 +2,7 @@ package com.jobwait.spring;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -75,8 +76,11 @@ public class RequestNavigation {
 	public static Supplier<ObjectNode> getStat(String statId) {
 		return () -> {
 			Stat stat = requestController.getStat(statId);
+			Map<String,Object> rows = stat.getRows();
 
-			ObjectNode statNode = Utils.mapper.valueToTree(stat);
+			ObjectNode statNode = Utils.mapper.createObjectNode();
+			statNode.set("rows", Utils.mapper.valueToTree(rows));
+
 			return statNode;
 		};
 	}

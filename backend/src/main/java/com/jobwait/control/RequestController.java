@@ -11,6 +11,7 @@ import com.jobwait.persistence.PostgresController;
 import com.jobwait.security.AuthToken;
 import com.jobwait.security.LinkedInOAuthValidator;
 import com.jobwait.security.OAuthValidator;
+import com.jobwait.stat.Stats;
 
 public class RequestController {
     private PersistenceController persistence = new PostgresController();
@@ -39,7 +40,7 @@ public class RequestController {
     }
 
     public Stat getStat(String statId) {
-        Stat stat = new Stat("cool-graph", Map.of("pickles", List.of(5, 7, 8, 9, 30)));
+        Stat stat = Stats.statFromId(statId);
         return stat;
     }
 
