@@ -1,4 +1,4 @@
-package com.jobwait.domain;
+package com.jobwait.domain.fault;
 
 import org.springframework.http.HttpStatus;
 

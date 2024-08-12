@@ -12,7 +12,7 @@ import java.util.List;
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Question;
 import com.jobwait.domain.Questions;
-import com.jobwait.domain.UndefinedAnswerTypeFault;
+import com.jobwait.domain.fault.UndefinedAnswerTypeFault;
 import com.jobwait.fault.FaultException;
 import com.jobwait.persistence.DatabaseFaults;
 import com.jobwait.util.Enumerate;
