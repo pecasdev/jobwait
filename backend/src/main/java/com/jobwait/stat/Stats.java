@@ -14,12 +14,16 @@ public class Stats {
             new JobTitleStat("job-title"));
 
     // don't touch this stuff
+    private static StatRefreshOfficer statRefreshOfficer = new StatRefreshOfficer();
+
     public static Stat statFromId(String statId) {
         List<Stat> matches = known.stream().filter(s -> s.id.equals(statId)).toList();
         if (matches.size() == 0) {
             throw new UnknownStatId(statId);
         }
-        return matches.getFirst();
+        Stat stat = matches.getFirst();
+        Stats.statRefreshOfficer.refreshStatIfNeeded(stat.id);
+        return stat;
     }
 
     private static class UnknownStatId extends FaultException {
