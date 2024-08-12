@@ -154,6 +154,25 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
+    public List<List<Answer>> getAllAnswerSets() {
+        try {
+            Connection connection = getConnection();
+
+            String answerColumnValues = String.join(", ", Questions.knownQuestionKeys);
+            String statementText = "SELECT %s FROM answers".formatted(answerColumnValues);
+            PreparedStatement statement = connection.prepareStatement(statementText);
+
+            ResultSet resultSet = statement.executeQuery();
+            List<List<Answer>> answerSets = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
+                    new PostgresAnswerAdapter());
+
+            return answerSets;
+        } catch (SQLException e) {
+            throw DatabaseFaults.GenericDatabaseFault();
+        }
+    }
+
+    @Override
     public void deleteUserAndPurgeAnswers(User user) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteUserAndPurgeAnswers'");
