@@ -4,15 +4,14 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.jobwait.domain.Answer;
-import com.jobwait.domain.Questions;
-import com.jobwait.spring.utils.Utils;
 import com.jobwait.domain.AnswerType;
 import com.jobwait.domain.Question;
+import com.jobwait.domain.Questions;
+import com.jobwait.spring.utils.Utils;
 
 public class AnswerDeserializer extends StdDeserializer<Answer> {
     public AnswerDeserializer() {
