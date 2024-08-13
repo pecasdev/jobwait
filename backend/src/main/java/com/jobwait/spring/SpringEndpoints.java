@@ -64,13 +64,4 @@ public class SpringEndpoints {
 	public static ResponseEntity<ObjectNode> getStat(@RequestParam("id") String statId) {
 		return processAndHandleException(RequestNavigation.getStat(statId));
 	}
-	/*
-	 * 
-	 * frontend can query a specific stat by id
-	 * backend will send a dictionary of string -> list[int] with rowdata for that
-	 * stat
-	 * frontend takes the rows and a provided schema and renders it using graph
-	 * library
-	 * 
-	 */
 }
