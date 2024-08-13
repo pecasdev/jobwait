@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import com.jobwait.domain.Stat;
 
-public class StatRefreshOfficer {
+public class StatRefreshController {
     // constants
     private static Duration statLifetime = Duration.ofMinutes(60);
 
@@ -22,7 +22,7 @@ public class StatRefreshOfficer {
 
     private Map<String, Instant> statIdToLastRefreshStamp = generateIdStampMap();
 
-    public void refreshStatIfNeeded(String statId) {
+    public void refreshStatIfStale(String statId) {
         Instant lastRefreshStamp = this.statIdToLastRefreshStamp.get(statId);
 
         if (Instant.now().isAfter(lastRefreshStamp.plus(statLifetime))) {
