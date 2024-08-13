@@ -25,10 +25,10 @@ public class Questions {
     public static List<String> knownQuestionKeys = Questions.known.stream().map(x -> x.key).toList();
 
     public static Question questionFromKey(String questionKey) throws IOException {
-        List<Question> matches = known.stream().filter(q -> q.key.equals(questionKey)).toList();
-        if (matches.size() == 0) {
-            throw new IOException("questionKey '%s' does not exist in known questions".formatted(questionKey));
-        }
-        return matches.getFirst();
+        return known.stream()
+                .filter(q -> q.key.equals(questionKey))
+                .findFirst().orElseThrow(() -> new IOException(
+                        "questionKey '%s' does not exist in known questions"
+                                .formatted(questionKey)));
     }
 }

@@ -17,11 +17,9 @@ public class Stats {
     private static StatRefreshOfficer statRefreshOfficer = new StatRefreshOfficer();
 
     public static Stat statFromId(String statId) {
-        List<Stat> matches = known.stream().filter(s -> s.id.equals(statId)).toList();
-        if (matches.size() == 0) {
-            throw new UnknownStatId(statId);
-        }
-        Stat stat = matches.getFirst();
+        Stat stat = known.stream()
+                .filter(s -> s.id.equals(statId))
+                .findFirst().orElseThrow(() -> new UnknownStatId(statId));
         Stats.statRefreshOfficer.refreshStatIfNeeded(stat.id);
         return stat;
     }
