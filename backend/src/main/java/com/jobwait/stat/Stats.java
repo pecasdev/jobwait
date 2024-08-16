@@ -14,13 +14,10 @@ public class Stats {
             new JobTitleStat("job-title"));
 
     // don't touch this stuff
-    private static StatRefreshController statRefreshOfficer = new StatRefreshController();
-
     public static Stat statFromId(String statId) {
         Stat stat = known.stream()
                 .filter(s -> s.id.equals(statId))
                 .findFirst().orElseThrow(() -> new UnknownStatId(statId));
-        Stats.statRefreshOfficer.refreshStatIfStale(stat.id);
         return stat;
     }
 
