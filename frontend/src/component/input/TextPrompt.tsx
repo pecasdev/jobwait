@@ -1,4 +1,4 @@
-import { PromptTypeProps } from "../../models/PromptTypes";
+import { PromptTypeProps } from "../../model/PromptTypes";
 import { TextInput } from "@mantine/core";
 
 export default function TextPrompt(props: PromptTypeProps) {

@@ -1,8 +1,8 @@
 import { useForm } from "@mantine/form";
 import { Button, Fieldset, Image, Group } from "@mantine/core";
 import { ReactNode, useState } from "react";
-import { PromptDefinition } from "../../models/PromptTypes";
-import { Answers } from "../../models/Answers";
+import { PromptDefinition } from "../../model/PromptTypes";
+import { Answers } from "../../model/Answers";
 import { FailAlert, SuccessAlert } from "../output/alert/AlertOnSubmission";
 import { handleFormSubmission } from "../output/FormSubmissionHandler";
 
