@@ -11,7 +11,8 @@ import { StatShape } from "../../shape/StatShape";
 import GenericChart from "./chart/GenericChart";
 import classes from "./StatsComponent.module.css";
 
-const statsToRender = [{ statId: "job-title" }];
+// todo - don't hardcode this list in the frontend, have it be fetched from the backend
+const statIdsToRender = ["job-title", "job-wait", "apps-needed-given-job-count"];
 
 function StatRenderBundle(props: { statId: string }) {
     const computedColorScheme = useComputedColorScheme("light");
@@ -57,9 +58,9 @@ function StatRenderBundle(props: { statId: string }) {
 }
 
 export function StatsComponent() {
-    let stats = statsToRender.map((stat) => (
-        <Grid.Col span={1} id={stat.statId}>
-            <StatRenderBundle statId={stat.statId} />
+    let stats = statIdsToRender.map((statId) => (
+        <Grid.Col span={1} id={statId}>
+            <StatRenderBundle statId={statId} />
         </Grid.Col>
     ));
 
