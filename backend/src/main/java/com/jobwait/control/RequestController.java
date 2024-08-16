@@ -10,11 +10,13 @@ import com.jobwait.persistence.PostgresController;
 import com.jobwait.security.AuthToken;
 import com.jobwait.security.LinkedInOAuthValidator;
 import com.jobwait.security.OAuthValidator;
+import com.jobwait.stat.StatRefreshController;
 import com.jobwait.stat.Stats;
 
 public class RequestController {
     private PersistenceController persistence = new PostgresController();
     private OAuthValidator oAuthValidator = new LinkedInOAuthValidator();
+    private StatRefreshController statRefreshController = new StatRefreshController();
 
     public User getUserFromAuthToken(AuthToken token) {
         oAuthValidator.validateToken(token);
@@ -40,6 +42,7 @@ public class RequestController {
 
     public Stat getStat(String statId) {
         Stat stat = Stats.statFromId(statId);
+        statRefreshController.refreshStatIfStale(stat.id);
         return stat;
     }
 
