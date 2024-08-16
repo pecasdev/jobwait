@@ -9,7 +9,7 @@ import com.jobwait.stat.AnswerFetching;
 
 public class JobTitleStat extends Stat implements AnswerFetching {
     public JobTitleStat(String id) {
-        super(id);
+        super(id, "bar");
         this.rows = new HashMap<String, Object>();
     }
 
