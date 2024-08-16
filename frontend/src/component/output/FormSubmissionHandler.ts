@@ -1,4 +1,4 @@
-import { Answers } from "../../models/Answers";
+import { Answers } from "../../model/Answers";
 import { SubmissionError } from "./SubmissionError";
 
 export async function handleFormSubmission(
