@@ -1,20 +1,18 @@
-import { ChartData, ChartOptions, plugins } from "chart.js";
+import { ChartData, ChartOptions } from "chart.js";
+import _ from "lodash";
 import { Line } from "react-chartjs-2";
+import { DataLabelsOptions } from "./DataLabelsOptions";
 
 export default function LineChart(props: {
     data: ChartData<"line", any[], string>;
 }) {
     const options: ChartOptions<"line"> = {
+        layout: {
+            padding: 25,
+        },
         plugins: {
-            datalabels: {
-                offset: 2,
-                align: "top",
-
-                anchor: "end",
-                font: {
-                    size: 16,
-                },
-            },
+            datalabels: DataLabelsOptions,
+            legend: { position: "bottom" },
         },
     };
     return (
