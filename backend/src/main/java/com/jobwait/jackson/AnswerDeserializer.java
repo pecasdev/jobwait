@@ -12,6 +12,7 @@ import com.jobwait.domain.AnswerType;
 import com.jobwait.domain.Question;
 import com.jobwait.domain.Questions;
 import com.jobwait.spring.utils.Utils;
+import java.time.LocalDate;
 
 public class AnswerDeserializer extends StdDeserializer<Answer> {
     public AnswerDeserializer() {
@@ -24,7 +25,7 @@ public class AnswerDeserializer extends StdDeserializer<Answer> {
 
     @Override
     public Answer deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
-        JsonNode node = jp.getCodec().readTree(jp);
+         JsonNode node = jp.getCodec().readTree(jp);
 
         JsonNode questionKeyNode = node.get("questionKey");
         if (questionKeyNode == null) {
@@ -42,6 +43,17 @@ public class AnswerDeserializer extends StdDeserializer<Answer> {
         AnswerType answerType = question.answerType;
 
         Object answerValue = Utils.mapper.treeToValue(node.get("answerValue"), Object.class);
+
+        if (answerType == AnswerType.DATE) {
+            try {
+                answerValue = LocalDate.parse((String) answerValue);
+            }
+            catch(Exception e) {
+                throw new IOException(
+                    "%s could not be parsed as a date / format [yyyy-MM-dd]".formatted(answerValue));
+            }
+            
+        }
 
         // assert valid data type
         if (!Answer.assertValidAnswerType(answerType, answerValue)) {
