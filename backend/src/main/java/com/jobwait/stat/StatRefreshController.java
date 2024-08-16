@@ -15,7 +15,7 @@ public class StatRefreshController {
     // stat id to timestamp
     private static Map<String, Instant> generateIdStampMap() {
         return Stats.known.stream().map(s -> s.id)
-                .collect(Collectors.toMap(Function.identity(), _ -> Instant.now(), (_, _) -> {
+                .collect(Collectors.toMap(Function.identity(), _ -> Instant.MIN, (_, _) -> {
                     throw new RuntimeException("impossible error");
                 }));
     }
