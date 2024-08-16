@@ -46,11 +46,11 @@ public class JobWaitStat extends Stat implements AnswerFetching {
                 if (answer.questionKey.equals("jobsearchstartdate")) {
                     jobSearchStartDate = answer.answerValueAsDate();
                 }
+            }
 
-                if (jobAcceptDate != null && jobSearchStartDate != null) {
-                    int daysElapsed = (int) ChronoUnit.DAYS.between(jobSearchStartDate, jobAcceptDate);
-                    this.addOrIncrementRow(daysElapsed);
-                }
+            if (jobAcceptDate != null && jobSearchStartDate != null) {
+                int daysElapsed = (int) ChronoUnit.DAYS.between(jobSearchStartDate, jobAcceptDate);
+                this.addOrIncrementRow(daysElapsed);
             }
         }
     }
