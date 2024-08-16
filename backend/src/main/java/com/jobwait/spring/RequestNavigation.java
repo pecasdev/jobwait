@@ -76,9 +76,11 @@ public class RequestNavigation {
 	public static Supplier<ObjectNode> getStat(String statId) {
 		return () -> {
 			Stat stat = requestController.getStat(statId);
-			Map<String,Object> rows = stat.getRows();
+			Map<String, Object> rows = stat.getRows();
+			String type = stat.type;
 
 			ObjectNode statNode = Utils.mapper.createObjectNode();
+			statNode.put("type", type);
 			statNode.set("rows", Utils.mapper.valueToTree(rows));
 
 			return statNode;
