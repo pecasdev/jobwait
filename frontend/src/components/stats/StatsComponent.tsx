@@ -4,34 +4,34 @@ import {
     LoadingOverlay,
     useComputedColorScheme,
 } from "@mantine/core";
-import { useState } from "react";
-import { useDisclosure } from "@mantine/hooks";
-import classes from "./StatsComponent.module.css";
-import GraphExample from "./GraphExample";
 import clsx from "clsx";
+import { useEffect, useState } from "react";
+import Api from "../../api";
+import { StatShape } from "../../shape/StatShape";
+import GenericChart from "./chart/GenericChart";
+import classes from "./StatsComponent.module.css";
 
-export type StatRenderType = "box" | "line";
-export type StatRenderBundleProps = {
-    queryPath: string;
-    renderType: StatRenderType;
-};
+const statsToRender = [{ statId: "job-title" }];
 
-
-export type StatRenderBundleState = {
-    renderData: any | null;
-};
-
-const statsToRender = [
-    { queryPath: "yoe-to-app-count", renderType: "line" },
-    { queryPath: "yoe-to-app-count2", renderType: "line" },
-    { queryPath: "yoe-to-app-count3", renderType: "line" },
-    { queryPath: "yoe-to-app-count4", renderType: "line" },
-];
-
-function StatRenderBundle() {
+function StatRenderBundle(props: { statId: string }) {
     const computedColorScheme = useComputedColorScheme("light");
-    const [renderData, setRenderData] = useState<any>(null);
-    const [_, { toggle }] = useDisclosure(false);
+    const [renderData, setRenderData] = useState<StatShape | null>(null);
+
+    // todo: investigate bug with duplicate requests going out
+    // nothing breaks but we definitely shouldn't be sending duplicate requests for no reason lol
+    // honestly might leave fixing this bug until after MVP is done
+    useEffect(() => {
+        const api = new Api();
+        const statId = props.statId;
+        const fetchAndSet = () => {
+            console.log("fetching");
+            api.fetchStat(statId)
+                .then(setRenderData)
+                .catch((error) => console.error(error));
+        };
+        setTimeout(fetchAndSet, 2000); // fake delay to test loading animation
+    }, []);
+
     return (
         <Box
             pos="relative"
@@ -47,22 +47,19 @@ function StatRenderBundle() {
                     backgroundOpacity: 0.9,
                     blur: 1,
                 }}
-                onClick={() => {
-                    setRenderData("test");
-                    toggle;
-                }}
-            ></LoadingOverlay>
-            <GraphExample
-                currentColorScheme={computedColorScheme}
-            ></GraphExample>
+            />
+
+            {renderData ? (
+                <GenericChart data={renderData} legendName={props.statId} />
+            ) : null}
         </Box>
     );
 }
 
 export function StatsComponent() {
     let stats = statsToRender.map((stat) => (
-        <Grid.Col span={1} id={stat.queryPath}>
-            <StatRenderBundle />
+        <Grid.Col span={1} id={stat.statId}>
+            <StatRenderBundle statId={stat.statId} />
         </Grid.Col>
     ));
 
