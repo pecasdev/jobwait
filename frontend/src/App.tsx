@@ -13,7 +13,7 @@ export default function App() {
             <Header />
             <Paper withBorder radius="xl" className={classes.sections}>
                 <Flex direction="column" align="center">
-                    <StatsComponent></StatsComponent>
+                    <StatsComponent />
                 </Flex>
             </Paper>
             <Paper withBorder radius="xl" className={classes.sections}>
