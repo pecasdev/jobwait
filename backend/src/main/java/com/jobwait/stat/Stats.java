@@ -6,12 +6,16 @@ import org.springframework.http.HttpStatus;
 
 import com.jobwait.domain.Stat;
 import com.jobwait.fault.FaultException;
+import com.jobwait.stat.impl.AppsNeededGivenJobCountStat;
 import com.jobwait.stat.impl.JobTitleStat;
+import com.jobwait.stat.impl.JobWaitStat;
 
 public class Stats {
     // touch this stuff
     public static List<Stat> known = List.of(
-            new JobTitleStat("job-title"));
+            new JobTitleStat("job-title"),
+            new JobWaitStat("job-wait"),
+            new AppsNeededGivenJobCountStat("apps-needed-given-job-count"));
 
     // don't touch this stuff
     public static Stat statFromId(String statId) {
