@@ -26,7 +26,7 @@ public class SpringEndpoints {
 			if (data == null) {
 				return new ResponseEntity<ObjectNode>(HttpStatus.OK);
 			} else {
-				responseNode.set("data", func.get());
+				responseNode.set("data", data);
 				return new ResponseEntity<ObjectNode>(responseNode, HttpStatus.OK);
 			}
 		} catch (FaultException e) {
