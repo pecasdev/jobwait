@@ -1,5 +1,6 @@
 import { ChartData, ChartOptions } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { DataLabelsOptions } from "./DataLabelsOptions";
 
 export default function BarChart(props: {
     data: ChartData<"bar", any[], string>;
@@ -9,6 +10,18 @@ export default function BarChart(props: {
             y: {
                 beginAtZero: true,
             },
+        },
+        layout: {
+            padding: {
+                top: 40,
+                left: 25,
+                right: 25,
+                bottom: 25,
+            },
+        },
+        plugins: {
+            datalabels: DataLabelsOptions,
+            legend: { position: "bottom" },
         },
     };
 

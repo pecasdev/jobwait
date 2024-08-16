@@ -1,10 +1,10 @@
-import "./index.css";
-import App from "./App";
 import { localStorageColorSchemeManager, MantineProvider } from "@mantine/core";
+import { Chart, registerables } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { Chart, registerables } from "chart.js";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import App from "./App";
+import "./index.css";
 
 const colorSchemeManager = localStorageColorSchemeManager({
     key: "mantine-color-scheme-value",
