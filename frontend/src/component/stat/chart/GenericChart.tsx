@@ -1,5 +1,6 @@
 import { StatShape } from "../../../shape/StatShape";
 import BarChart from "./BarChart";
+import LineChart from "./LineChart";
 
 export default function GenericChart(props: {
     data: StatShape;
@@ -23,6 +24,21 @@ export default function GenericChart(props: {
                     }}
                 />
             );
+        
+        case "line":
+            return (
+                <LineChart
+                data={{
+                    labels: Object.keys(chartData),
+                    datasets: [
+                        {
+                            label: props.legendName,
+                            data: Object.values(chartData)
+                        }
+                    ]
+                }}
+            />
+            )
 
         default:
             return <p>yeah idk</p>;
