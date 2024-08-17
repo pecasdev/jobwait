@@ -6,5 +6,8 @@ export type StatRowsShape = {
 };
 export type StatShape = {
     type: ArrayElement<typeof StatShapeTypes>;
+    title: string;
+    xAxisLabel: string;
+    yAxisLabel: string;
     rows: StatRowsShape;
 };

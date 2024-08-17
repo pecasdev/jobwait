@@ -5,8 +5,9 @@ import { DataLabelsOptions } from "./DataLabelsOptions";
 
 export default function LineChart(props: {
     data: ChartData<"line", any[], string>;
+    options: ChartOptions<"line">;
 }) {
-    const options: ChartOptions<"line"> = {
+    const defaultOptions: ChartOptions<"line"> = {
         layout: {
             padding: 25,
         },
@@ -16,6 +17,11 @@ export default function LineChart(props: {
         },
     };
     return (
-        <Line data={props.data} options={options} width={200} height={200} />
+        <Line
+            data={props.data}
+            options={_.merge(defaultOptions, props.options)}
+            width={200}
+            height={200}
+        />
     );
 }

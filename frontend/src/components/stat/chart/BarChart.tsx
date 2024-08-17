@@ -1,11 +1,13 @@
 import { ChartData, ChartOptions } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { DataLabelsOptions } from "./DataLabelsOptions";
+import _ from "lodash";
 
 export default function BarChart(props: {
     data: ChartData<"bar", any[], string>;
+    options: ChartOptions<"bar">;
 }) {
-    const options: ChartOptions<"bar"> = {
+    const defaultOptions: ChartOptions<"bar"> = {
         scales: {
             y: {
                 beginAtZero: true,
@@ -25,5 +27,12 @@ export default function BarChart(props: {
         },
     };
 
-    return <Bar data={props.data} options={options} width={200} height={200} />;
+    return (
+        <Bar
+            data={props.data}
+            options={_.merge(defaultOptions, props.options)}
+            width={200}
+            height={200}
+        />
+    );
 }
