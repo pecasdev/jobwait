@@ -1,4 +1,3 @@
-
 import { assertEqual, ShapeMold } from "../ShapeMold";
 import { BarStatShape } from "../shapes/BarStatShape";
 import { StatMold } from "./StatMold";
