@@ -7,9 +7,9 @@ import {
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import Api from "../../api";
-import { StatShape } from "../../shape/StatShape";
+import { StatShape } from "../../shape/shapes/StatShape";
 import GenericChart from "./chart/GenericChart";
-import classes from "./StatsComponent.module.css";
+import classes from "./StatComponent.module.css";
 
 // todo - don't hardcode this list in the frontend, have it be fetched from the backend
 const statIdsToRender = ["job-title", "job-wait", "apps-needed-given-job-count"];
@@ -57,7 +57,7 @@ function StatRenderBundle(props: { statId: string }) {
     );
 }
 
-export function StatsComponent() {
+export function StatComponent() {
     let stats = statIdsToRender.map((statId) => (
         <Grid.Col span={1} id={statId}>
             <StatRenderBundle statId={statId} />

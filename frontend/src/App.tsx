@@ -1,11 +1,11 @@
-import { Header } from "./component/header/Header";
+import { Header } from "./components/header/Header";
 import { Box, Flex, Paper } from "@mantine/core";
 import { defaultPromptDefinitions } from "./model/DefaultPromptDefinitions";
 
 import classes from "./App.module.css";
-import { DataSubmitForm } from "./component/input/DataSubmitForm";
-import { StatsComponent } from "./component/stat/StatsComponent";
-import { Footer } from "./component/footer/Footer";
+import { DataSubmitForm } from "./components/input/DataSubmitForm";
+import { StatComponent } from "./components/stat/StatComponent";
+import { Footer } from "./components/footer/Footer";
 
 export default function App() {
     return (
@@ -13,7 +13,7 @@ export default function App() {
             <Header />
             <Paper withBorder radius="xl" className={classes.sections}>
                 <Flex direction="column" align="center">
-                    <StatsComponent />
+                    <StatComponent />
                 </Flex>
             </Paper>
             <Paper withBorder radius="xl" className={classes.sections}>

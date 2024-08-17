@@ -1,4 +1,6 @@
-import { StatMold, StatShape } from "./shape/StatShape";
+import { StatShape } from "./shape/shapes/StatShape";
+import { StatMold } from "./shape/molds/StatMold";
+
 import _ from "lodash";
 
 export default class Api {
@@ -11,10 +13,7 @@ export default class Api {
             .then((data) => new StatMold().assert(data))
             .then((stat) => {
                 // sort row keys
-                stat.rows = _.pick(
-                    stat.rows,
-                    Object.keys(stat.rows).sort(),
-                );
+                stat.rows = _.pick(stat.rows, Object.keys(stat.rows).sort());
                 return stat;
             });
     }

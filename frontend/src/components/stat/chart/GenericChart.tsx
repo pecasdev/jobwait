@@ -1,4 +1,4 @@
-import { StatShape } from "../../../shape/StatShape";
+import { StatShape } from "../../../shape/shapes/StatShape";
 import BarChart from "./BarChart";
 import LineChart from "./LineChart";
 
