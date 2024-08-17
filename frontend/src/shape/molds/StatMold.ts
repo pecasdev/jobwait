@@ -23,6 +23,13 @@ export class StatMold extends ShapeMold<StatShape> {
     protected override throwIfMisfit(obj: any) {
         assertKeyInShape(obj, "type");
         assertElementOf(obj["type"], StatShapeTypes);
+        
+        assertKeyInShape(obj, "xAxisLabel");
+        assertType(obj["xAxisLabel"], "string");
+
+        assertKeyInShape(obj, "yAxisLabel");
+        assertType(obj["yAxisLabel"], "string");
+
         assertKeyInShape(obj, "rows");
         this.statRowMold.assert(obj["rows"]);
     }

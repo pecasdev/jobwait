@@ -12,16 +12,12 @@ import com.jobwait.stat.AnswerFetching;
 // wowowowow it's the name of the website guys, this is THE stat
 public class JobWaitStat extends Stat implements AnswerFetching {
     public JobWaitStat(String id) {
-        super(id, "bar");
-        this.rows = new HashMap<String, Object>();
+        super(id, "bar", "Wait time to receive job offer", "days waited", "# of people");
     }
 
     // todo - put this into a defaultdict util class
     private void addOrIncrementRow(int daysWaited) {
-        String key = String.valueOf(daysWaited).concat(" day");
-        if (daysWaited > 1) {
-            key = key.concat("s");
-        }
+        String key = String.valueOf(daysWaited);
         if (this.rows.containsKey(key)) {
             int prev = (int) this.rows.get(key);
             this.rows.put(key, prev + 1);

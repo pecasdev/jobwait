@@ -9,8 +9,8 @@ import com.jobwait.stat.AnswerFetching;
 // this code should be deleted and replaced with a real stat
 public class AppsNeededGivenJobCountStat extends Stat implements AnswerFetching {
     public AppsNeededGivenJobCountStat(String id) {
-        super(id, "line");
-        this.rows = new HashMap<String, Object>();
+        super(id, "line", "Applications needed to get a job given the number of previous jobs you've had",
+                "# of previous jobs", "Applications needed");
     }
 
     // todo - make this actually work
@@ -18,9 +18,10 @@ public class AppsNeededGivenJobCountStat extends Stat implements AnswerFetching 
     // to submit and manage multiple answersets
     public void fetchAndSetRows() {
         this.rows = new HashMap<String, Object>();
-        this.rows.put("1 job", 663);
-        this.rows.put("2 jobs", 387);
-        this.rows.put("3 jobs", 192);
-        this.rows.put("4 jobs", 43);
+        this.rows.put("0", 663);
+        this.rows.put("1", 387);
+        this.rows.put("2", 192);
+        this.rows.put("3", 43);
+        this.rows.put("4", 7);
     }
 }

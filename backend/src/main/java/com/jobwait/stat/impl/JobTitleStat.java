@@ -9,8 +9,7 @@ import com.jobwait.stat.AnswerFetching;
 
 public class JobTitleStat extends Stat implements AnswerFetching {
     public JobTitleStat(String id) {
-        super(id, "bar");
-        this.rows = new HashMap<String, Object>();
+        super(id, "bar", "Job Title", "Title", "# of people");
     }
 
     // todo - put this into a defaultdict util class
