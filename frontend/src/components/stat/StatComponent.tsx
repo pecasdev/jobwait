@@ -12,7 +12,11 @@ import GenericChart from "./chart/GenericChart";
 import classes from "./StatComponent.module.css";
 
 // todo - don't hardcode this list in the frontend, have it be fetched from the backend
-const statIdsToRender = ["job-title", "job-wait", "apps-needed-given-job-count"];
+const statIdsToRender = [
+    "job-title",
+    "job-wait",
+    "apps-needed-given-job-count",
+];
 
 function StatRenderBundle(props: { statId: string }) {
     const computedColorScheme = useComputedColorScheme("light");
@@ -50,9 +54,9 @@ function StatRenderBundle(props: { statId: string }) {
                 }}
             />
 
-            {renderData ? (
+            {renderData && (
                 <GenericChart data={renderData} legendName={props.statId} />
-            ) : null}
+            )}
         </Box>
     );
 }
