@@ -1,16 +1,7 @@
-import { ArrayElement } from "../magic/ArrayElement";
-import { assertElementOf, assertKeyInShape, assertType, Shape } from "./Shape";
+import { assertElementOf, assertKeyInShape, assertType, ShapeMold } from "../ShapeMold";
+import { StatRowsShape, StatShape, StatShapeTypes } from "../shapes/StatShape";
 
-const StatShapeTypes = ["bar", "line"];
-export type StatRowsShape = {
-    [key: string]: number | number[];
-};
-export type StatShape = {
-    type: ArrayElement<typeof StatShapeTypes>;
-    rows: StatRowsShape;
-};
-
-class StatRowMold extends Shape<StatRowsShape> {
+class StatRowMold extends ShapeMold<StatRowsShape> {
     public assert(obj: any): StatRowsShape {
         return super.assert(obj);
     }
@@ -26,7 +17,7 @@ class StatRowMold extends Shape<StatRowsShape> {
     }
 }
 
-export class StatMold extends Shape<StatShape> {
+export class StatMold extends ShapeMold<StatShape> {
     statRowMold = new StatRowMold();
 
     protected override throwIfMisfit(obj: any) {
