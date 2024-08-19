@@ -28,6 +28,8 @@ public class UUIDJumbler {
         return hexString.toString();
     }
 
+    // NoSuchAlgorithmException should never throw because the MessageDigest
+    // algorithm exists...
     public Tuple<String, UUID> getUUIDAndHash() throws NoSuchAlgorithmException {
         UUID userID = this.somExchange.getUserUUID(this.someCode);
 

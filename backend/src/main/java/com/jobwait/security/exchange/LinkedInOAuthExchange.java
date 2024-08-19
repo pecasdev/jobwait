@@ -1,11 +1,15 @@
 package com.jobwait.security.exchange;
 
 import java.util.UUID;
+
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
+
 import com.jobwait.security.AuthToken;
+import com.jobwait.security.exchange.exchangefaults.FailToGetTokenFault;
+import com.jobwait.security.exchange.exchangefaults.FailToGetUserIDFault;
 import com.jobwait.security.linkedin.LinkedInUserProfile;
 
 public final class LinkedInOAuthExchange extends OAuthExchange {
@@ -25,16 +29,15 @@ public final class LinkedInOAuthExchange extends OAuthExchange {
         formData.add("client_secret", clientSecret);
         formData.add("redirect_uri", redirectURI);
 
-        // handle error [Specific error (bad response)]
-        // AND
-        // [Generic error because unlikely (timeout) or (no body)]
         return localClient
                 .post()
                 .uri(linkedInAccessTokenURI)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .bodyValue(formData)
                 .retrieve()
-                .bodyToMono(AuthToken.class).block().authToken;
+                .bodyToMono(AuthToken.class)
+                .onErrorMap(err -> new FailToGetTokenFault(err.getMessage()))
+                .block().authToken;
     }
 
     @Override
@@ -48,7 +51,9 @@ public final class LinkedInOAuthExchange extends OAuthExchange {
                 .uri(linkedInUserInfoURI)
                 .headers(h -> h.setBearerAuth(bearerToken))
                 .retrieve()
-                .bodyToMono(LinkedInUserProfile.class).block().sub;
+                .bodyToMono(LinkedInUserProfile.class)
+                .onErrorMap(err -> new FailToGetUserIDFault(err.getMessage()))
+                .block().sub;
 
         return UUID.fromString(linkedInUUID);
     }
