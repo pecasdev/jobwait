@@ -8,4 +8,12 @@ public class Tuple<X, Y> {
         this.x = x;
         this.y = y;
     }
+
+    public X getLeft() {
+        return this.x;
+    }
+
+    public Y getRight() {
+        return this.y;
+    }
 }
