@@ -3,7 +3,6 @@ package com.jobwait.security;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 
 public class UUIDJumbler {
     private static String bytesToHex(byte[] hash) {
@@ -20,11 +19,11 @@ public class UUIDJumbler {
 
     // NoSuchAlgorithmException should never throw because the MessageDigest
     // algorithm exists...
-    public static String jumbleUUID(UUID someID) {
+    public static String jumbleUUID(String someID) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA3-256");
             byte[] hashbytes = digest.digest(
-                    someID.toString().getBytes(StandardCharsets.UTF_8));
+                    someID.getBytes(StandardCharsets.UTF_8));
             final String sha3Hex = bytesToHex(hashbytes);
             return sha3Hex;
         } catch (NoSuchAlgorithmException exception) {

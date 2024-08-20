@@ -42,12 +42,12 @@ public final class LinkedInOAuthExchange extends OAuthExchange {
     }
 
     @Override
-    public UUID getUserUUID(String authCode) {
+    public String getUserID(String authCode) {
         String bearerToken = codeToBearerToken(authCode);
 
         String linkedInUserInfoURI = "https://api.linkedin.com/v2/userinfo";
 
-        String linkedInUUID = localClient
+        String linkedInUserID = localClient
                 .get()
                 .uri(linkedInUserInfoURI)
                 .headers(h -> h.setBearerAuth(bearerToken))
@@ -56,13 +56,13 @@ public final class LinkedInOAuthExchange extends OAuthExchange {
                 .onErrorMap(err -> SecurityFaults.FailToGetUserIDFault(err.getMessage()))
                 .block().sub;
 
-        return UUID.fromString(linkedInUUID);
+        return linkedInUserID;
     }
 
     @Override
-    public Tuple<String, UUID> getUUIDAndHash(String authCode) {
-        UUID userID = this.getUserUUID(authCode);
+    public Tuple<String, String> getUserIDAndHash(String authCode) {
+        String userID = this.getUserID(authCode);
         String hashString = UUIDJumbler.jumbleUUID(userID);
-        return new Tuple<String, UUID>(hashString, userID);
+        return new Tuple<String, String>(hashString, userID);
     }
 }
