@@ -8,9 +8,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.jobwait.security.AuthToken;
-import com.jobwait.security.exchange.exchangefaults.FailToGetTokenFault;
-import com.jobwait.security.exchange.exchangefaults.FailToGetUserIDFault;
+import com.jobwait.security.SecurityFaults;
+import com.jobwait.security.UUIDJumbler;
 import com.jobwait.security.linkedin.LinkedInUserProfile;
+import com.jobwait.util.Tuple;
 
 public final class LinkedInOAuthExchange extends OAuthExchange {
     private static WebClient localClient = WebClient.create();
@@ -36,7 +37,7 @@ public final class LinkedInOAuthExchange extends OAuthExchange {
                 .bodyValue(formData)
                 .retrieve()
                 .bodyToMono(AuthToken.class)
-                .onErrorMap(err -> new FailToGetTokenFault(err.getMessage()))
+                .onErrorMap(err -> SecurityFaults.FailToGetTokenFault(err.getMessage()))
                 .block().authToken;
     }
 
@@ -52,9 +53,16 @@ public final class LinkedInOAuthExchange extends OAuthExchange {
                 .headers(h -> h.setBearerAuth(bearerToken))
                 .retrieve()
                 .bodyToMono(LinkedInUserProfile.class)
-                .onErrorMap(err -> new FailToGetUserIDFault(err.getMessage()))
+                .onErrorMap(err -> SecurityFaults.FailToGetUserIDFault(err.getMessage()))
                 .block().sub;
 
         return UUID.fromString(linkedInUUID);
+    }
+
+    @Override
+    public Tuple<String, UUID> getUUIDAndHash(String authCode) {
+        UUID userID = this.getUserUUID(authCode);
+        String hashString = UUIDJumbler.jumbleUUID(userID);
+        return new Tuple<String, UUID>(hashString, userID);
     }
 }
