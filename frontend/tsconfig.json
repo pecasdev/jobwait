@@ -28,7 +28,7 @@
         "src/setupTests.ts",
         "./dist/**/*"
     ],
-    "types": ["typePatches"],
+    "types": ["typePatches", "jest"],
     "esModuleInterop": true,
     "resolve": { "extensions": [".tsx"] }
 }
