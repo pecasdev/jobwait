@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import com.jobwait.domain.Answer;
@@ -17,14 +18,23 @@ import com.jobwait.persistence.adapters.PostgresAnswerAdapter;
 import com.jobwait.persistence.adapters.PostgresUserAdapter;
 
 public class PostgresController extends PersistenceController {
-    private String jdbcUrl = "jdbc:postgresql://localhost:5432/mydatabase";
+    private ArrayList<String> jdbcUrls = new ArrayList<String>(List.of(
+            "jdbc:postgresql://database:5432/mydatabase", // inside docker-compose
+            "jdbc:postgresql://localhost:5432/mydatabase" // outside docker-compose
+    ));
     private String dbUser = "postgres";
     private String dbPassword = "password";
 
     private Connection getConnection() throws SQLException {
         try {
+            String jdbcUrl = jdbcUrls.getFirst();
             return DriverManager.getConnection(jdbcUrl, dbUser, dbPassword);
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchElementException e) {
+            if (!jdbcUrls.isEmpty()) {
+                jdbcUrls.remove(0);
+                return getConnection();
+            }
+            System.out.println(e);
             throw DatabaseFaults.DatabaseGetConnectionFault();
         }
     }
