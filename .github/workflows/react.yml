@@ -1,0 +1,54 @@
+name: React
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [ opened, synchronize ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./frontend"
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Download packages
+        run: |
+          npm install
+          npm install -g jest
+      - name: Run tests
+        run: npm test
+  
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: "./frontend"
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ECR_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+      - name: Push docker image
+        run: |
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 801239133603.dkr.ecr.us-east-2.amazonaws.com
+          docker build -t private/jobwait/frontend .
+          docker tag private/jobwait/frontend:latest 801239133603.dkr.ecr.us-east-2.amazonaws.com/private/jobwait/frontend:latest
+          docker push 801239133603.dkr.ecr.us-east-2.amazonaws.com/private/jobwait/frontend:latest
+
