@@ -4,7 +4,7 @@ import { StatMold } from "./shape/molds/StatMold";
 import _ from "lodash";
 
 export default class Api {
-    static backendUrl = "http://127.0.0.1:9000";
+    static backendUrl = process.env.REACT_APP_API_URL;
 
     async fetchStat(statId: string): Promise<StatShape> {
         return fetch(`${Api.backendUrl}/stat?id=${statId}`)
