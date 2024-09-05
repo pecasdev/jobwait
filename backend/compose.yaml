@@ -3,6 +3,8 @@ services:
     image: "postgres:16.3"
     ports:
       - "5432:5432"
+    expose: 
+      - "5432"
     environment:
       - "POSTGRES_USER=postgres"
       - "POSTGRES_DB=mydatabase"
@@ -33,3 +35,4 @@ services:
 networks:
   backend-network:
     name: "backend-shared-network"
+    driver: bridge

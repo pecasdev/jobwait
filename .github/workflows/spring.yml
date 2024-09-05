@@ -1,0 +1,67 @@
+name: Spring
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [ opened, synchronize ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./backend"
+
+    services:
+      postgres:
+        image: postgres:16.3
+        env:
+          POSTGRES_DB: mydatabase
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        ports:
+          - "5432:5432"
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 22
+        uses: actions/setup-java@v3
+        with:
+          java-version: "22"
+          distribution: "temurin"
+          cache: "maven"
+      - name: Run tests
+        run: mvn test
+  
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: "./backend"
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ECR_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+      - name: Push docker image
+        run: |
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 801239133603.dkr.ecr.us-east-2.amazonaws.com
+          docker build -t private/jobwait/backend .
+          docker tag private/jobwait/backend:latest 801239133603.dkr.ecr.us-east-2.amazonaws.com/private/jobwait/backend:latest
+          docker push 801239133603.dkr.ecr.us-east-2.amazonaws.com/private/jobwait/backend:latest
+
