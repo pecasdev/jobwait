@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jobwait.fault.FaultException;
 import com.jobwait.spring.utils.Utils;
 
-@CrossOrigin(origins={"http://127.0.0.1:3000", "http://localhost:3000"})
+@CrossOrigin(origins={"http://127.0.0.1:3000", "http://localhost:3000", "https://jobwait.pecas.dev"})
 @RestController
 public class SpringEndpoints {
 	private static ResponseEntity<ObjectNode> processAndHandleException(Supplier<ObjectNode> func) {
