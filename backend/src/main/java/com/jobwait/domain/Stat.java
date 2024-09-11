@@ -1,7 +1,8 @@
 package com.jobwait.domain;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import com.jobwait.stat.StatRows;
 
 public abstract class Stat {
     // internal identifier used to fetch the stat
@@ -20,7 +21,7 @@ public abstract class Stat {
     public String yAxisLabel;
 
     // row data to use when displaying rows on the frontend
-    protected Map<String, Object> rows;
+    protected StatRows rows;
 
     public Stat(String id, String type, String title, String xAxisLabel, String yAxisLabel) {
         this.id = id;
@@ -28,7 +29,7 @@ public abstract class Stat {
         this.title = title;
         this.xAxisLabel = xAxisLabel;
         this.yAxisLabel = yAxisLabel;
-        this.rows = new HashMap<String, Object>();
+        this.rows = new StatRows();
     }
 
     public Map<String, Object> getRows() {

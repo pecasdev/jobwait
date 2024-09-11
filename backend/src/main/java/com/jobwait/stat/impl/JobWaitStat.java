@@ -1,6 +1,5 @@
 package com.jobwait.stat.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -8,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.Stat;
 import com.jobwait.stat.AnswerFetching;
+import com.jobwait.stat.StatRows;
 
 // wowowowow it's the name of the website guys, this is THE stat
 public class JobWaitStat extends Stat implements AnswerFetching {
@@ -15,19 +15,8 @@ public class JobWaitStat extends Stat implements AnswerFetching {
         super(id, "bar", "Wait time to receive job offer", "days waited", "# of people");
     }
 
-    // todo - put this into a defaultdict util class
-    private void addOrIncrementRow(int daysWaited) {
-        String key = String.valueOf(daysWaited);
-        if (this.rows.containsKey(key)) {
-            int prev = (int) this.rows.get(key);
-            this.rows.put(key, prev + 1);
-        } else {
-            this.rows.put(key, 1);
-        }
-    }
-
     public void fetchAndSetRows() {
-        this.rows = new HashMap<String, Object>();
+        this.rows = new StatRows();
 
         List<List<Answer>> answers = this.fetchAllAnswerSets();
         for (List<Answer> answerSet : answers) {
@@ -45,8 +34,8 @@ public class JobWaitStat extends Stat implements AnswerFetching {
             }
 
             if (jobAcceptDate != null && jobSearchStartDate != null) {
-                int daysElapsed = (int) ChronoUnit.DAYS.between(jobSearchStartDate, jobAcceptDate);
-                this.addOrIncrementRow(daysElapsed);
+                String daysElapsed = String.valueOf(ChronoUnit.DAYS.between(jobSearchStartDate, jobAcceptDate));
+                this.rows.addOrIncrementRow(daysElapsed);
             }
         }
     }
