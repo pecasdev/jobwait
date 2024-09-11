@@ -32,6 +32,9 @@ public class PostgresController extends PersistenceController {
             ResultSet resultSet = statement.executeQuery();
             List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
                     new PostgresUserAdapter());
+
+            connection.close();
+
             return PersistenceUtil.assertSingleElement(users);
         } catch (ElementNotFoundException e) {
             throw DatabaseFaults.UserNotFoundFault(authId);
@@ -54,6 +57,9 @@ public class PostgresController extends PersistenceController {
             ResultSet resultSet = statement.executeQuery();
             List<List<Answer>> answers = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
                     new PostgresAnswerAdapter());
+
+            connection.close();
+
             return PersistenceUtil.assertSingleElement(answers);
         } catch (SQLException e) {
             throw DatabaseFaults.GenericDatabaseFault();
@@ -119,6 +125,8 @@ public class PostgresController extends PersistenceController {
             new PostgresAnswerAdapter().statementSetPlaceholders(updateStatement, answers);
 
             PersistenceUtil.assertSingleRowUpdated(updateStatement.executeUpdate());
+
+            connection.close();
         } catch (SQLException e) {
             throw DatabaseFaults.GenericDatabaseFault();
         }
@@ -139,7 +147,9 @@ public class PostgresController extends PersistenceController {
 
             // init null answers for user
             this.updateUserAnswers(user, new ArrayList<Answer>());
-
+                       
+            connection.close();
+ 
             return user;
         } catch (SQLException e) {
             throw DatabaseFaults.GenericDatabaseFault();
@@ -158,7 +168,9 @@ public class PostgresController extends PersistenceController {
             ResultSet resultSet = statement.executeQuery();
             List<List<Answer>> answerSets = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
                     new PostgresAnswerAdapter());
-
+            
+            connection.close();
+ 
             return answerSets;
         } catch (SQLException e) {
             throw DatabaseFaults.GenericDatabaseFault();
