@@ -9,9 +9,10 @@ import com.jobwait.domain.Stat;
 import com.jobwait.stat.AnswerFetching;
 import com.jobwait.stat.StatRows;
 
-public class JobWaitStat extends Stat implements AnswerFetching {
-    public JobWaitStat(String id) {
-        super(id, "bar", "Wait time to receive job offer", "days waited", "# of people");
+public class JobWaitWithExperienceStat extends Stat implements AnswerFetching {
+    public JobWaitWithExperienceStat(String id) {
+        super(id, "bar", "Wait time to receive job offer given years of experience", "days waited",
+                "years of experience");
     }
 
     public void fetchAndSetRows() {
@@ -21,6 +22,7 @@ public class JobWaitStat extends Stat implements AnswerFetching {
         for (List<Answer> answerSet : answers) {
             LocalDate jobAcceptDate = null;
             LocalDate jobSearchStartDate = null;
+            Integer yearsOfExperience = null;
 
             for (Answer answer : answerSet) {
                 if (answer.questionKey.equals("jobacceptdate")) {
@@ -30,11 +32,15 @@ public class JobWaitStat extends Stat implements AnswerFetching {
                 if (answer.questionKey.equals("jobsearchstartdate")) {
                     jobSearchStartDate = answer.answerValueAsDate();
                 }
+
+                if (answer.questionKey.equals("yearsofproexperience")) {
+                    yearsOfExperience = answer.answerValueAsInteger();
+                }
             }
 
-            if (jobAcceptDate != null && jobSearchStartDate != null) {
+            if (jobAcceptDate != null && jobSearchStartDate != null && yearsOfExperience != null) {
                 String daysElapsed = String.valueOf(ChronoUnit.DAYS.between(jobSearchStartDate, jobAcceptDate));
-                this.rows.addOrIncrementRow(daysElapsed);
+                this.rows.put(String.valueOf(yearsOfExperience), daysElapsed);
             }
         }
     }
