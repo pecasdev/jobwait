@@ -12,6 +12,19 @@
             "env": {
                 "PGPASSWORD": "password"
             }
+        },
+        {
+            "type": "java",
+            "name": "Create FakeData <jobwait>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.jobwait.fakedata.FakeData",
+            "projectName": "jobwait",
+            "args": "createFakeData",
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "PGPASSWORD": "password"
+            }
         }
     ]
 }
