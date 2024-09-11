@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Questions {
     // touch this stuff
-    private static List<String> workContractQuestionChoices = List.of("FULL_TIME", "PART_TIME", "CONTRACT",
+    public static List<String> workContractQuestionChoices = List.of("FULL_TIME", "PART_TIME", "CONTRACT",
             "INTERNSHIP", "OTHER");
-    private static List<String> workModelQuestionChoices = List.of("ON_SITE", "HYBRID", "REMOTE");
-    private static List<String> educationLevelQuestionChoices = List.of("LESS_THAN_HIGHSCHOOL", "HIGHSCHOOL_DIPLOMA",
+    public static List<String> workModelQuestionChoices = List.of("ON_SITE", "HYBRID", "REMOTE");
+    public static List<String> educationLevelQuestionChoices = List.of("LESS_THAN_HIGHSCHOOL", "HIGHSCHOOL_DIPLOMA",
             "ASSOCIATE_DEGREE", "BACHELOR_DEGREE", "MASTER_DEGREE", "DOCTORAL_DEGREE", "OTHER");
 
     public static List<Question> known = List.of(
