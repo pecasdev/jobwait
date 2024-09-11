@@ -1,6 +1,6 @@
 import { ArrayElement } from "../../magic/ArrayElement";
 
-export const StatShapeTypes = ["bar", "line"];
+export const StatShapeTypes = ["bar", "line", "bubble"];
 export type StatRowsShape = {
     [key: string]: number | number[];
 };
