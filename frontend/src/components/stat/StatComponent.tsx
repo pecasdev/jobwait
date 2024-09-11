@@ -13,9 +13,12 @@ import classes from "./StatComponent.module.css";
 
 // todo - don't hardcode this list in the frontend, have it be fetched from the backend
 const statIdsToRender = [
+    "job-model-and-job-contract",
     "job-title",
     "job-wait",
-    "apps-needed-given-job-count",
+    "job-wait-with-application-count",
+    "job-wait-with-education",
+    "job-wait-with-experience",
 ];
 
 function StatRenderBundle(props: { statId: string }) {
