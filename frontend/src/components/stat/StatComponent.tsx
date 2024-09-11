@@ -46,11 +46,12 @@ function StatRenderBundle(props: { statId: string }) {
             })}
         >
             <LoadingOverlay
+                className="min-h-12"
                 visible={renderData == null}
                 overlayProps={{
                     radius: "sm",
-                    backgroundOpacity: 0.9,
-                    blur: 1,
+                    backgroundOpacity: 0,
+                    blur: 0,
                 }}
             />
 
