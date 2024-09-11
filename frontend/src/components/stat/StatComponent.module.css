@@ -1,7 +1,7 @@
 .grid {
     margin: rem(20px);
     width: rem(800px);
-    height: rem(800px);
+    min-height: rem(100px);
     justify-content: "center";
     align-items: "center";
 }
