@@ -1,7 +1,7 @@
 import { ChartData, ChartOptions } from "chart.js";
 import _ from "lodash";
 import { Line } from "react-chartjs-2";
-import { DataLabelsOptions } from "./DataLabelsOptions";
+import { DataLabelsOptionsTop } from "./DataLabelsOptions";
 
 export default function LineChart(props: {
     data: ChartData<"line", any[], string>;
@@ -12,7 +12,7 @@ export default function LineChart(props: {
             padding: 25,
         },
         plugins: {
-            datalabels: DataLabelsOptions,
+            datalabels: DataLabelsOptionsTop,
             legend: { position: "bottom" },
         },
     };
