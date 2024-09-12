@@ -6,14 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -26,9 +18,9 @@ import com.jobwait.persistence.PostgresController;
 public class FakeData {
     PostgresController postgresController = new PostgresController();
 
-    int NUMBER_OF_FAKE_USERS = 1000;
+    public static int NUMBER_OF_FAKE_USERS = 1000;
 
-    private User createFakeUser() {
+    public User createFakeUser() {
         User user = postgresController.createUserFromAuthId("FAKE_".concat(UUID.randomUUID().toString()));
         return user;
     }
@@ -79,7 +71,7 @@ public class FakeData {
             Collections.nCopies(15, "MASTER_DEGREE").stream(),
             Collections.nCopies(1, "DOCTORAL_DEGREE").stream()).flatMap(Function.identity()).toList();
 
-    private void createFakeAnswersForUser(User user) {
+    public void createFakeAnswersForUser(User user) {
         // educationlevel
         String educationLevel = ListRandom.choose(EL_WEIGHTED_OPTIONS);
 
@@ -148,72 +140,5 @@ public class FakeData {
                 new Answer("educationlevel", AnswerType.ENUM, educationLevel));
 
         postgresController.updateUserAnswers(user, answers);
-    }
-
-    private Callable<Void> createFakeUsersAndAnswersHandle() {
-        return () -> {
-            User user = createFakeUser();
-            createFakeAnswersForUser(user);
-            return null;
-        };
-    }
-
-    int INDIVIDUAL_FAKERY_TIMEOUT_SECONDS = 10;
-    int OVERALL_FAKERY_TIMEOUT_SECONDS = 60;
-
-    public void createFakeUsersAndAnswers() {
-        ExecutorService executor = Executors.newFixedThreadPool(100);
-
-        for (int i = 0; i != NUMBER_OF_FAKE_USERS; i++) {
-            executor.submit(() -> {
-                ExecutorService individual = Executors.newSingleThreadExecutor();
-
-                Future<Void> future = individual.submit(createFakeUsersAndAnswersHandle());
-
-                try {
-                    future.get(INDIVIDUAL_FAKERY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                } catch (TimeoutException e) {
-                    System.err.println("1 task out of %d has timed out, skipping".formatted(NUMBER_OF_FAKE_USERS));
-                    future.cancel(true);
-                } catch (InterruptedException | ExecutionException e) {
-                    System.err.println("Task interrupted or failed");
-                    System.err.print(e);
-                    Thread.currentThread().interrupt();
-                }
-            });
-        }
-
-        executor.shutdown();
-
-        try {
-            if (!executor.awaitTermination(OVERALL_FAKERY_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-                System.out.println("Could not finish all tasks in time");
-
-                ThreadPoolExecutor tpe = (ThreadPoolExecutor) executor;
-                int completedCount = (int) tpe.getCompletedTaskCount();
-                System.out.println("Finished %d tasks before timing out".formatted(completedCount));
-
-                executor.shutdownNow();
-                if (!executor.awaitTermination(OVERALL_FAKERY_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-                    System.err.println("Executor did not terminate");
-                }
-            }
-        } catch (InterruptedException e) {
-            executor.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-
-    }
-
-    public static void main(String[] args) {
-        if (args.length > 0) {
-            if (args[0].equals("createFakeData")) {
-                System.out.println("creating fake data... (should take under a minute)");
-                new FakeData().createFakeUsersAndAnswers();
-                System.out.println("done! cleaning up and exiting... (I sometimes hang for some reason, feel free to kill me)");
-                return;
-            }
-        }
-        System.out.println("missing argument 'createFakeData', aborting");
     }
 }
