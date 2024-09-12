@@ -36,7 +36,7 @@ public class FakeData {
             "MASTER_DEGREE", 1,
             "DOCTORAL_DEGREE", 1);
     Map<Integer, Integer> JAD_DAYS_AFTER_START_YOE_MODIFIERS = Map.of(
-            0, 4,
+            0, 5,
             1, 3,
             2, 3,
             3, 2,
