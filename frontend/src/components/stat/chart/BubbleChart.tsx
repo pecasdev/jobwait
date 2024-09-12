@@ -2,7 +2,10 @@ import { ChartData, ChartOptions } from "chart.js";
 import { Bubble } from "react-chartjs-2";
 import { DataLabelsOptionsCenter } from "./DataLabelsOptions";
 import _ from "lodash";
-import { BubbleRow, BubbleStatShape } from "../../../shape/shapes/BubbleStatShape";
+import {
+    BubbleRow,
+    BubbleStatShape,
+} from "../../../shape/shapes/BubbleStatShape";
 import { Context } from "chartjs-plugin-datalabels";
 import { DefaultChartOptions } from "./options/DefaultChartOptions";
 import { normalizeArray } from "../../../util/normalizeArray";
@@ -16,14 +19,18 @@ export default function BubbleChart(props: {
         return bubble.count;
     }
 
-    const chartOptions: ChartOptions<"bubble"> = _.merge({}, DefaultChartOptions, {
-        plugins: {
-            datalabels: _.merge({}, DataLabelsOptionsCenter, {
-                formatter: dataLabelsFormatter,
-            }),
-            legend: { display: false },
+    const chartOptions: ChartOptions<"bubble"> = _.merge(
+        {},
+        DefaultChartOptions,
+        {
+            plugins: {
+                datalabels: _.merge({}, DataLabelsOptionsCenter, {
+                    formatter: dataLabelsFormatter,
+                }),
+                legend: { display: false },
+            },
         },
-    });
+    );
 
     return (
         <Bubble
@@ -35,23 +42,26 @@ export default function BubbleChart(props: {
     );
 }
 
-export function formatBubbleStatForBubbleChart(bubbleStat: BubbleStatShape): [string[], string[], BubbleRow[]] {
+// we want to normalize the radii otherwise a value of 500 will render a circle that takes up the entire screen
+// the original value is still stored so that labels work properly
+const newMinimumRadius = 10;
+const newMaximumRadius = 30;
+
+export function formatBubbleStatForBubbleChart(
+    bubbleStat: BubbleStatShape,
+): [string[], string[], BubbleRow[]] {
     const bubbleRows: BubbleRow[] = Object.values(bubbleStat.rows);
     const normalizedRadii = normalizeArray(
         bubbleRows.map((b) => b.count),
-        10,
-        30,
+        newMinimumRadius,
+        newMaximumRadius,
     );
     normalizedRadii.forEach((normal_count, i) => {
         bubbleRows[i].r = Math.round(normal_count);
     });
 
-    const xLabels = [
-        ...new Set(bubbleRows.map((row) => row.x.toString())),
-    ];
-    const yLabels = [
-        ...new Set(bubbleRows.map((row) => row.y.toString())),
-    ];
+    const xLabels = [...new Set(bubbleRows.map((row) => row.x.toString()))];
+    const yLabels = [...new Set(bubbleRows.map((row) => row.y.toString()))];
 
     return [xLabels, yLabels, bubbleRows];
 }
