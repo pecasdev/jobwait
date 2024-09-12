@@ -55,7 +55,7 @@ public class JobModelAndJobContractStat extends Stat implements AnswerFetching {
                 HashMap<String, Object> bubble = new HashMap<String, Object>();
                 bubble.put("x", workModel);
                 bubble.put("y", workContract);
-                bubble.put("count", count*10);
+                bubble.put("count", count);
 
                 // for bubble graphs, we don't need a key-value pair, it's just a list of bubbles
                 // unfortunately the abstraction doesn't hold well here because we're forced to use a hashmap
