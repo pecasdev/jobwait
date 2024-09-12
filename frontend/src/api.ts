@@ -1,5 +1,5 @@
 import { StatShape } from "./shape/shapes/StatShape";
-import { StatMold } from "./shape/molds/StatMold";
+import { assertGenericStatShape, StatMold } from "./shape/molds/StatMold";
 
 import _ from "lodash";
 
@@ -10,7 +10,7 @@ export default class Api {
         return fetch(`${Api.backendUrl}/stat?id=${statId}`)
             .then((resp) => resp.json())
             .then((json) => json["data"])
-            .then((data) => new StatMold().assert(data))
+            .then(assertGenericStatShape)
             .then((stat) => {
                 // sort row keys
                 stat.rows = _.pick(stat.rows, Object.keys(stat.rows).sort());
