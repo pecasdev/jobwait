@@ -1,19 +1,14 @@
 import { ChartOptions } from "chart.js";
 import _ from "lodash";
 import { BubbleStatMold } from "../../../shape/molds/BubbleStatMold";
-import {
-    BubbleStatShape
-} from "../../../shape/shapes/BubbleStatShape";
+import { BubbleStatShape } from "../../../shape/shapes/BubbleStatShape";
 import { StatShape } from "../../../shape/shapes/StatShape";
 import BarChart from "./BarChart";
 import BubbleChart, { formatBubbleStatForBubbleChart } from "./BubbleChart";
 import HistogramChart from "./HistogramChart";
 import LineChart from "./LineChart";
 
-export default function GenericChart(props: {
-    data: StatShape;
-    legendName: string; // remove me
-}) {
+export default function GenericChart(props: { data: StatShape }) {
     const chartType = props.data.type;
     const chartTitle = props.data.title;
     const chartRows = props.data.rows;
@@ -24,7 +19,6 @@ export default function GenericChart(props: {
         labels: Object.keys(chartRows),
         datasets: [
             {
-                label: props.legendName,
                 data: Object.values(chartRows),
             },
         ],
@@ -90,12 +84,7 @@ export default function GenericChart(props: {
             return (
                 <BubbleChart
                     data={{
-                        datasets: [
-                            {
-                                label: props.legendName,
-                                data: bubbleRows,
-                            },
-                        ],
+                        datasets: [{ data: bubbleRows }],
                     }}
                     options={bubbleChartOptions}
                 />
@@ -110,6 +99,6 @@ export default function GenericChart(props: {
             );
 
         default:
-            return <p>yeah idk</p>;
+            return <p>You should not be able to see this</p>;
     }
 }
