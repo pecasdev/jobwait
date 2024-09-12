@@ -1,6 +1,7 @@
 services:
   database:
     image: "postgres:16.3"
+    command: -c 'max_connections=200'
     ports:
       - "5432:5432"
     expose: 
