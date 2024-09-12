@@ -39,7 +39,7 @@ CREATE TABLE answers(
     workmodel validworkmodel,
     workcontract validworkcontract,
     jobapplicationcount INT CHECK (
-        jobapplicationcount BETWEEN 0 and 10000
+        jobapplicationcount BETWEEN 0 and 100000
     ),
     jobtitle VARCHAR(50),
     yearsofproexperience INT CHECK (
