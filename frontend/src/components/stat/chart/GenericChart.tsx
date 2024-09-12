@@ -1,108 +1,91 @@
+import { ChartOptions } from "chart.js";
+import _ from "lodash";
 import { BubbleStatMold } from "../../../shape/molds/BubbleStatMold";
-import { BubbleStatShape } from "../../../shape/shapes/BubbleStatShape";
+import {
+    BubbleStatShape
+} from "../../../shape/shapes/BubbleStatShape";
 import { StatShape } from "../../../shape/shapes/StatShape";
-import { normalizeArray } from "../../../util/normalizeArray";
 import BarChart from "./BarChart";
-import BubbleChart from "./BubbleChart";
+import BubbleChart, { formatBubbleStatForBubbleChart } from "./BubbleChart";
 import HistogramChart from "./HistogramChart";
 import LineChart from "./LineChart";
 
 export default function GenericChart(props: {
     data: StatShape;
-    legendName: string;
+    legendName: string; // remove me
 }) {
     const chartType = props.data.type;
     const chartTitle = props.data.title;
-    const chartData = props.data.rows;
+    const chartRows = props.data.rows;
     const chartXAxisLabel = props.data.xAxisLabel;
     const chartYAxisLabel = props.data.yAxisLabel;
 
+    const chartData = {
+        labels: Object.keys(chartRows),
+        datasets: [
+            {
+                label: props.legendName,
+                data: Object.values(chartRows),
+            },
+        ],
+    };
+
+    const chartOptions = {
+        plugins: {
+            title: {
+                display: true,
+                text: chartTitle,
+            },
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: chartXAxisLabel,
+                },
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: chartYAxisLabel,
+                },
+            },
+        },
+    };
+
     switch (chartType) {
         case "bar":
-            return (
-                <BarChart
-                    data={{
-                        labels: Object.keys(chartData),
-
-                        datasets: [
-                            {
-                                label: props.legendName,
-                                data: Object.values(chartData),
-                            },
-                        ],
-                    }}
-                    options={{
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: chartTitle,
-                            },
-                        },
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: chartXAxisLabel,
-                                },
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: chartYAxisLabel,
-                                },
-                            },
-                        },
-                    }}
-                />
-            );
+            return <BarChart data={chartData} options={chartOptions} />;
 
         case "line":
-            return (
-                <LineChart
-                    data={{
-                        labels: Object.keys(chartData),
-                        datasets: [
-                            {
-                                label: props.legendName,
-                                data: Object.values(chartData),
-                            },
-                        ],
-                    }}
-                    options={{
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: chartTitle,
-                            },
-                        },
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: chartXAxisLabel,
-                                },
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: chartYAxisLabel,
-                                },
-                            },
-                        },
-                    }}
-                />
-            );
+            return <LineChart data={chartData} options={chartOptions} />;
 
         case "bubble":
-            const bubbleStat: BubbleStatShape = new BubbleStatMold().assert(props.data);
-            const bubbleRows = Object.values(bubbleStat.rows);
-            const normalizedRadii = normalizeArray(bubbleRows.map(b => b.count), 10, 30);
-            normalizedRadii.forEach((normal_count, i) => {
-                bubbleRows[i].r = Math.round(normal_count);
-            });
+            const bubbleStat: BubbleStatShape = new BubbleStatMold().assert(
+                props.data,
+            );
 
-            const xLabels = [... new Set(bubbleRows.map(row => row.x.toString()))];
-            const yLabels = [... new Set(bubbleRows.map(row => row.y.toString()))];
+            const [xLabels, yLabels, bubbleRows] =
+                formatBubbleStatForBubbleChart(bubbleStat);
+
+            const bubbleChartOptions: ChartOptions<"bubble"> = _.merge(
+                {},
+                chartOptions,
+                {
+                    scales: {
+                        x: {
+                            type: "category",
+                            labels: xLabels,
+                            ticks: { padding: 20 },
+                        },
+                        y: {
+                            type: "category",
+                            labels: yLabels,
+                            ticks: { padding: 20 },
+                        },
+                    },
+                },
+            ) as ChartOptions<"bubble">;
 
             return (
                 <BubbleChart
@@ -114,78 +97,17 @@ export default function GenericChart(props: {
                             },
                         ],
                     }}
-                    options={{
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: chartTitle,
-                            },
-                        },
-                        scales: {
-                            x: {
-                                type: "category",
-                                labels: xLabels,
-                                ticks: {padding: 20},
-                                title: {
-                                    display: true,
-                                    text: chartXAxisLabel,
-                                },
-                            },
-                            y: {
-                                type: "category",
-                                labels: yLabels,
-                                ticks: {padding: 20},
-                                title: {
-                                    display: true,
-                                    text: chartYAxisLabel,
-                                },
-                            },
-                        },
-                    }}
+                    options={bubbleChartOptions}
                 />
             );
-        
+
         case "histogram":
+            const histogramOptions = _.merge({}, chartOptions, {
+                x: { ticks: { padding: 20 } },
+            });
             return (
-                <HistogramChart
-                    data={{
-                        labels: Object.keys(chartData),
-
-                        datasets: [
-                            {
-                                label: props.legendName,
-                                data: Object.values(chartData)
-                            },
-                        ],
-                    }}
-                    options={{
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: chartTitle,
-                            },
-                        },
-                        scales: {
-                            x: {
-                                ticks: {padding: 20},
-                                title: {
-                                    display: true,
-                                    text: chartXAxisLabel,
-                                },
-                                
-                            },
-                            y: {
-                                
-                                title: {
-                                    display: true,
-                                    text: chartYAxisLabel,
-                                },
-                            },
-                        },
-                    }}
-                />
+                <HistogramChart data={chartData} options={histogramOptions} />
             );
-
 
         default:
             return <p>yeah idk</p>;
