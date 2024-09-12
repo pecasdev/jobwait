@@ -13,8 +13,8 @@ import com.jobwait.stat.StatRows;
 
 public class JobWaitWithEducationStat extends Stat implements AnswerFetching {
     public JobWaitWithEducationStat(String id) {
-        super(id, "bar", "Average wait time to receive job offer given education level", "education level",
-                "average wait time");
+        super(id, "bar", "Average wait time to receive job offer given education level", "Education Level",
+                "Average Days Waited");
     }
 
     public void fetchAndSetRows() {

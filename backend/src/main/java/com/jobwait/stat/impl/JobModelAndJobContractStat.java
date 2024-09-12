@@ -10,7 +10,7 @@ import com.jobwait.stat.StatRows;
 
 public class JobModelAndJobContractStat extends Stat implements AnswerFetching {
     public JobModelAndJobContractStat(String id) {
-        super(id, "bubble", "Work Model vs Work Contract", "work model", "work contract");
+        super(id, "bubble", "Work Model vs Work Contract", "Work Model", "Work Contract");
     }
 
     public void fetchAndSetRows() {
