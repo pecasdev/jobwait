@@ -12,8 +12,9 @@ export default function LineChart(props: {
             padding: 25,
         },
         plugins: {
+            title: { padding: { bottom: 35 } },
             datalabels: DataLabelsOptionsTop,
-            legend: { position: "bottom" },
+            legend: { display: false },
         },
     };
     return (

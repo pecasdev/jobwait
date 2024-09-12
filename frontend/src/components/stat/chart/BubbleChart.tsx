@@ -33,7 +33,7 @@ export default function BubbleChart(props: {
             datalabels: _.merge(DataLabelsOptionsCenter, {
                 formatter: dataLabelsFormatter,
             }),
-            legend: { position: "bottom" },
+            legend: { display: false },
         },
     };
 
