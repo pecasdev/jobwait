@@ -1,6 +1,6 @@
 import { ChartData, ChartOptions } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { DataLabelsOptions } from "./DataLabelsOptions";
+import { DataLabelsOptionsTop } from "./DataLabelsOptions";
 import _ from "lodash";
 
 export default function BarChart(props: {
@@ -22,7 +22,8 @@ export default function BarChart(props: {
             },
         },
         plugins: {
-            datalabels: DataLabelsOptions,
+            title: {padding: {bottom: 25}},
+            datalabels: DataLabelsOptionsTop,
             legend: { position: "bottom" },
         },
     };
