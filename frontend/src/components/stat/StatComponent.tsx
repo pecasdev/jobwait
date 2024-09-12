@@ -59,7 +59,7 @@ function StatRenderBundle(props: { statId: string }) {
             />
 
             {renderData && (
-                <GenericChart data={renderData} legendName={props.statId} />
+                <GenericChart data={renderData} />
             )}
         </Box>
     );
