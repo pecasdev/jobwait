@@ -22,8 +22,9 @@ export default function HistogramChart(props: {
             },
         },
         plugins: {
+            title: { padding: { bottom: 35 } },
             datalabels: { display: false },
-            legend: { position: "bottom" },
+            legend: { display: false },
         },
     };
 

@@ -22,9 +22,9 @@ export default function BarChart(props: {
             },
         },
         plugins: {
-            title: {padding: {bottom: 25}},
+            title: { padding: { bottom: 25 } },
             datalabels: DataLabelsOptionsTop,
-            legend: { position: "bottom" },
+            legend: { display: false },
         },
     };
 
