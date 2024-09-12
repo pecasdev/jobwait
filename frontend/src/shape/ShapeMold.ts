@@ -31,16 +31,21 @@ export class InvalidShapeError extends Error {
         let description;
 
         switch (problemType) {
-            default:
-                description = "";
             case "KEY":
                 description = `Could not find expected key: '${expected}'`;
+                break;
             case "TYPE":
                 description = `Mismatch type, expected: '${expected}', got: '${actual}'`;
+                break;
             case "EQUALITY":
                 description = `Unequal values, expected: '${expected}', got: '${actual}`;
+                break;
             case "INCLUSION":
                 description = `Expected value ${actual} to be an element of [${expected}]`;
+                break;
+            default:
+                description = "";
+                break;
         }
 
         super(`SHAPE_ERROR: ${description}`);
