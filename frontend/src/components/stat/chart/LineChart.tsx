@@ -2,25 +2,24 @@ import { ChartData, ChartOptions } from "chart.js";
 import _ from "lodash";
 import { Line } from "react-chartjs-2";
 import { DataLabelsOptionsTop } from "./DataLabelsOptions";
+import { DefaultChartOptions } from "./options/DefaultChartOptions";
 
 export default function LineChart(props: {
     data: ChartData<"line", any[], string>;
     options: ChartOptions<"line">;
 }) {
-    const defaultOptions: ChartOptions<"line"> = {
-        layout: {
-            padding: 25,
-        },
-        plugins: {
-            title: { padding: { bottom: 35 } },
-            datalabels: DataLabelsOptionsTop,
-            legend: { display: false },
-        },
-    };
+    const chartOptions: ChartOptions<"line"> = _.merge({}, 
+        DefaultChartOptions, {
+            plugins: {
+                datalabels: DataLabelsOptionsTop
+            }
+        }
+    )
+
     return (
         <Line
             data={props.data}
-            options={_.merge(defaultOptions, props.options)}
+            options={_.merge({}, chartOptions, props.options)}
             width={200}
             height={200}
         />
