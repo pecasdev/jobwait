@@ -11,8 +11,8 @@ import com.jobwait.stat.StatRows;
 
 public class JobWaitWithExperienceStat extends Stat implements AnswerFetching {
     public JobWaitWithExperienceStat(String id) {
-        super(id, "bar", "Wait time to receive job offer given years of experience", "days waited",
-                "years of experience");
+        super(id, "bar", "Wait time to receive job offer given years of experience", "years of experience",
+                "days waited");
     }
 
     public void fetchAndSetRows() {
