@@ -4,6 +4,7 @@ import { StatShape } from "../../../shape/shapes/StatShape";
 import { normalizeArray } from "../../../util/normalizeArray";
 import BarChart from "./BarChart";
 import BubbleChart from "./BubbleChart";
+import HistogramChart from "./HistogramChart";
 import LineChart from "./LineChart";
 
 export default function GenericChart(props: {
@@ -143,6 +144,48 @@ export default function GenericChart(props: {
                     }}
                 />
             );
+        
+        case "histogram":
+            return (
+                <HistogramChart
+                    data={{
+                        labels: Object.keys(chartData),
+
+                        datasets: [
+                            {
+                                label: props.legendName,
+                                data: Object.values(chartData)
+                            },
+                        ],
+                    }}
+                    options={{
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: chartTitle,
+                            },
+                        },
+                        scales: {
+                            x: {
+                                ticks: {padding: 20},
+                                title: {
+                                    display: true,
+                                    text: chartXAxisLabel,
+                                },
+                                
+                            },
+                            y: {
+                                
+                                title: {
+                                    display: true,
+                                    text: chartYAxisLabel,
+                                },
+                            },
+                        },
+                    }}
+                />
+            );
+
 
         default:
             return <p>yeah idk</p>;
