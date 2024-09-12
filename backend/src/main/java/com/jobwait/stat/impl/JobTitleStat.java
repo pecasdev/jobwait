@@ -9,7 +9,7 @@ import com.jobwait.stat.StatRows;
 
 public class JobTitleStat extends Stat implements AnswerFetching {
     public JobTitleStat(String id) {
-        super(id, "bar", "Job Title", "Title", "# of people");
+        super(id, "bar", "Job Title", "Title", "# of People");
     }
 
     public void fetchAndSetRows() {

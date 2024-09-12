@@ -11,7 +11,7 @@ import com.jobwait.stat.StatRows;
 
 public class JobWaitStat extends Stat implements AnswerFetching {
     public JobWaitStat(String id) {
-        super(id, "histogram", "Wait time to receive job offer", "days waited", "# of people");
+        super(id, "histogram", "Wait time to receive job offer", "Days Waited", "# of People");
     }
 
     public void fetchAndSetRows() {

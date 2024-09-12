@@ -13,8 +13,8 @@ import com.jobwait.stat.StatRows;
 
 public class JobWaitWithApplicationCountStat extends Stat implements AnswerFetching {
     public JobWaitWithApplicationCountStat(String id) {
-        super(id, "histogram", "Average wait time to receive job offer given number of applications", "application count",
-                "average wait time");
+        super(id, "histogram", "Average wait time to receive job offer given number of applications", "Number of Applications Sent",
+                "Average Days Waited");
     }
 
     public void fetchAndSetRows() {
