@@ -14,6 +14,7 @@ import com.jobwait.domain.User;
 import com.jobwait.fault.FaultException;
 import com.jobwait.persistence.adapters.PostgresAnswerAdapter;
 import com.jobwait.persistence.adapters.PostgresUserAdapter;
+import com.jobwait.util.Tuple;
 
 public class PostgresController extends PersistenceController {
     private PostgresConnectionHandler connectionHandler = new PostgresConnectionHandler();
@@ -23,12 +24,12 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
-    public User getUserFromAuthId(String authId) throws FaultException {
+    public User getUserFromAuthHash(String authHash) throws FaultException {
         try {
             Connection connection = getConnection();
             PreparedStatement statement = connection
                     .prepareStatement("SELECT * FROM users WHERE authhash = ?");
-            statement.setString(1, authId);
+            statement.setString(1, authHash);
             ResultSet resultSet = statement.executeQuery();
             List<User> users = PersistenceUtil.resultSetRowsToAdaptedRows(resultSet,
                     new PostgresUserAdapter());
@@ -37,14 +38,14 @@ public class PostgresController extends PersistenceController {
 
             return PersistenceUtil.assertSingleElement(users);
         } catch (ElementNotFoundException e) {
-            throw DatabaseFaults.UserNotFoundFault(authId);
+            throw DatabaseFaults.UserNotFoundFault(authHash);
         } catch (SQLException e) {
             throw DatabaseFaults.GenericDatabaseFault();
         }
     }
 
     @Override
-    public List<Answer> getUserAnswersFromAuthId(User user) {
+    public List<Answer> getUserAnswers(User user) {
         try {
             UUID userId = user.id();
             Connection connection = getConnection();
@@ -133,12 +134,12 @@ public class PostgresController extends PersistenceController {
     }
 
     @Override
-    public User createUserFromAuthId(String authHash) {
+    public User createUser(Tuple<String, String> userIDAndHash) {
         try {
             Connection connection = getConnection();
 
             PreparedStatement statement = connection
-                    .prepareStatement("INSERT INTO users(authhash) VALUES (?) RETURNING *");
+                    .prepareStatement("INSERT INTO users(id, authhash) VALUES (?, ?) RETURNING *");
             new PostgresUserAdapter().statementSetPlaceholders(statement, new User(null, authHash));
 
             ResultSet resultSet = statement.executeQuery();

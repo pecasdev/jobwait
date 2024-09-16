@@ -13,16 +13,14 @@ import com.jobwait.domain.Answer;
 import com.jobwait.domain.Stat;
 import com.jobwait.domain.User;
 import com.jobwait.jackson.AnswerDeserializerFault;
-import com.jobwait.security.AuthToken;
 import com.jobwait.spring.utils.Utils;
 
 public class RequestNavigation {
 	private static RequestController requestController = new RequestController();
 
-	public static Supplier<ObjectNode> getUserFromAuthToken(String authToken) {
+	public static Supplier<ObjectNode> getUserFromAuthCode(String authCode) {
 		return () -> {
-			AuthToken token = AuthToken.fromClientId(authToken);
-			User user = requestController.getUserFromAuthToken(token);
+			User user = requestController.getUserFromAuthCode(authCode);
 
 			ObjectNode dataNode = Utils.mapper.createObjectNode();
 			dataNode.put("userId", user.id().toString());
@@ -31,10 +29,9 @@ public class RequestNavigation {
 		};
 	}
 
-	public static Supplier<ObjectNode> createUserFromAuthToken(String authToken) {
+	public static Supplier<ObjectNode> createUserFromAuthCode(String authCode) {
 		return () -> {
-			AuthToken token = AuthToken.fromClientId(authToken);
-			User user = requestController.createUserFromAuthToken(token);
+			User user = requestController.createUserFromAuthCode(authCode);
 
 			ObjectNode dataNode = Utils.mapper.createObjectNode();
 			dataNode.put("userId", user.id().toString());
@@ -43,10 +40,9 @@ public class RequestNavigation {
 		};
 	}
 
-	public static Supplier<ObjectNode> getUserAnswers(String authToken) {
+	public static Supplier<ObjectNode> getUserAnswers(String authCode) {
 		return () -> {
-			AuthToken token = AuthToken.fromClientId(authToken);
-			List<Answer> answers = requestController.getUserAnswers(token);
+			List<Answer> answers = requestController.getUserAnswers(authCode);
 
 			ObjectNode dataNode = Utils.mapper.createObjectNode();
 			ObjectNode answersNode = Utils.mapper.valueToTree(answers);
@@ -56,14 +52,13 @@ public class RequestNavigation {
 		};
 	}
 
-	public static Supplier<ObjectNode> submitUserAnswers(String authToken, String payload) {
+	public static Supplier<ObjectNode> submitUserAnswers(String authCode, String payload) {
 		return () -> {
 			try {
 				JsonNode root = Utils.mapper.readTree(payload).path("answers");
 				List<Answer> answersList = Arrays.asList(Utils.mapper.treeToValue(root, Answer[].class));
 
-				AuthToken token = AuthToken.fromClientId(authToken);
-				requestController.submitUserAnswers(token, answersList);
+				requestController.submitUserAnswers(authCode, answersList);
 
 				return null;
 			} catch (JsonProcessingException e) {

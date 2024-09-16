@@ -88,8 +88,8 @@ public class PostgresAnswerAdapter extends PostgresAdapter<List<Answer>> {
     public void statementSetPlaceholders(PreparedStatement ps, List<Answer> answers) throws FaultException {
         try {
             for (Tuple<Answer, Integer> answerWithIndex : Enumerate.zipWithIndex(answers)) {
-                Answer answer = answerWithIndex.x;
-                int index = answerWithIndex.y;
+                Answer answer = answerWithIndex.getLeft();
+                int index = answerWithIndex.getRight();
                 setPlaceholderFromAnswer(ps, answer, index + 1);
             }
         } catch (SQLException e) {

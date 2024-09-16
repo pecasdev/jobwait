@@ -4,15 +4,16 @@ import java.util.List;
 
 import com.jobwait.domain.Answer;
 import com.jobwait.domain.User;
+import com.jobwait.util.Tuple;
 
 public abstract class PersistenceController {
-    public abstract User getUserFromAuthId(String authId);
+    public abstract User getUserFromAuthHash(String authHash);
 
-    public abstract List<Answer> getUserAnswersFromAuthId(User user);
+    public abstract List<Answer> getUserAnswers(User user);
 
     public abstract void updateUserAnswers(User user, List<Answer> answers);
 
-    public abstract User createUserFromAuthId(String authId);
+    public abstract User createUser(Tuple<String, String> userIDAndHash);
 
     public abstract List<List<Answer>> getAllAnswerSets();
 

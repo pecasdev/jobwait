@@ -15,7 +15,7 @@ function updateImageBlur(
     if (!image) {
         console.error(`Cannot find image with name ${imageName}`);
     } else {
-        image?.classList.remove("blur-3xl");
+        image?.classList.remove("blur-2xl");
         image.style.filter = `blur(${blurQuantity * blurScaling}px)`;
     }
 }
@@ -78,7 +78,7 @@ export function DataSubmitForm(props: PromptCollectorProps) {
     form.initialize(formValues);
 
     return (
-        <Group justify="flex" align="center">
+        <Group justify="flex" align="center" preventGrowOverflow>
             <Fieldset
                 radius="lg"
                 variant="filled"
@@ -110,10 +110,9 @@ export function DataSubmitForm(props: PromptCollectorProps) {
                 </Group>
             </Fieldset>
             <Image
-                className="blur-3xl"
+                className="blur-2xl"
                 draggable="false"
-                radius="md"
-                m={50}
+                radius="xl"
                 id="gatitoImage" //THE BOY
                 src="gatito.jpg"
             />
