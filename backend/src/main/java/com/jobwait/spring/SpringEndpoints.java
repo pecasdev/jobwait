@@ -40,24 +40,24 @@ public class SpringEndpoints {
 	}
 
 	@GetMapping("/user")
-	public static ResponseEntity<ObjectNode> getUserFromAuthToken(@RequestParam("at") String authToken) {
-		return processAndHandleException(RequestNavigation.getUserFromAuthToken(authToken));
+	public static ResponseEntity<ObjectNode> getUserFromAuthCode(@RequestParam("at") String authCode) {
+		return processAndHandleException(RequestNavigation.getUserFromAuthCode(authCode));
 	}
 
 	@PostMapping("/user/create")
-	public static ResponseEntity<ObjectNode> createUserFromAuthToken(@RequestParam("at") String authToken) {
-		return processAndHandleException(RequestNavigation.createUserFromAuthToken(authToken));
+	public static ResponseEntity<ObjectNode> createUserFromAuthCode(@RequestParam("at") String authCode) {
+		return processAndHandleException(RequestNavigation.createUserFromAuthCode(authCode));
 	}
 
 	@GetMapping("/answers")
-	public static ResponseEntity<ObjectNode> getUserAnswers(@RequestParam("at") String authToken) {
-		return processAndHandleException(RequestNavigation.getUserAnswers(authToken));
+	public static ResponseEntity<ObjectNode> getUserAnswers(@RequestParam("at") String authCode) {
+		return processAndHandleException(RequestNavigation.getUserAnswers(authCode));
 	}
 
 	@PostMapping("/answers/submit")
-	public static ResponseEntity<ObjectNode> submitUserAnswers(@RequestParam("at") String authToken,
+	public static ResponseEntity<ObjectNode> submitUserAnswers(@RequestParam("at") String authCode,
 			@RequestBody String payload) {
-		return processAndHandleException(RequestNavigation.submitUserAnswers(authToken, payload));
+		return processAndHandleException(RequestNavigation.submitUserAnswers(authCode, payload));
 	}
 
 	@GetMapping("/stat")

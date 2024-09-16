@@ -8,35 +8,35 @@ import com.jobwait.domain.User;
 import com.jobwait.persistence.PersistenceController;
 import com.jobwait.persistence.PostgresController;
 import com.jobwait.security.AuthToken;
-import com.jobwait.security.LinkedInOAuthValidator;
-import com.jobwait.security.OAuthValidator;
+import com.jobwait.security.exchange.LinkedInOAuthExchange;
+import com.jobwait.util.Tuple;
 import com.jobwait.stat.StatRefreshController;
 import com.jobwait.stat.Stats;
 
 public class RequestController {
     private PersistenceController persistence = new PostgresController();
-    private OAuthValidator oAuthValidator = new LinkedInOAuthValidator();
     private StatRefreshController statRefreshController = new StatRefreshController();
+    private LinkedInOAuthExchange linkedInOAuthExchange = new LinkedInOAuthExchange();
 
-    public User getUserFromAuthToken(AuthToken token) {
-        oAuthValidator.validateToken(token);
-        User user = persistence.getUserFromAuthId(token.clientId());
+    public User getUserFromAuthCode(String authCode) {
+        String authHash = linkedInOAuthExchange.getUserIDAndHash(authCode).getRight();
+        User user = persistence.getUserFromAuthHash(authHash);
         return user;
     }
 
-    public User createUserFromAuthToken(AuthToken token) {
-        oAuthValidator.validateToken(token);
-        User user = persistence.createUserFromAuthId(token.clientId());
+    public User createUserFromAuthCode(String authCode) {
+        Tuple<String, String> userIDAndHash = linkedInOAuthExchange.getUserIDAndHash(authCode);
+        User user = persistence.createUser(authHash);
         return user;
     }
 
-    public List<Answer> getUserAnswers(AuthToken token) {
-        User user = getUserFromAuthToken(token);
-        return persistence.getUserAnswersFromAuthId(user);
+    public List<Answer> getUserAnswers(String authCode) {
+        User user = getUserFromAuthCode(authCode);
+        return persistence.getUserAnswers(user);
     }
 
-    public void submitUserAnswers(AuthToken token, List<Answer> answers) {
-        User user = getUserFromAuthToken(token);
+    public void submitUserAnswers(String authCode, List<Answer> answers) {
+        User user = getUserFromAuthCode(authCode);
         persistence.updateUserAnswers(user, answers);
     }
 
@@ -46,8 +46,8 @@ public class RequestController {
         return stat;
     }
 
-    public void deleteUserAndPurgeAnswers(AuthToken token) {
-        User user = getUserFromAuthToken(token);
+    public void deleteUserAndPurgeAnswers(String authCode) {
+        User user = getUserFromAuthCode(authCode);
         persistence.deleteUserAndPurgeAnswers(user);
     }
 }
