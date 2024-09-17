@@ -1,5 +1,5 @@
 import { useForm } from "@mantine/form";
-import { Button, Fieldset, Image, Group } from "@mantine/core";
+import { Button, Fieldset, Image, Group, Flex } from "@mantine/core";
 import { ReactNode, useState } from "react";
 import { PromptDefinition } from "../../model/PromptTypes";
 import { Answers } from "../../model/Answers";
@@ -32,6 +32,7 @@ export function DataSubmitForm(props: PromptCollectorProps) {
     let formValues: Answers = { answers: [] };
     let children: ReactNode[] = [];
     const [open, setOpen] = useState<Status>(Status.PENDING);
+    const [gatitoVisible, setGatitoVisible] = useState<boolean>(false);
 
     const form = useForm({
         mode: "uncontrolled",
@@ -44,6 +45,10 @@ export function DataSubmitForm(props: PromptCollectorProps) {
                 const changedValues = values.answers.filter(
                     (answer) => answer.value != "",
                 );
+
+                const allQuestionsAnswered =
+                    changedValues.length == values.answers.length;
+                setGatitoVisible(allQuestionsAnswered);
 
                 updateImageBlur(
                     "gatitoImage",
@@ -109,14 +114,22 @@ export function DataSubmitForm(props: PromptCollectorProps) {
                     </Button>
                 </Group>
             </Fieldset>
-            <Image
-                className="blur-3xl"
-                draggable="false"
-                radius="md"
-                m={50}
-                id="gatitoImage" //THE BOY
-                src="gatito.jpg"
-            />
+            <Flex direction="column">
+                <Image
+                    className="blur-3xl"
+                    draggable="false"
+                    radius="md"
+                    m={50}
+                    id="gatitoImage" //THE BOY
+                    src="gatito.jpg"
+                ></Image>
+
+                {gatitoVisible ? (
+                    <p>El Gatito thanks you for your data ♥</p>
+                ) : (
+                    <p></p>
+                )}
+            </Flex>
         </Group>
     );
 }
