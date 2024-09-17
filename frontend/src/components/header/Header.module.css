@@ -39,3 +39,11 @@ font-size: rem(24px);
   background-color: white;
   z-index: 1000; /*always on top*/
 }
+
+.dark_bg {
+  background: var(--mantine-color-dark-7);
+}
+
+.light_bg {
+  background: var(--mantine-color-white);
+}

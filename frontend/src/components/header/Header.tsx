@@ -6,6 +6,7 @@ import {
 } from "@mantine/core";
 import classes from "./Header.module.css";
 import useDetectScroll from "@smakss/react-scroll-direction";
+import clsx from "clsx";
 
 export function Header() {
     const { setColorScheme } = useMantineColorScheme();
@@ -31,11 +32,18 @@ export function Header() {
     const {scrollPosition} = useDetectScroll();
 
     return (
-        <header className={classes.header}>
+        <header className={clsx({
+            [classes.header]: true,
+            [classes.dark_bg]: computedColorScheme === "dark",
+            [classes.light_bg]: computedColorScheme === "light"
+        })}>
             <Flex direction="column" align="center" justify="center" pb={15}>
                 <h1
                     onClick={() => toggleColorScheme()}
-                    className={(scrollPosition.top < 50) ? classes.title_large: classes.title_small}
+                    className={clsx({
+                        [classes.title_large]: scrollPosition.top < 50,
+                        [classes.title_small]: scrollPosition.top >= 50,
+                    })}
                 >
                     <Text component="span" c="green" inherit>
                         jobwait
@@ -44,8 +52,8 @@ export function Header() {
 
                 <Flex direction="row">
 
-                <button onClick={scrollToStats}>View our stats</button>
-                <button onClick={scrollToPrompts}>Help contribute answers</button>
+                <button className="p-1 mx-1" onClick={scrollToStats}>View our stats</button>
+                <button className="p-1 mx-1" onClick={scrollToPrompts}>Help contribute answers</button>
                 </Flex>
             </Flex>
         </header>
