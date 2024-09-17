@@ -58,9 +58,7 @@ function StatRenderBundle(props: { statId: string }) {
                 }}
             />
 
-            {renderData && (
-                <GenericChart data={renderData} />
-            )}
+            <GenericChart data={renderData} />
         </Box>
     );
 }

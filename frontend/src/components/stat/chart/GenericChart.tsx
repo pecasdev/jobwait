@@ -7,8 +7,13 @@ import BarChart from "./BarChart";
 import BubbleChart, { formatBubbleStatForBubbleChart } from "./BubbleChart";
 import HistogramChart from "./HistogramChart";
 import LineChart from "./LineChart";
+import EmptyChart from "./EmptyChart";
 
-export default function GenericChart(props: { data: StatShape }) {
+export default function GenericChart(props: { data: StatShape | null }) {
+    if (props.data == null) {
+        return <EmptyChart/>
+    }
+    
     const chartType = props.data.type;
     const chartTitle = props.data.title;
     const chartRows = props.data.rows;
