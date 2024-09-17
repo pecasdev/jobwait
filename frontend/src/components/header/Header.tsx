@@ -13,6 +13,21 @@ export function Header() {
     const toggleColorScheme = () => {
         setColorScheme(computedColorScheme === "dark" ? "light" : "dark");
     };
+
+    function scrollToStats () {
+        const statHeader = document.getElementById("statHeader");
+        if (statHeader != null) {
+            statHeader.scrollIntoView({behavior: "smooth", block: "end"});
+        }
+    }
+
+    function scrollToPrompts () {
+        const promptHeader = document.getElementById("promptHeader");
+        if (promptHeader != null) {
+            promptHeader.scrollIntoView({behavior: "smooth", block:"start"});
+        }
+    }
+
     const {scrollPosition} = useDetectScroll();
 
     return (
@@ -27,9 +42,11 @@ export function Header() {
                     </Text>
                 </h1>
 
-                <Text className={classes.description}>
-                    Can I please just get a job?
-                </Text>
+                <Flex direction="row">
+
+                <button onClick={scrollToStats}>View our stats</button>
+                <button onClick={scrollToPrompts}>Help contribute answers</button>
+                </Flex>
             </Flex>
         </header>
     );
