@@ -11,7 +11,12 @@ export default function DatePickerPrompt(props: PromptTypeProps) {
             value={value}
             onChange={(val) => {
                 setValue(val);
-                props.validateAndUpdate(val);
+
+                if (val == null) {
+                    props.validateAndUpdate(null);
+                } else {
+                    props.validateAndUpdate(val.toISOString().split("T")[0]);
+                }
             }}
         />
     );

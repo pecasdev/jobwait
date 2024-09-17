@@ -1,4 +1,4 @@
-export type Answer = {type: string, value: string}
+export type Answer = {questionKey: string, answerValue: string}
 
 export type Answers = {
     answers : Answer[];

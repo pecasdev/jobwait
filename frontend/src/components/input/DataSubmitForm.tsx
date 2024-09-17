@@ -43,7 +43,7 @@ export function DataSubmitForm(props: PromptCollectorProps) {
                 Object.keys(values).length != 0
             ) {
                 const changedValues = values.answers.filter(
-                    (answer) => answer.value != "",
+                    (answer) => answer.answerValue != "",
                 );
 
                 const allQuestionsAnswered =
@@ -59,12 +59,12 @@ export function DataSubmitForm(props: PromptCollectorProps) {
     });
 
     props.promptDefinitions.forEach((promptDef: PromptDefinition) => {
-        formValues.answers.push({ type: promptDef.idKey, value: "" });
+        formValues.answers.push({ questionKey: promptDef.idKey, answerValue: "" });
         const index = formValues.answers.length - 1;
 
         //this could be curried but it would serve no purpose in this case)
         const validateAndUpdateForm = (value: any) => {
-            form.setFieldValue(`answers.${index}.value`, value);
+            form.setFieldValue(`answers.${index}.answerValue`, value);
         };
 
         const { inputType, ...childProps } = promptDef;
