@@ -8,6 +8,7 @@
     "@mantine/dates": "^7.10.2",
     "@mantine/form": "^7.10.2",
     "@mantine/hooks": "^7.10.2",
+    "@smakss/react-scroll-direction": "^4.2.0",
     "@tabler/icons-react": "^3.6.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/user-event": "^13.5.0",

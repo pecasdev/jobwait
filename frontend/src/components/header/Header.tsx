@@ -5,6 +5,7 @@ import {
     useComputedColorScheme,
 } from "@mantine/core";
 import classes from "./Header.module.css";
+import useDetectScroll from "@smakss/react-scroll-direction";
 
 export function Header() {
     const { setColorScheme } = useMantineColorScheme();
@@ -12,19 +13,17 @@ export function Header() {
     const toggleColorScheme = () => {
         setColorScheme(computedColorScheme === "dark" ? "light" : "dark");
     };
+    const {scrollPosition} = useDetectScroll();
 
     return (
-        <header>
-            <Flex direction="column" align="center" justify="center" pb={50}>
+        <header className={classes.header}>
+            <Flex direction="column" align="center" justify="center" pb={15}>
                 <h1
                     onClick={() => toggleColorScheme()}
-                    className={classes.title}
+                    className={(scrollPosition.top < 50) ? classes.title_large: classes.title_small}
                 >
                     <Text component="span" c="green" inherit>
-                        job!
-                    </Text>{" "}
-                    <Text component="span" inherit>
-                        wait...
+                        jobwait
                     </Text>
                 </h1>
 

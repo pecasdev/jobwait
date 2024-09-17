@@ -1,19 +1,29 @@
-.title {
+.title_small, .title_large {
     font-family:
       Greycliff CF,
       var(--mantine-font-family);
-    font-size: rem(62px);
+    
     font-weight: 900;
     line-height: 1.1;
     margin: 0;
-    padding: 0;
+    padding-bottom: 15px;
   
     @media (max-width: $mantine-breakpoint-sm) {
       font-size: rem(42px);
       line-height: 1.2;
     }
+
+    transition: 0.4s;
+}
+
+.title_small {
+  font-size: rem(40px);
 }
   
+.title_large {
+  font-size: rem(62px);
+}
+
 .description {
 margin-top: var(--mantine-spacing-xl);
 font-size: rem(24px);
@@ -21,4 +31,11 @@ font-size: rem(24px);
 @media (max-width: $mantine-breakpoint-sm) {
     font-size: rem(18px);
 }
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1000; /*always on top*/
 }
