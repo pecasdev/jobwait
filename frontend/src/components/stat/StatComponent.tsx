@@ -10,6 +10,7 @@ import Api from "../../api";
 import { StatShape } from "../../shape/shapes/StatShape";
 import GenericChart from "./chart/GenericChart";
 import classes from "./StatComponent.module.css";
+import { irandom_range } from "../../util/randomRange";
 
 // todo - don't hardcode this list in the frontend, have it be fetched from the backend
 const statIdsToRender = [
@@ -37,7 +38,7 @@ function StatRenderBundle(props: { statId: string }) {
                 .then(setRenderData)
                 .catch((error) => console.error(error));
         };
-        setTimeout(fetchAndSet, 2000); // fake delay to test loading animation
+        setTimeout(fetchAndSet, irandom_range(400, 600)); // fake delay so viewers can admire the loading icon
     }, []);
 
     return (
