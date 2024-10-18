@@ -5,6 +5,7 @@ const links = [
     { link: "https://github.com/pecasdev", label: "Peter" },
     { link: "https://github.com/danielperev", label: "Daniel" },
     { link: "https://github.com/pecasdev/jobwait", label: "Source" },
+    { link: "https://blog.pecas.dev/jobwait", label: "Blog Post" },
 ];
 
 export function Footer() {

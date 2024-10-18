@@ -29,6 +29,10 @@ export function Header() {
         }
     }
 
+    function navigateToBlogPost() {
+        window.location.href = "https://blog.pecas.dev/jobwait"
+    }
+
     const {scrollPosition} = useDetectScroll();
 
     return (
@@ -54,6 +58,7 @@ export function Header() {
 
                 <button className="p-1 mx-1" onClick={scrollToStats}>View our stats</button>
                 <button className="p-1 mx-1" onClick={scrollToPrompts}>Help contribute answers</button>
+                <button className="p-1 mx-1" onClick={navigateToBlogPost}>Read dev blog post</button>
                 </Flex>
             </Flex>
         </header>
