@@ -1,5 +1,5 @@
 import { useForm } from "@mantine/form";
-import { Button, Fieldset, Image, Group, Flex } from "@mantine/core";
+import { Button, Fieldset, Image, Group, Flex, Tooltip } from "@mantine/core";
 import { ReactNode, useState } from "react";
 import { PromptDefinition } from "../../model/PromptTypes";
 import { Answers } from "../../model/Answers";
@@ -59,7 +59,10 @@ export function DataSubmitForm(props: PromptCollectorProps) {
     });
 
     props.promptDefinitions.forEach((promptDef: PromptDefinition) => {
-        formValues.answers.push({ questionKey: promptDef.idKey, answerValue: "" });
+        formValues.answers.push({
+            questionKey: promptDef.idKey,
+            answerValue: "",
+        });
         const index = formValues.answers.length - 1;
 
         //this could be curried but it would serve no purpose in this case)
@@ -100,18 +103,21 @@ export function DataSubmitForm(props: PromptCollectorProps) {
                     {open == Status.ERROR && (
                         <FailAlert setState={setOpen}></FailAlert>
                     )}
-                    <Button
-                        onClick={() => {
-                            handleFormSubmission(form.getValues())
-                                .then((_) => setOpen(Status.SUCCESS))
-                                .catch((error) => {
-                                    console.error(error);
-                                    setOpen(Status.ERROR);
-                                });
-                        }}
-                    >
-                        Submit
-                    </Button>
+                    <Tooltip label="Data submission disabled for MVP">
+                        <Button
+                            disabled
+                            onClick={() => {
+                                handleFormSubmission(form.getValues())
+                                    .then((_) => setOpen(Status.SUCCESS))
+                                    .catch((error) => {
+                                        console.error(error);
+                                        setOpen(Status.ERROR);
+                                    });
+                            }}
+                        >
+                            Submit
+                        </Button>
+                    </Tooltip>
                 </Group>
             </Fieldset>
             <Flex direction="column">
